@@ -1328,8 +1328,6 @@ horizontal ones, and the error drifts slowly rather than varying
 independently from one reading to the next. A drift between the two
 observations looks like a wrong vertical speed, which grows to tens of
 centimeters by the plane, while our error model assumes independent errors.
-For reference, a constant-acceleration curve through the same positions
-misses by \SI{107}{\centi\metre}.
 
 The test is small, its kicks are passes and shots in open play rather than
 penalties, and the true crossing is measured by the same noisy system. We
@@ -1433,8 +1431,7 @@ direction; the medians over the 17 kicks are \SI{0.8}{}, \SI{0.8}{} and
 
 \paragraph{Prediction.} Each kick is predicted with the standard model and
 4{,}000 draws, exactly as for the penalty, using these three values of
-$\sigma$. The constant-acceleration curve uses the same start and
-observations.
+$\sigma$.
 
 \begin{lstlisting}[caption={Core of the real-kick test. The arrays t, pos, speed and acc hold one ball's readings in seconds, meters, meters per second and meters per second squared.}, label=lst:realdata, captionpos=b]
 # Finding kicks
