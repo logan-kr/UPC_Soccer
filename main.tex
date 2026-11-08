@@ -481,19 +481,19 @@ trajectories agree to better than \SI{1e-6}{\metre}.
   \item \textbf{The ball leaves the foot at $t = 0$ from $\bm{r}_0$.} This is
     how the problem defines the kick. After $t = 0$ the foot no longer touches
     the ball.
-  \item \textbf{Only gravity, drag and Magnus lift act on the ball.} Here and
-    in Section~\ref{sec:exact-fits} we neglect buoyancy, which is
+  \item \textbf{Only gravity, drag and Magnus lift act on the ball.} Initially, here and
+    in Section~\ref{sec:exact-fits}, we neglect buoyancy, which is
     \SI{1.6}{\percent} of the ball's weight, and the added mass of the air the
     ball carries with it; together they change its height at the goal by about
     \SI{1}{\centi\metre}. We also neglect the random sideways forces that act
     on balls kicked with almost no spin (``knuckling''), which are strongest
     below about \SI{1}{\rev\per\second} \citep{mizota2013}.
     Section~\ref{sec:variants} adds both effects.
-  \item \textbf{The air is still.} The two observations cannot detect wind,
+  \item \textbf{The air is still.} The two observations cannot independently detect wind,
     so it cannot be estimated from the data. In our model, ignoring a
     crosswind of \SI{1}{\metre\per\second} moves the predicted crossing
     point by about \SI{1.3}{\centi\metre}.
-  \item \textbf{The ball has the drag and lift of the Teamgeist.} Balls with
+  \item \textbf{The ball has the drag and lift characteristics of the Teamgeist ball.} Balls with
     different panel designs have different drag and lift curves
     \citep{kiratidis2018}. Here and in Section~\ref{sec:exact-fits} we use the
     Teamgeist curves; Section~\ref{sec:montecarlo} covers the other balls by
@@ -510,7 +510,7 @@ length fixed at $m = \SI{0.43}{\kilo\gram}$ (the middle of the legal range
 \SIrange{0.41}{0.45}{\kilo\gram}, \citealp{ifab2025}) and
 $L = \SI{230}{\metre}$ (the middle of the measured range);
 Section~\ref{sec:montecarlo} lets them vary. We treat the air density as
-known, since a goalkeeper can know the conditions on the day. Here and in
+known, since a goalkeeper might theoretically be able to know the conditions on the day. Here and in
 Section~\ref{sec:exact-fits} we use $\rho = \SI{1.20}{\kilo\gram\per\metre\cubed}$;
 Section~\ref{sec:montecarlo} uses the sea-level value of the standard
 atmosphere, \SI{1.225}{\kilo\gram\per\metre\cubed} \citep{ussa1976}. A change in
@@ -527,8 +527,8 @@ determined by six numbers: the three components of the launch velocity
 $\bm{v}_0$ and the three components of the spin $\bm{\omega}_0$. The two
 observations also supply six numbers. In this section we ask which launch
 velocities and spins reproduce both observations to within their rounding,
-and where those trajectories cross the goal plane. The method applies to any
-pair of observations; we apply it to the scenario of
+and where those trajectories cross the goal plane. This general method applies to any
+pair of observations; here we apply it to the scenario of
 Table~\ref{tab:scenario}.
 
 \subsection{Spin Components}
@@ -571,8 +571,6 @@ instead ask for a fit within the precision of the data.
 \subsection{Existence and Uniqueness}
 \label{sec:uniqueness}
 
-The reduction from six to five unknowns raises fundamental questions regarding
-the existence and uniqueness of trajectories matching the observations.
 
 Under classical ordinary differential equation (ODE) theory, our equations of
 motion $\ddot{\bm{r}} = \bm{f}(\bm{r}, \dot{\bm{r}}, \bm{\omega})$
@@ -889,7 +887,7 @@ everything the observations cannot determine.
 Section~\ref{sec:exact-fits} found the trajectories that fit the observations
 under one fixed set of assumptions: the drag and lift of the Teamgeist, a ball of
 average mass, a typical spin decay, and observations exact to their rounding.
-None of these is known exactly, and the spin is known only to lie somewhere in
+For a general solution, we don't know any of these features exactly, and the spin is known only to lie somewhere in
 the range of measured kicks. The Monte Carlo method asks how uncertain the
 predicted crossing point is once these assumptions are themselves uncertain.
 
@@ -912,7 +910,7 @@ and~\ref{sec:summaries}).
 \subsection{Extending the Model}
 \label{sec:variants}
 
-The model of Section~\ref{sec:simple-model} leaves out three effects:
+We extend the model of Section~\ref{sec:simple-model} with three more effects:
 buoyancy and the added mass of the surrounding air, knuckling, and differences
 in aerodynamics between balls. Each is small for this kick, but including them
 shows how much the answer depends on the physics.
