@@ -156,14 +156,13 @@ Table~\ref{tab:scenario}.
   \end{tabular}
 \end{table}
 
-We interpret a general it
-takes any two observed positions as input, and the given scenario is one
-application of it. Second, we take the point where the ball enters the goal to
+We interpret a general method as being capable of
+taking any two observed positions as input; the given scenario is one application of this method we test in depth. We define the point where the ball enters the goal to
 be the $(y, z)$ position of its center when the center reaches the goal plane
 $x = 11$; a shot whose center crosses outside the goal mouth is counted as
-\emph{wide} ($|y| \geq 3.66$) or \emph{over} ($z \geq 2.44$). Third, the
-observed positions are rounded to the nearest centimeter, so each coordinate is
-known only to within $\pm\SI{5}{\milli\metre}$, and any trajectory that passes
+\emph{wide} ($|y| \geq 3.66$) or \emph{over} ($z \geq 2.44$). Given that he
+observed positions are rounded to the nearest centimeter, we note that each coordinate is
+known only to within $\pm\SI{5}{\milli\metre}$. Therefore, any trajectory that passes
 within this distance of every observation is consistent with the data.
 
 % =====================================================================
@@ -171,9 +170,9 @@ within this distance of every observation is consistent with the data.
 \label{sec:simple-model}
 % =====================================================================
 
-We first build a deterministic model: given the ball's launch velocity, its
-spin and a few physical constants, it predicts the whole flight. The method in
-Sections~\ref{sec:exact-fits} and~\ref{sec:montecarlo} uses this model to work
+In order to understand the flight characteristics of the ball, we first build a simplistic deterministic model. Given the ball's launch velocity, its
+spin, and a few physical constants, we apply this method to predict the the entire path of a ball. The method in
+Sections~\ref{sec:exact-fits} and~\ref{sec:montecarlo} then uses this model to work
 backward from the two observed positions.
 
 \subsection{Forces on the ball}
