@@ -808,8 +808,14 @@ With both effects, Equation~\eqref{eq:eom} becomes
 \end{equation}
 
 A ball kicked with little spin can swerve erratically
-as its wake sheds unevenly \citep{mizota2013}. We model this as an
-oscillating sideways force,
+as its wake sheds unevenly \citep{mizota2013}. Our model of this force follows
+the flight measurements of \citet{mizota2013}. For balls launched by machine
+at \SI{22.8}{} and \SI{29.2}{\metre\per\second} with about
+\SI{1}{\rev\per\second} of spin, the sideways force coefficient they measured
+varied roughly sinusoidally in time, with an amplitude of 0.10--0.15 and a
+period of \SI{1.3}{\second} (their Fig.~1e,h). In their wind tunnel the same
+force fluctuated more randomly, at \SIrange{0.7}{2.5}{\hertz}. We therefore
+model knuckling as a sinusoidally oscillating sideways force,
 \begin{equation}
   \bm{F}_k = \tfrac{1}{2}\rho A\, C_k\, |\bm{v}|^2\,
   \min\!\left(1, \frac{\omega_c}{|\bm{\omega}|}\right)
@@ -818,13 +824,14 @@ oscillating sideways force,
 \end{equation}
 where $\hat{\bm{k}}$ is a unit vector perpendicular to the launch velocity.
 Its direction around the flight path and the phase $\phi$ are drawn uniformly
-in each draw. We take the peak coefficient $C_k = 0.10$, the low end of the
-forces \citet{hong2010} measured on kicked knuckleballs (about \SI{2}{\newton}
-at \SIrange{20}{30}{\metre\per\second}), and their average frequency
-$f = \SI{3.5}{\hertz}$. The force is at full strength up to
-$\omega_c = \SI{1}{\rev\per\second}$, below which \citet{mizota2013} observed
-knuckling, and weakens in proportion to $1/|\bm{\omega}|$ above it, because a
-spinning ball does not exhibit this behavior. Where the two
+in each draw. We take the peak coefficient $C_k = 0.10$, the low end of both
+the amplitudes of \citet{mizota2013} and the forces \citet{hong2010} measured on kicked knuckleballs (about \SI{2}{\newton}
+at \SIrange{20}{30}{\metre\per\second}), and the average frequency of
+\citet{hong2010}, $f = \SI{3.5}{\hertz}$. The force is at full strength up to
+$\omega_c = \SI{1}{\rev\per\second}$, the spin at which \citet{mizota2013}
+still observed knuckling, and weakens in proportion to $1/|\bm{\omega}|$ above
+it, because faster spin replaces the unsteady force with a steady Magnus force
+by about \SIrange{2}{3}{\rev\per\second} \citep{mizota2013}. Where the two
 sources differ we take the more modest value, so this model is more likely to
 understate knuckling than to overstate it.
 
