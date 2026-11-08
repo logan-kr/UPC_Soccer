@@ -52,6 +52,20 @@ def save(fig, name):
     print("wrote", FIG / f"{name}.pdf")
 
 
+def ylabel_top(ax, text):
+    """Horizontal y-axis label above the top-left corner of the axes (no rotated text)."""
+    ax.set_ylabel("")
+    ax.text(0.0, 1.03, text, transform=ax.transAxes, ha="left", va="bottom", fontsize=9, color=INK)
+
+
+def hcolorbar(fig, mappable, ax, label, pad=0.16, **kw):
+    """Horizontal colorbar under the axes, with a horizontal label."""
+    cb = fig.colorbar(mappable, ax=ax, orientation="horizontal", fraction=0.05, pad=pad, aspect=35, **kw)
+    cb.set_label(label)
+    cb.outline.set_visible(False)
+    return cb
+
+
 # ------------------------------------------------------------------ forces schematic
 def forces():
     fig, ax = plt.subplots(figsize=(4.2, 3.0))
@@ -93,10 +107,9 @@ def coefficients():
     a.axvspan(26, 33, color=GRID, alpha=0.6, lw=0)
     a.text(29.5, 0.115, "penalty\nspeeds", ha="center", va="bottom", fontsize=7.5, color=INK2)
     a.set_xlabel(r"speed $|\mathbf{v}|$ (m/s)")
-    a.set_ylabel(r"drag coefficient $C_D$")
+    ylabel_top(a, r"(a) drag coefficient $C_D$")
     a.set_ylim(0.1, 0.55)
     a.legend(loc="upper right")
-    a.set_title("(a) Drag", loc="left")
 
     S = np.linspace(0, 0.4, 400)
     b.plot(S, ball.cl(30.0, S), color=BLUE, lw=1.8, label="model, 30 m/s")
@@ -105,10 +118,9 @@ def coefficients():
     b.axvspan(0, 0.26, color=GRID, alpha=0.6, lw=0)
     b.text(0.13, 0.375, "measured kicks", ha="center", fontsize=7.5, color=INK2)
     b.set_xlabel(r"perpendicular spin parameter $S_\perp$")
-    b.set_ylabel(r"lift coefficient $C_L$")
+    ylabel_top(b, r"(b) lift coefficient $C_L$")
     b.set_ylim(0, 0.4)
     b.legend(loc="lower right")
-    b.set_title("(b) Lift", loc="left")
     fig.tight_layout(w_pad=2.0)
     save(fig, "coefficients")
 
@@ -125,7 +137,7 @@ def spin_map(df):
     g = df.pivot(index="side_rps", columns="back_rps", values="max_miss_mm")
     B, S = np.meshgrid(g.columns.to_numpy(), g.index.to_numpy())
     Z = g.to_numpy()
-    fig, ax = plt.subplots(figsize=(4.6, 4.0))
+    fig, ax = plt.subplots(figsize=(4.4, 5.0))
     pc = ax.pcolormesh(B, S, np.clip(Z, 0, 20), cmap=SEQ.reversed(), vmin=0, vmax=20, shading="nearest",
                        rasterized=True)
     ax.contour(B, S, Z, levels=[TOL_MM], colors=[ORANGE], linewidths=1.8)
@@ -145,17 +157,15 @@ def spin_map(df):
     ax.set_ylim(-36, 24)
     ax.grid(False)
     ax.set_xlabel("backspin (+) / topspin (−) (rev/s)")
-    ax.set_ylabel("sidespin, + curls to kicker's left (rev/s)")
-    cb = fig.colorbar(pc, ax=ax, shrink=0.85, extend="max")
-    cb.set_label("worst miss of a sighting coordinate (mm)")
-    cb.outline.set_visible(False)
+    ylabel_top(ax, "sidespin (rev/s), + curls to the kicker's left")
+    hcolorbar(fig, pc, ax, "largest miss of an observed coordinate (mm)", extend="max")
     save(fig, "spin_map")
 
 
 def goal_crossings(df):
     ok = df[df.max_miss_mm <= TOL_MM].copy()
     ok["rate"] = np.hypot(ok.back_rps, ok.side_rps)
-    fig, ax = plt.subplots(figsize=(4.8, 3.4))
+    fig, ax = plt.subplots(figsize=(4.8, 3.9))
     ax.plot([1.0, 3.66, 3.66], [2.44, 2.44, 0.0], color=INK, lw=2.5, solid_capstyle="butt")   # bar and post
     ax.axhline(0, color=INK2, lw=0.8)
     sc = ax.scatter(ok.y_goal, ok.z_goal, c=ok.rate, cmap=SEQ, vmin=5, vmax=30, s=6, lw=0)
@@ -168,16 +178,14 @@ def goal_crossings(df):
     ax.plot(best.y_goal, best.z_goal, marker="*", ms=13, mfc=ORANGE, mec="white", mew=1.0, ls="none")
     ax.annotate("smallest miss", (best.y_goal, best.z_goal), xytext=(20, -26), textcoords="offset points",
                 fontsize=7.5, arrowprops=dict(arrowstyle="-", color=INK2, lw=0.7))
-    ax.text(3.80, 1.7, "post", rotation=90, fontsize=7.5, color=INK2, va="center")
+    ax.text(3.62, 1.3, "post", fontsize=7.5, color=INK2, ha="right")
     ax.text(1.4, 2.5, "crossbar", fontsize=7.5, color=INK2)
     ax.set_xlim(4.0, 1.0)                          # kicker's view: +y on the left
     ax.set_ylim(1.2, 2.8)
     ax.set_aspect("equal")
     ax.set_xlabel("y at the goal plane (m), kicker's view")
-    ax.set_ylabel("z at the goal plane (m)")
-    cb = fig.colorbar(sc, ax=ax, shrink=0.8)
-    cb.set_label("spin rate (rev/s)")
-    cb.outline.set_visible(False)
+    ylabel_top(ax, "z at the goal plane (m)")
+    hcolorbar(fig, sc, ax, "spin rate (rev/s)", pad=0.24)
     save(fig, "goal_crossings")
 
 
@@ -196,9 +204,9 @@ def residuals(df):
            label=f"best spin ({math.hypot(best.back_rps, best.side_rps):.0f} rev/s)")
     ax.axhline(0, color=INK2, lw=0.8)
     ax.set_xticks(x, labels)
-    ax.set_ylabel("model − sighting (mm)")
+    ylabel_top(ax, "model − observed position (mm)")
     ax.grid(axis="x", visible=False)
-    ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=2)
+    ax.legend(loc="lower right")
     save(fig, "residuals")
 
 
