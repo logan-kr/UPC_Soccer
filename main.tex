@@ -187,7 +187,7 @@ $\bm{v} = \dot{\bm{r}}$ for its velocity,
 \end{equation}
 with $m$ the ball's mass and $\bm{g} = (0, 0, -g)$, $g = \SI{9.81}{\metre\per\second\squared}$.
 
-\paragraph{Drag.} Drag opposes the velocity and grows with the square of the
+Drag opposes the velocity and grows with the square of the
 speed in the high-Reynolds-number regime characteristic of macroscopic balls in air \citep{timmerman1999}:
 \begin{equation}
   \bm{F}_D = -\tfrac{1}{2}\rho A\, C_D\, |\bm{v}|\,\bm{v},
@@ -196,10 +196,10 @@ speed in the high-Reynolds-number regime characteristic of macroscopic balls in 
 where $\rho$ is the air density, $A = \pi r^2$ is the ball's cross-section and
 $C_D$ is the drag coefficient.
 
-\paragraph{Magnus lift.} A spinning ball drags air around with it, deflecting
+A spinning ball drags air around with it, deflecting
 the flow and pushing the ball sideways to its direction of travel
 \citep{kray2014}. The force
-is perpendicular to both the velocity and the spin axis (make sure this citation gives this equation:
+is perpendicular to both the velocity and the spin axis \citep{kiratidis2018}:
 \begin{equation}
   \bm{F}_L = \tfrac{1}{2}\rho A\, C_L\, |\bm{v}|^2\,
              \frac{\bm{\omega} \times \bm{v}}{|\bm{\omega} \times \bm{v}|},
@@ -263,7 +263,6 @@ from axial rotation \citep{kray2014}. Because the soccer ball decelerates due
 to drag and curves under lift, both $S_\perp$ and the resulting force
 coefficients are evaluated dynamically at each numerical integration step.
 
-\paragraph{Parameterization via Kiratidis \& Leinweber (2018).}
 We parameterize both coefficients using the empirical models of
 \citet{kiratidis2018}, who fitted experimental datasets across modern FIFA match
 balls, including the wind-tunnel measurements of \citet{asai2007} and the
@@ -321,7 +320,7 @@ or error bars accompany their equations. This absence of published uncertainty
 bounds directly motivates the sensitivity analyses and Monte Carlo sampling
 framework developed in Section~\ref{sec:montecarlo}.
 
-\paragraph{Differences between balls.} Their model does show how much the
+Their model does show how much the
 coefficients change from one ball to another. Table~\ref{tab:balls} compares
 the other three World Cup balls they characterize with the Teamgeist, using
 their own equations (their Table~1 and Equations~5--9) over the speeds and spin
@@ -349,7 +348,6 @@ uses this spread as the uncertainty of the coefficients.
   \end{tabular}
 \end{table}
 
-\paragraph{Cross-validation with Kray et al. (2014) and simulation bounds.}
 To verify whether these formulations and our simulation bounds represent
 physically realistic aerodynamics rather than isolated model artifacts, we
 compare them against the independent wind-tunnel measurements of
@@ -595,7 +593,6 @@ instead ask for a fit within the precision of the data.
 The reduction from six to five unknowns raises fundamental questions regarding
 the existence and uniqueness of trajectories matching the observations.
 
-\paragraph{Initial value problems versus multipoint boundary constraints.}
 Under classical ordinary differential equation (ODE) theory, our equations of
 motion $\ddot{\bm{r}} = \bm{f}(\bm{r}, \dot{\bm{r}}, \bm{\omega})$
 (Equation~\ref{eq:accel}) define an autonomous dynamical system in the
@@ -624,7 +621,6 @@ uniqueness guarantees of the Picard--Lindel{\"o}f theorem do not automatically
 apply, and the determinacy of the system depends strictly on the balance between
 constraints and free parameters.
 
-\paragraph{Degree of determinacy: constrained versus overconstrained systems.}
 Each three-dimensional observation provides three scalar coordinate
 constraints, yielding $3 \times 3 = 9$ constraints in total. Fixing the
 initial position $\bm{r}(0) = \bm{r}_0$ at $t_0 = 0$ satisfies three of these
@@ -661,7 +657,6 @@ measurements inevitably contain noise and discretization error, rendering exact
 algebraic matching ill-posed and making parameter estimation for nonlinear ODEs
 from discrete observations fundamentally an optimization problem \citep{ramsay2007}.
 
-\paragraph{Finding the possible exact and consistent solutions.}
 Because an exact algebraic zero residual ($\bm{r}(t_i) = \tilde{\bm{r}}_i$) is
 exceedingly unlikely in practice, it is fitting to reframe the search for
 solutions around physical consistency. In practice, the observed coordinates are rounded to the
@@ -865,7 +860,7 @@ crosses at $(y, z) = (2.68, 1.92)$\,\si{\metre}.
   \end{tabular}
 \end{table}
 
-\paragraph{Effect of the fixed parameters.} We repeated the best fit with the
+We repeated the best fit with the
 air density at \SI{1.14}{} and \SI{1.26}{\kilo\gram\per\metre\cubed}, the mass
 at \SI{0.41}{} and \SI{0.45}{\kilo\gram}, and the decay length at
 \SI{110}{\metre}, \SI{350}{\metre} and with no spin decay. None of these
