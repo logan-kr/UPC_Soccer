@@ -1,14 +1,226 @@
-\documentclass{article}
-\usepackage{graphicx} % Required for inserting images
+\documentclass[11pt,a4paper]{article}
 
-\title{UPC}
-\author{Logan Ramanathan}
-\date{November 2026}
+% ---------- Fonts and layout ----------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{XCharter}                 % serif body font, close to the exemplar
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{microtype}
+
+% ---------- Math, figures, tables ----------
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup{font=small,labelfont=bf}
+\usepackage[per-mode=symbol]{siunitx}
+
+% ---------- Header: "Problem X | Team NNN | page" with a rule ----------
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{Problem \problemletter}
+\fancyhead[C]{Team \teamnumber}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ---------- Links (kept black, like the exemplar) ----------
+\usepackage[hidelinks]{hyperref}
+
+% ---------- Competition details: fill these in ----------
+% UPC submissions are anonymous: team number only, no names or school.
+\newcommand{\teamnumber}{727}
+\newcommand{\problemletter}{B}
+
+% ---------- Citations: author-year, as in the exemplar ----------
+\usepackage[round]{natbib}
+\bibliographystyle{apalike}
 
 \begin{document}
 
-\maketitle
+% =====================================================================
+% Cover page: title, team, abstract
+% =====================================================================
+% UPC rules: the first page holds only the team number, the problem letter,
+% the title and a summary of at most 300 words. The header carries the team number.
+\begin{center}
+  \vspace*{3cm}
+  {\LARGE Aerodynamic Modelling and Monte Carlo Simulations\\[4pt]
+   for FIFA Penalty Kick Trajectory Prediction}\\[1.5cm]
+  {\large Team \teamnumber, Problem \problemletter}\\[1.5cm]
+  {\bfseries Abstract}
+\end{center}
 
+\begin{quote}
+  \small
+  % Written last, once the results sections are final.
+  \textit{[Abstract to be written.]}
+\end{quote}
+
+\clearpage
+
+% =====================================================================
+% Contents
+% =====================================================================
+\tableofcontents
+\clearpage
+
+% =====================================================================
 \section{Introduction}
+% =====================================================================
+
+In a penalty kick, one player shoots at a goal defended only by the
+goalkeeper. The ball starts on a mark \SI{11}{\metre} in front of a goal
+\SI{7.32}{\metre} wide and \SI{2.44}{\metre} high \citep{ifab2025}.
+A well-struck penalty covers that distance in about \SI{0.4}{\second}, too
+fast for the goalkeeper to wait and see where the ball goes. To block the
+kick, the goalkeeper has to anticipate the trajectory from the first
+instants of the ball's flight. This paper asks how well that can be done:
+given the ball's position at two moments shortly after the kick, where will
+it most likely cross the goal line, and how sure can we be?
+
+The difficulty is that the first instants say little about the forces that
+decide where the ball ends up. Over the first \SI{0.1}{\second} the ball
+travels about \SI{3}{\metre}, and the curve that spin puts into its path
+is only about \SI{1}{\centi\metre}, the same size as the precision of the
+positions we are given. By the time the ball reaches the goal, the same spin
+has moved it by tens of centimetres. Drag, which slows the ball, depends on
+its speed and spin in ways that cannot be measured from two positions.
+Predicting the crossing point is therefore not a curve-fitting problem but
+an extrapolation problem, and an honest answer has to say how uncertain the
+extrapolation is.
+
+Our approach combines a physical model of the ball's flight with a
+statistical treatment of what the observations cannot determine.
+Section~\ref{sec:restatement} restates the problem and our interpretation
+of it. Section~\ref{sec:simple-model} introduces the forces on the ball and
+the assumptions of a simplified model. Section~\ref{sec:exact-fits} applies
+that model in the case where the problem is well constrained, and finds the
+trajectories that pass through the given positions to within their rounding.
+Section~\ref{sec:montecarlo} extends this to a Monte Carlo method that samples
+the quantities the data cannot fix, from distributions based on measured kicks,
+and weights each sample by how well it explains the observations.
+Section~\ref{sec:results} gives the predicted crossing point and its
+uncertainty for the given scenario, together with tests of the method on
+simulated kicks, and Section~\ref{sec:discussion} discusses the strengths
+and weaknesses of the approach.
+
+% =====================================================================
+\section{Problem Restatement}
+\label{sec:restatement}
+% =====================================================================
+
+A penalty kick is taken from the penalty mark. We use the coordinate system
+of the problem, in metres:
+\begin{itemize}
+  \item the origin is at the penalty mark;
+  \item the $x$-axis points toward the goal, which lies in the plane $x = 11$;
+  \item the $y$-axis runs across the goal, with $+y$ on the kicker's left;
+  \item the $z$-axis points up.
+\end{itemize}
+The goal mouth is the region $-3.66 < y < 3.66$, $0 < z < 2.44$ of the
+plane $x = 11$. At $t = 0$ the centre of the ball is at
+$\bm{r}_0 = (0, 0, 0.11)$, one ball radius above the mark. The position of
+the ball is then observed at $t_1 = \SI{0.05}{\second}$ and
+$t_2 = \SI{0.10}{\second}$.
+
+The problem asks us to develop a general method that, given the coordinates
+of the ball at $t_1$ and $t_2$,
+\begin{enumerate}
+  \item predicts the point at which the ball is most likely to enter the goal, and
+  \item estimates the uncertainty of that prediction.
+\end{enumerate}
+We are to test the method and apply it to the scenario in
+Table~\ref{tab:scenario}.
+
+\begin{table}[h]
+  \centering
+  \caption{Observed positions of the ball's centre in the given scenario.
+    The position at $t = 0$ is given exactly.}
+  \label{tab:scenario}
+  \begin{tabular}{S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
+    \toprule
+    {$t$ (\si{\second})} & {$x$ (\si{\metre})} & {$y$ (\si{\metre})} & {$z$ (\si{\metre})} \\
+    \midrule
+    0.00 & 0.00 & 0.00 & 0.11 \\
+    0.05 & 1.50 & 0.45 & 0.44 \\
+    0.10 & 2.96 & 0.86 & 0.74 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+We interpret the problem as follows.
+\begin{itemize}
+  \item \textbf{A general method.} The method takes any two observed
+    positions as input. Nothing in it is tuned to the given scenario,
+    which serves as one application of it.
+  \item \textbf{Coordinates of the ball.} The problem gives the position
+    at $t = 0$ as the centre of the ball, so we take the observed
+    coordinates at $t_1$ and $t_2$ to be positions of the centre as well.
+  \item \textbf{Entering the goal.} We take the point where the ball
+    ``enters the goal'' to be the $(y, z)$ position of its centre when the
+    centre reaches the goal plane $x = 11$. A shot counts as on target when
+    the centre crosses inside the goal mouth defined above, as \emph{wide}
+    when $|y| \geq 3.66$, and as \emph{over} when $z \geq 2.44$.
+  \item \textbf{Off-target shots are part of the answer.} The ball is not
+    guaranteed to enter the goal, so we predict where it crosses the whole
+    goal plane, inside or outside the frame. Alongside the most likely
+    point we report the probability that the ball enters the goal, and the
+    probabilities that it goes wide or over.
+  \item \textbf{Precision of the data.} The observed positions are given
+    to the nearest centimetre, so each coordinate is known only to within
+    about $\pm\SI{5}{\milli\metre}$. A trajectory that passes within this
+    distance of every observation is consistent with the data.
+  \item \textbf{Most likely point and uncertainty.} Because the observations
+    cannot determine every quantity that affects the flight, the prediction
+    is a probability distribution over the goal plane. We take the most
+    likely crossing point to be the peak of that distribution, and describe
+    the uncertainty by its spread, by the regions that contain 68\% and 95\%
+    of the probability, and by the outcome probabilities.
+  \item \textbf{Testing.} We test the method both on the given scenario and
+    on simulated kicks whose true crossing points are known, which checks
+    whether the stated uncertainty is honest.
+\end{itemize}
+
+% =====================================================================
+\section{Simplified Model and Assumptions}
+\label{sec:simple-model}
+% =====================================================================
+% Forces (gravity, drag, Magnus lift), equations of motion,
+% drag and lift coefficients, assumptions list with justifications.
+
+% =====================================================================
+\section{Exact Fits in the Well-Constrained Case}
+\label{sec:exact-fits}
+% =====================================================================
+% Fix rho and m; fit launch velocity and spin to the six observed coordinates;
+% trajectories within the +/-5 mm rounding; what the data can and cannot fix.
+
+% =====================================================================
+\section{Monte Carlo Model}
+\label{sec:montecarlo}
+% =====================================================================
+% Sampled variables and their priors (with sources), velocity fit per draw,
+% likelihood weights, spin decay, summaries (KDE mode, HPD regions).
+
+% =====================================================================
+\section{Results}
+\label{sec:results}
+% =====================================================================
+% Scenario answer, figures, comparison methods, synthetic validation,
+% sensitivity analysis.
+
+% =====================================================================
+\section{Discussion}
+\label{sec:discussion}
+% =====================================================================
+
+\subsection{Strengths}
+
+\subsection{Weaknesses}
+
+% =====================================================================
+\bibliography{references}
 
 \end{document}
