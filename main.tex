@@ -489,10 +489,12 @@ trajectories agree to better than \SI{1e-6}{\metre}.
     on balls kicked with almost no spin (``knuckling''), which are strongest
     below about \SI{1}{\rev\per\second} \citep{mizota2013}.
     Section~\ref{sec:variants} adds both effects.
-  \item \textbf{The air is still.} The two observations cannot independently detect wind,
-    so it cannot be estimated from the data. In our model, ignoring a
-    crosswind of \SI{1}{\metre\per\second} moves the predicted crossing
-    point by about \SI{1.3}{\centi\metre}.
+  \item \textbf{The air is still.} We take the match to be played without
+    wind, as indoors or on a calm day. Wind is a property of the venue, not
+    of the kick, and two observations in the first \SI{0.1}{\second} could
+    not reveal it: over that time it changes the ball's path far less than
+    the rounding of the data. Where wind matters, it would have to be
+    measured and given to the model as an input.
   \item \textbf{The ball has the drag and lift characteristics of the Teamgeist ball.} Balls with
     different panel designs have different drag and lift curves
     \citep{kiratidis2018}. Here and in Section~\ref{sec:exact-fits} we use the
@@ -972,7 +974,7 @@ random draws, so that differences between them are not Monte Carlo noise.
   \item \textbf{Extended:} the standard model with the knuckling force of
     Equation~\eqref{eq:knuckle}.
 \end{itemize}
-Wind is left out of all three (Section~\ref{sec:assumptions}).
+All three assume still air (Section~\ref{sec:assumptions}).
 
 \subsection{Uncertain Inputs and Their Distributions}
 \label{sec:priors}
