@@ -87,29 +87,26 @@ movement even begins \citep{teichner1954}. To block the
 kick, the goalkeeper has to anticipate the trajectory from the first
 instants of the ball's flight. This paper asks how well that can be done:
 given the ball's position at two moments shortly after the kick, where will
-it most likely cross the goal line, and how sure can we be?
+it most likely cross the goal line, and how sure can we be about its final position?
 
-The difficulty is that the first instants say little about the forces that
-decide where the ball ends up. Over the first \SI{0.1}{\second} the ball
+The first section of the ball's trajectory, however, contains only a limited amount of information about the forces that
+decide where the ball ends up. In the scenario specified in the problem statement, over the first \SI{0.1}{\second} the ball
 travels about \SI{3}{\metre}, and the curve that spin puts into its path
 is only about \SI{1}{\centi\metre}, the same size as the precision of the
 positions we are given. By the time the ball reaches the goal, the same spin
 has moved it by tens of centimeters. Drag, which slows the ball, depends on
 its speed and spin in ways that cannot be measured from two positions.
-Predicting the crossing point is therefore not a curve-fitting problem but
-an extrapolation problem, and an honest answer has to say how uncertain the
-extrapolation is.
+Predicting the point at which the balls crosses the plane of the goal is therefore
+a complex extrapolation problem with significant uncertainty which must be quantified.
 
 Our approach combines a physical model of the ball's flight with a
-statistical treatment of what the observations cannot determine.
+statistical analysis of what the observations cannot determine.
 Section~\ref{sec:restatement} restates the problem and our interpretation
 of it. Section~\ref{sec:simple-model} introduces the forces on the ball and
 the assumptions of a simplified model. Section~\ref{sec:exact-fits} applies
 that model in the case where the problem is well constrained, and finds the
 trajectories that pass through the given positions to within their rounding.
-Section~\ref{sec:montecarlo} extends this to a Monte Carlo method that samples
-the quantities the data cannot fix, from distributions based on measured kicks,
-and weights each sample by how well it explains the observations.
+Section~\ref{sec:montecarlo} extends this to a Monte Carlo method that samples uncertain quantities from distributions and weights each sample according to how well it explains the observations.
 Section~\ref{sec:results} gives the predicted crossing point and its
 uncertainty for the given scenario, together with tests of the method on
 simulated kicks, and Section~\ref{sec:discussion} discusses the strengths
