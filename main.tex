@@ -766,11 +766,14 @@ the data (Figure~\ref{fig:spinmap}). They form a single region of spin rates
 between \SI{9.4}{\rev\per\second} and \SI{28.4}{\rev\per\second}, all with
 sidespin that curls the ball to the kicker's right. The best fit, at
 $(\omega_b, \omega_s) = (3.0, -22.5)$\,\si{\rev\per\second}, matches every
-coordinate to within \SI{0.9}{\milli\metre}. Every consistent spin lies
-outside the range of measured kicks (the dashed sector in
-Figure~\ref{fig:spinmap}, discussed in Section~\ref{sec:montecarlo}); inside
-that range the best fit still misses one coordinate by
-\SI{5.4}{\milli\metre}.
+coordinate to within \SI{0.9}{\milli\metre}. The region reaches the edge of
+the range of measured kicks (the dashed sector in Figure~\ref{fig:spinmap},
+discussed in Section~\ref{sec:priors}) but barely enters it. The best grid
+point inside that range misses one coordinate by \SI{5.0}{\milli\metre}, and
+a finer search along the edge of the range finds spins of
+\SI{9.3}{\rev\per\second}, mostly sidespin, that fit to within
+\SI{4.9}{\milli\metre}. These trajectories cross the goal plane near
+$(y, z) = (2.5, 2.2)$\,\si{\metre}.
 
 \begin{figure}[H]
   \centering
@@ -786,7 +789,8 @@ that range the best fit still misses one coordinate by
     \SI{5}{\milli\metre}. The star marks the best fit
     ($\delta_{\max} = \SI{0.9}{\milli\metre}$) and the circle marks no spin
     ($\delta_{\max} = \SI{11.5}{\milli\metre}$). The dashed sector shows the spins of measured
-    kicks, used as the spin range in Section~\ref{sec:montecarlo}.}
+    kicks (rates up to \SI{9.3}{\rev\per\second}, axis within \SI{110}{\degree} of
+    backspin), the spin range used in Section~\ref{sec:montecarlo}.}
   \label{fig:spinmap}
 \end{figure}
 
@@ -854,15 +858,15 @@ motivate the Monte Carlo method of the next section.
     rounding and refitted 40 times, the preferred spin ranged from
     \SIrange{16}{26}{\rev\per\second}. The spin estimate is therefore driven
     as much by how the numbers were rounded as by the physics.
-  \item \textbf{The consistent spins are larger than those of measured kicks.}
-    Measured instep and curled kicks spin at
-    \SIrange{3}{8}{\rev\per\second} (Section~\ref{sec:montecarlo}), while
-    every consistent fit needs at least \SI{9.4}{\rev\per\second}
-    \citeneeded{measured spin rates of kicked balls}.
-    Any real measurement of the ball's position has errors of its own. If
-    those errors could reach \SI{5.4}{\milli\metre} instead of
-    \SI{5}{\milli\metre}, spins in the measured range would already fit the
-    data.
+  \item \textbf{The data favor spins at the top of the measured range.}
+    Measured instep and curled kicks average \SIrange{3}{7.5}{\rev\per\second},
+    and the fastest reach about \SI{9.3}{\rev\per\second}
+    \citep{tsukada2011, whiteside2010}. Only spins at that upper edge fit the
+    data, and only just (\SI{4.9}{\milli\metre} against the
+    \SI{5}{\milli\metre} bound). The best fit spins at
+    \SI{22.7}{\rev\per\second}, more than twice as fast as any measured kick.
+    Either this kick spun unusually fast, or the rounding happens to
+    exaggerate the curvature, as the previous point suggests.
   \item \textbf{The fits rely on the lift model beyond its data.} The
     consistent spins correspond to $S_\perp$ between $0.20$ and $0.60$, and
     \SI{93}{\percent} of them lie above $S_\perp = 0.31$, the largest spin
@@ -870,10 +874,13 @@ motivate the Monte Carlo method of the next section.
     location of the consistent region therefore depends on an extrapolated
     part of the lift curve.
 \end{itemize}
-The Monte Carlo method addresses these limits. Instead of trusting the
-observations to the millimeter, it treats them as uncertain measurements. It
-draws the spin from the range of measured kicks, and it lets the air
-density and ball mass vary, so that the stated uncertainty includes
+The Monte Carlo method addresses these limits. It draws the spin only from
+the range of measured kicks and lets the observations decide which spins in
+that range are most likely; this also keeps $S_\perp$ below about 0.23
+throughout the flight, inside the range of the lift data. It replaces the hard \SI{5}{\milli\metre} bound with
+a measurement error of the same spread, so each draw is graded by how well it
+fits rather than accepted or rejected. And it samples the ball's mass, spin
+decay and drag and lift coefficients, so that the stated uncertainty includes
 everything the observations cannot determine.
 
 % =====================================================================

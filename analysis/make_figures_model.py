@@ -26,7 +26,7 @@ from penalty_mc.physics import KLBall      # noqa: E402
 FIG = HERE.parent / "figures"
 DATA = HERE / "data" / "feasible_grid.csv"
 TOL_MM = 5.0
-PRIOR_RPS, PRIOR_DEG = 8.0, 110.0          # Monte Carlo spin prior (config.yaml), for reference
+PRIOR_RPS, PRIOR_DEG = 9.3, 110.0          # Monte Carlo spin prior (config.yaml), for reference
 
 # palette: reference categorical slots 1-3, ink, a single-hue sequential ramp
 BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
