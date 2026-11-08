@@ -743,7 +743,7 @@ motivate the Monte Carlo method of the next section.
     \SI{5}{\milli\metre} bound). The best fit spins at
     \SI{22.7}{\rev\per\second}, more than twice as fast as any measured kick.
     Either this kick spun unusually fast, or the rounding happens to
-    exaggerate the curvature, as the previous point suggests.
+    exaggerate the curvature, as the previous point suggests is possible.
   \item \textbf{The fits rely on the lift model beyond its data.} The
     consistent spins correspond to $S_\perp$ between $0.20$ and $0.60$, and
     \SI{93}{\percent} of them lie above $S_\perp = 0.31$, the largest spin
@@ -756,7 +756,7 @@ the range of measured kicks and lets the observations decide which spins in
 that range are most likely; this also keeps $S_\perp$ below about 0.23
 throughout the flight, inside the range of the lift data. It replaces the hard \SI{5}{\milli\metre} bound with
 a measurement error of the same spread, so each draw is graded by how well it
-fits rather than accepted or rejected. And it samples the ball's mass, spin
+fits rather than being simply accepted or rejected. The Monte Carlo model also samples the ball's mass, spin
 decay and drag and lift coefficients, so that the stated uncertainty includes
 everything the observations cannot determine.
 
@@ -766,9 +766,9 @@ everything the observations cannot determine.
 % =====================================================================
 
 Section~\ref{sec:exact-fits} found the trajectories that fit the observations
-under one fixed set of assumptions: the drag and lift of the Teamgeist, a ball of
+under one fixed set of assumptions: the drag and lift characteristics of the Teamgeist, a ball of
 average mass, a typical spin decay, and observations exact to their rounding.
-For a general solution, we don't know any of these features exactly, and the spin is known only to lie somewhere in
+For a more detailed general solution, we don't know any of these features exactly, and the spin is known only to lie somewhere in
 the range of measured kicks. The Monte Carlo method asks how uncertain the
 predicted crossing point is once these assumptions are themselves uncertain.
 
@@ -776,12 +776,11 @@ We describe each uncertain input by a probability distribution, based on
 measurements where they exist. Each sample, or \emph{draw}, picks a value for
 every input, finds the launch velocity that best explains the observations,
 and flies the ball to the goal. Draws whose inputs explain the observations
-well count for more. The spread of the weighted crossing points is the
-uncertainty of the prediction. It is what our assumptions about the inputs
-imply, narrowed wherever the observations can tell one input from another. A
+well count for more. The spread of the weighted crossing points reflects the
+uncertainty of the prediction. A
 different choice of distributions would give a different spread, so
-Section~\ref{sec:results} also tests how the answer changes when the
-distributions change.
+Section~\ref{sec:results} also tests how the answer changes when the input
+distributions are modified.
 
 We first extend the physical model (Section~\ref{sec:variants}), then give the
 distributions of the uncertain inputs (Section~\ref{sec:priors}), and finally
@@ -793,7 +792,7 @@ and~\ref{sec:summaries}).
 
 We extend the model of Section~\ref{sec:simple-model} with two more effects:
 buoyancy and the added mass of the surrounding air, and knuckling. Each is
-small for this kick, but including them shows how much the answer depends on
+small for the kick specified in the problem, but including them shows how much the answer depends on
 the physics. Differences in aerodynamics between balls are treated as
 uncertainty in the drag and lift coefficients (Section~\ref{sec:priors}).
 
