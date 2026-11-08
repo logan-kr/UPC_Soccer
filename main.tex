@@ -1300,34 +1300,36 @@ procedure and the code.
 
 \begin{table}[H]
   \centering
-  \caption{Predictions for 17 real kicks on a plane 6--9\,m from the kick.
-    With a correct uncertainty, 95\% of misses would lie within two predicted
-    standard deviations.}
+  \caption{Predictions for 17 real kicks on a plane 6--9\,m from the kick,
+    in each direction. With a correct uncertainty, about 68\% of misses would
+    lie within one predicted standard deviation and 95\% within two.}
   \label{tab:realdata}
   \small
-  \begin{tabular}{lccc}
+  \begin{tabular}{lcc}
     \toprule
-    & Sideways & Height & Overall \\
+    & Sideways & Height \\
     \midrule
-    Median miss (\si{\centi\metre})                     & 14   & 24   & 33 \\
-    Within two predicted standard deviations            & 0.94 & 0.59 & \\
-    Inside 68\% / 95\% region                            &      &      & 0.35 / 0.59 \\
+    Median miss (\si{\centi\metre})           & 14   & 24   \\
+    Within one predicted standard deviation  & 0.47 & 0.35 \\
+    Within two predicted standard deviations & 0.94 & 0.59 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-Sideways, the method works on real kicks as it does on simulated ones
+Sideways, the method does reasonably well on real kicks
 (Table~\ref{tab:realdata}): the typical miss is \SI{14}{\centi\metre}, and
-16 of the 17 kicks land within two predicted standard deviations. In height
-it is less accurate and overconfident: the typical miss is
-\SI{24}{\centi\metre}, and only 59\% of kicks land within two standard
-deviations, so the 68\% and 95\% regions contain the true crossing for only
-35\% and 59\% of kicks. The likely cause is the tracking system rather than
-the physics. Its height readings are three times noisier than its
-horizontal ones, and the error drifts slowly rather than varying
-independently from one reading to the next. A drift between the two
-observations looks like a wrong vertical speed, which grows to tens of
-centimeters by the plane, while our error model assumes independent errors.
+16 of the 17 kicks land within two predicted standard deviations, though
+fewer than expected land within one. In height it is less accurate and
+clearly overconfident: the typical miss is \SI{24}{\centi\metre}, and only
+59\% of kicks land within two standard deviations. Taking both directions
+together, the 68\% and 95\% regions contain the true crossing for 35\% and
+59\% of kicks, and the typical miss is \SI{33}{\centi\metre}. The likely
+cause is the tracking system rather than the physics. Its height readings
+are three times noisier than its horizontal ones, and the error drifts
+slowly rather than varying independently from one reading to the next. A
+drift between the two observations looks like a wrong vertical speed, which
+grows to tens of centimeters by the plane, while our error model assumes
+independent errors.
 
 The test is small, its kicks are passes and shots in open play rather than
 penalties, and the true crossing is measured by the same noisy system. We
