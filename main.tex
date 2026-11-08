@@ -156,38 +156,15 @@ Table~\ref{tab:scenario}.
   \end{tabular}
 \end{table}
 
-We interpret the problem as follows.
-\begin{itemize}
-  \item \textbf{A general method.} The method takes any two observed
-    positions as input. Nothing in it is tuned to the given scenario,
-    which serves as one application of it.
-  \item \textbf{Coordinates of the ball.} The problem gives the position
-    at $t = 0$ as the center of the ball, so we take the observed
-    coordinates at $t_1$ and $t_2$ to be positions of the center as well.
-  \item \textbf{Entering the goal.} We take the point where the ball
-    ``enters the goal'' to be the $(y, z)$ position of its center when the
-    center reaches the goal plane $x = 11$. A shot counts as on target when
-    the center crosses inside the goal mouth defined above, as \emph{wide}
-    when $|y| \geq 3.66$, and as \emph{over} when $z \geq 2.44$.
-  \item \textbf{Off-target shots are part of the answer.} The ball is not
-    guaranteed to enter the goal, so we predict where it crosses the whole
-    goal plane, inside or outside the frame. Alongside the most likely
-    point we report the probability that the ball enters the goal, and the
-    probabilities that it goes wide or over.
-  \item \textbf{Precision of the data.} The observed positions are given
-    to the nearest centimeter, so each coordinate is known only to within
-    about $\pm\SI{5}{\milli\metre}$. A trajectory that passes within this
-    distance of every observation is consistent with the data.
-  \item \textbf{Most likely point and uncertainty.} Because the observations
-    cannot determine every quantity that affects the flight, the prediction
-    is a probability distribution over the goal plane. We take the most
-    likely crossing point to be the peak of that distribution, and describe
-    the uncertainty by its spread, by the regions that contain 68\% and 95\%
-    of the probability, and by the outcome probabilities.
-  \item \textbf{Testing.} We test the method both on the given scenario and
-    on simulated kicks whose true crossing points are known, which checks
-    whether the stated uncertainty is honest.
-\end{itemize}
+We read the problem in three ways. First, the method must be general: it
+takes any two observed positions as input, and the given scenario is one
+application of it. Second, we take the point where the ball enters the goal to
+be the $(y, z)$ position of its center when the center reaches the goal plane
+$x = 11$; a shot whose center crosses outside the goal mouth is counted as
+\emph{wide} ($|y| \geq 3.66$) or \emph{over} ($z \geq 2.44$). Third, the
+observed positions are rounded to the nearest centimeter, so each coordinate is
+known only to within $\pm\SI{5}{\milli\metre}$, and any trajectory that passes
+within this distance of every observation is consistent with the data.
 
 % =====================================================================
 \section{Simplified Model and Assumptions}
