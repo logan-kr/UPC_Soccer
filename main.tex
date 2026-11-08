@@ -524,148 +524,9 @@ $\hat{\bm{e}}_u = \hat{\bm{e}}_r\times\hat{\bm{f}}$ point up. We write
 \end{equation}
 where $\omega_b$ is backspin (positive values lift the ball, negative values
 are topspin), $\omega_s$ is sidespin (positive values curl the ball to the
-kicker's left, $+y$) and $\omega_f$ is screw spin about the direction of
-travel. We quote spin rates in revolutions per second
+kicker's left, $+y$) and $\omega_f$ is screw spin, rotation about the
+direction of travel like the spiral of a thrown American football. We quote spin rates in revolutions per second
 (\si{\rev\per\second}).
-
-\subsection{Screw Spin Simplification}
-\label{sec:screw}
-
-Screw spin is rotation about the direction of travel, like the spiral of a
-thrown American football. Backspin and sidespin turn the ball about axes
-perpendicular to its velocity, so they deflect the airflow and produce Magnus
-lift from the moment of launch. Screw spin does not: at launch its axis is
-parallel to the velocity, so $\bm{\omega}\times\bm{v} = \bm{0}$ and it adds
-nothing to $S_\perp$ (Equation~\ref{eq:sperp}).
-
-Screw spin starts to matter only once the path bends. The spin axis keeps its
-direction (Section~\ref{sec:spin-decay}) while gravity and lift turn the
-velocity, so an angle $\phi$ opens between them, and a screw spin $\omega_f$
-then acts like a perpendicular spin of $\omega_f \sin\phi$. For our best fit
-(Section~\ref{sec:search}) the velocity has turned by only \SI{1.3}{\degree}
-at the first observation and \SI{2.6}{\degree} at the second, so during the
-observed part of the flight screw spin acts at less than \SI{5}{\percent} of
-its rate. Adding up to \SI{30}{\rev\per\second} of screw spin to that fit
-changes its misses by less than \SI{0.5}{\milli\metre}.
-
-With $\omega_f$ included, the model has six unknowns (three components each of
-the launch velocity and the spin), the same as the number of observed
-coordinates (three at each of $t_1$ and $t_2$), so an exact match is possible
-in principle. We searched for exact solutions by least squares from several
-starting points. The only ones we found need a screw spin of nearly
-\SI{1000}{\rev\per\second}, more than a hundred times the spin of measured
-kicks \citep{tsukada2011, whiteside2010}. The other five unknowns already fit
-every coordinate to within \SI{0.9}{\milli\metre}. Removing the last fraction
-of a millimeter takes a lift that grows as the path bends, which screw spin
-produces and backspin and sidespin do not. Because screw spin reaches the ball
-only through the small angle $\phi$, producing even this small correction
-takes an enormous spin rate. These exact solutions come from having as many
-unknowns as equations, not from a realistic kick, so we set $\omega_f = 0$.
-
-That leaves five unknowns, $\bm{v}_0$, $\omega_b$ and $\omega_s$, for six
-observed coordinates. In general no trajectory then passes exactly through
-both observations, so instead of an exact fit we look for trajectories that
-match the observations to within their rounding
-(Section~\ref{sec:consistency}).
-
-\subsection{Existence and Uniqueness}
-\label{sec:uniqueness}
-
-
-Under classical ordinary differential equation (ODE) theory, our equations of
-motion $\ddot{\bm{r}} = \bm{f}(\bm{r}, \dot{\bm{r}}, \bm{\omega})$
-(Equation~\ref{eq:accel}) define an autonomous dynamical system in the
-six-dimensional phase space $(\bm{r}, \bm{v})$ (or seven-dimensional when
-augmented by the arc length $s$ of Equation~\ref{eq:spindecay}). It can be shown that the vector field is Lipschitz continuous.
-For an initial value problem (IVP) where the initial position $\bm{r}(0) = \bm{r}_0$
-and launch velocity $\dot{\bm{r}}(0) = \bm{v}_0$ are specified alongside fixed
-ball parameters and spin $\bm{\omega}$, the Picard--Lindel{\"o}f
-(Cauchy--Lipschitz) theorem \citep[Thm.~I.8.1]{hairer1993}
-guarantees that there exists a unique solution $\bm{r}(t)$ forward in time. A
-vital consequence of this uniqueness is that trajectories
-corresponding to distinct initial states in the full phase space
-can never cross or bifurcate.
-
-In our scenario, however, the launch velocity $\bm{v}_0$ is unknown. Instead of
-an initial value problem, we are presented with a multipoint boundary value
-problem (BVP): the center of the ball is observed at three discrete points
-$\bm{r}(t_0) = \bm{r}_0$, $\bm{r}(t_1) = \tilde{\bm{r}}_1$, and
-$\bm{r}(t_2) = \tilde{\bm{r}}_2$ at times $t_0 = 0$,
-$t_1 = \SI{0.05}{\second}$, and $t_2 = \SI{0.10}{\second}$
-(Table~\ref{tab:scenario}). For boundary value problems, the existence and
-uniqueness guarantees of the Picard--Lindel{\"o}f theorem do not automatically
-apply, and the determinacy of the system depends strictly on the balance between
-constraints and free parameters.
-
-Each three-dimensional observation provides three scalar coordinate
-constraints, yielding $3 \times 3 = 9$ constraints in total. Fixing the
-initial position $\bm{r}(0) = \bm{r}_0$ at $t_0 = 0$ satisfies three of these
-conditions, leaving six scalar constraints to be satisfied at $t_1$ and $t_2$:
-\begin{equation}
-  \bm{r}(t_1;\, \bm{p}) = \tilde{\bm{r}}_1, \qquad
-  \bm{r}(t_2;\, \bm{p}) = \tilde{\bm{r}}_2,
-  \label{eq:bvp-constraints}
-\end{equation}
-where $\bm{p}$ denotes the vector of unknown initial parameters.
-\begin{itemize}
-  \item \textbf{Unconstrained six-parameter case ($6 = 6$):} If both the launch
-    velocity $\bm{v}_0 \in \mathbb{R}^3$ and the full spin vector
-    $\bm{\omega}_0 \in \mathbb{R}^3$ are treated as free parameters, the system
-    possesses six unknown scalar parameters to satisfy the six scalar equations
-    of Equation~\eqref{eq:bvp-constraints}. By the inverse function theorem
-    applied to smooth dynamical flows \citep[Sec.~I.14]{hairer1993}, the system
-    is formally determined, and exact mathematical roots exist.
-    However, as shown in Section~\ref{sec:screw}, because screw spin $\omega_f$
-    is parallel to the velocity vector and generates no transverse Magnus force
-    to first order, the only exact roots require an unphysical spin rate of
-    nearly \SI{1000}{\rev\per\second}.
-  \item \textbf{Physical five-parameter case ($6 > 5$):} Setting screw spin to
-    zero ($\omega_f = 0$) leaves five physical degrees of freedom: the three
-    components of launch velocity $\bm{v}_0$ and the two transverse spin rates
-    $(\omega_b, \omega_s)$. Matching the observations now requires satisfying
-    six scalar coordinate equations with only five unknowns. The system is
-    strictly \emph{overdetermined} (overconstrained).
-\end{itemize}
-Because $6 > 5$, an exact mathematical trajectory passing through all three
-points simultaneously does not exist in general for an overdetermined system.
-Even if the data were generated by an actual physical kick, real-world
-measurements inevitably contain noise and discretization error, rendering exact
-algebraic matching ill-posed and making parameter estimation for nonlinear ODEs
-from discrete observations fundamentally an optimization problem \citep{ramsay2007}.
-
-Because an exact algebraic zero residual ($\bm{r}(t_i) = \tilde{\bm{r}}_i$) is
-exceedingly unlikely in practice, it is fitting to reframe the search for
-solutions around physical consistency. In practice, the observed coordinates are rounded to the
-nearest centimeter, meaning each true coordinate lies within a rounding box of
-$\pm\SI{5}{\milli\metre}$. Any trajectory satisfying this Chebyshev ($\ell_\infty$)
-error bound (defined formally in Section~\ref{sec:consistency}) represents an
-indistinguishable, physically valid solution.
-
-To isolate every consistent solution across the parameter space, we exploit a
-natural kinematic decoupling. Over the brief observation window
-($\Delta t \le \SI{0.10}{\second}$), the flight is overwhelmingly dominated by
-initial velocity, while aerodynamic drag and Magnus forces act as small
-perturbations (inducing only about \SI{1}{\centi\metre} of trajectory
-deflection). Because the flow map is nearly ballistic over this short duration,
-the mapping from launch velocity $\bm{v}_0$ to positions is strictly monotonic
-and locally convex \citeneeded{monotonicity and local convexity of short-time ballistic parameter maps}.
-Consequently, for any candidate transverse spin $(\omega_b, \omega_s)$, there
-exists a unique, well-conditioned optimal launch velocity
-$\bm{v}_0^*(\omega_b, \omega_s)$ that minimizes the coordinate residuals.
-
-We find this optimal velocity using the Levenberg--Marquardt algorithm
-\citep{levenberg1944, marquardt1963}, followed by a minimax linear program to
-minimize the largest coordinate miss $\delta_{\max}$. By evaluating this
-optimization across a dense, bounded grid of physically plausible spin rates
-$(\omega_b, \omega_s) \in [-40, 40]^2\,\si{\rev\per\second}$, we systematically
-sweep the entire parameter space to identify all consistent trajectories. From a
-theoretical standpoint, if the observations were exact, noiseless measurements
-from a real kick, the smoothness of the equations of motion
-guarantees that the exact solution set consists of isolated points, isolating a
-single physical solution in the subsonic domain. Under finite measurement
-rounding ($\pm\SI{5}{\milli\metre}$), this isolated point expands into the
-compact, connected region of consistent trajectories mapped in
-Section~\ref{sec:search}.
 
 \subsection{Consistency with the data}
 \label{sec:consistency}
@@ -688,6 +549,28 @@ can never exceed half the last digit.
 
 \subsection{Finding every consistent trajectory}
 \label{sec:search}
+
+\label{sec:screw}
+A first pass let all six unknowns vary. Three components each of launch
+velocity and spin match the six observed coordinates in number, so exact fits
+are possible, and least squares from several starting points found them.
+Every one needed a screw spin of nearly \SI{1000}{\rev\per\second}, more than
+a hundred times the spin of measured kicks \citep{tsukada2011, whiteside2010}.
+Screw spin produces no lift at launch, because its axis lies along the
+velocity and $\bm{\omega}\times\bm{v} = \bm{0}$. It acts only through the
+angle $\phi$ that opens between the fixed spin axis and the velocity as the
+path bends, as a perpendicular spin of $\omega_f \sin\phi$. For the best fit
+found below, $\phi$ is only \SI{1.3}{\degree} at the first observation and
+\SI{2.6}{\degree} at the second. Without screw spin, that fit already matches every
+coordinate to within \SI{0.9}{\milli\metre}; removing the last fraction of a
+millimeter takes a lift that grows as the path bends, which only screw spin
+provides, and through so small an angle that takes an enormous rate. Screw
+spin at realistic rates has almost no effect: adding up to
+\SI{30}{\rev\per\second} to the best fit changes its misses by less than
+\SI{0.5}{\milli\metre}. We therefore set $\omega_f = 0$. That leaves five
+unknowns for six observed coordinates, so in general no trajectory passes
+exactly through both observations, and we search instead for the trajectories
+that are consistent with them.
 
 The data fix the launch velocity sharply but the spin only weakly, so we
 treat the two differently: we search over spin, and for each spin we solve
