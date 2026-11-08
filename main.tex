@@ -262,9 +262,9 @@ of density \SI{1.20}{\kilo\gram\per\metre\cubed}, $k = \SI{0.053}{\per\metre}$.
 At \SI{32}{\metre\per\second}, the launch speed we fit in
 Section~\ref{sec:exact-fits}, drag decelerates a
 non-spinning ball by about \SI{8}{\metre\per\second\squared}. A spin of
-\SI{8}{\rev\per\second}, at the top of the range measured when players' kicks are filmed with
-high-speed cameras (``measured kicks'' below)
-\citeneeded{measured spin rates of kicked balls}, gives a lift of about \SI{15}{\metre\per\second\squared}. Both are comparable
+\SI{9.3}{\rev\per\second}, at the top of the range measured when players' kicks are filmed with
+high-speed cameras (``measured kicks'' below; \citealp{tsukada2011}), gives a lift of about
+\SI{16}{\metre\per\second\squared}. Both are comparable
 to gravity, so none of the three forces can be left out.
 
 \subsection{Drag and lift coefficients}
@@ -333,10 +333,11 @@ $C_{D,\mathrm{ref}} \approx 0.242$ is the calibration drag at the reference
 anchor point (Reynolds number $3.34\times10^5$, $S_\perp = 0.19$, corresponding
 to $v_{\mathrm{ref}} \approx \SI{23.6}{\metre\per\second}$ for kinematic
 viscosity $\nu = \SI{1.54e-5}{\metre\squared\per\second}$ and diameter
-$D = \SI{0.218}{\metre}$; \citealp{goff2010}). This calibration reproduces the
-empirically observed benchmarks of \citet{goff2010}: $C_L = 0.14$ at
-$S_\perp = 0.06$, $C_L = 0.29$ at $S_\perp = 0.19$, and $C_L = 0.33$ at
-$S_\perp = 0.31$.
+$D = \SI{0.218}{\metre}$; \citealp{goff2010}). These constants are the calibration
+of \citet{kiratidis2018}, who matched the wind-tunnel data of \citet{asai2007} at
+this Reynolds number: $C_L = 0.29$ at $S_\perp = 0.19$ and $C_L = 0.33$ at
+$S_\perp = 0.31$. The same curve gives $C_L = 0.14$ at $S_\perp = 0.06$, against a
+measured 0.15.
 
 It is important to note that \citet{kiratidis2018} did not report experimental
 uncertainties or error bounds for their digitized wind-tunnel datasets and
@@ -374,12 +375,9 @@ and $0 \le S_\perp \le 1.1$:
   \item \textbf{Lift saturation ceiling ($C_L$):} Equation~\eqref{eq:cl} yields
     $C_L \approx 0.33$ at $S_\perp \approx 0.30$. \citet{kray2014} demonstrate
     that for supercritical Reynolds numbers, the Magnus coefficient levels off
-    into a plateau between $0.30 < C_M < 0.35$. In our Monte Carlo pipeline, we
-    introduce a scaling multiplier $f_L \sim \mathcal{U}(0.8, 1.0)$ on $C_L$ to
-    account for seam orientation and ball-to-ball manufacturing variances; this
-    yields an effective operational ceiling of $C_L \in [0.24, 0.33]$, in
-    outstanding agreement with the empirical saturation envelope measured by
-    both \citet{goff2010} and \citet{kray2014}.
+    into a plateau between $0.30 < C_M < 0.35$. The Monte Carlo model of
+    Section~\ref{sec:montecarlo} also lets the lift coefficient fall by up to
+    \SI{25}{\percent} to cover other balls (Section~\ref{sec:priors}).
   \item \textbf{Regime consistency and anomalous effects:} While \citet{kray2014}
     documented a ``negative Magnus effect'' ($C_M \approx -0.09$) caused by
     asymmetric boundary-layer laminarization, they showed that this inversion
@@ -390,9 +388,9 @@ and $0 \le S_\perp \le 1.1$:
     Magnus force operates exclusively in the classical positive regime
     ($C_L > 0$). Furthermore, \citet{kray2014} observed that below rotational
     frequencies of \SI{2}{\hertz} ($S_\perp < 0.1$), coherent Magnus circulation
-    gives way to erratic lateral force fluctuations (``knuckling''); this
-    directly justifies our model's separation between high-spin Magnus lift and
-    low-spin knuckle perturbation forces.
+    gives way to erratic lateral force fluctuations (``knuckling''). This is
+    why we treat knuckling as a separate force that acts only at low spin
+    (Section~\ref{sec:variants}).
 \end{enumerate}
 
 \begin{figure}[H]
@@ -478,20 +476,23 @@ trajectories agree to better than \SI{1e-6}{\metre}.
   \item \textbf{The ball leaves the foot at $t = 0$ from $\bm{r}_0$.} This is
     how the problem defines the kick. After $t = 0$ the foot no longer touches
     the ball.
-  \item \textbf{Only gravity, drag and Magnus lift act on the ball.} We
-    neglect buoyancy, which is \SI{1.6}{\percent} of the ball's weight and
-    changes its height at the goal by about \SI{1}{\centi\metre}. We also
-    neglect the random sideways forces that act on balls kicked with almost
-    no spin (``knuckling'', \citealp{mizota2013}), which matter only below
-    about \SI{3}{\rev\per\second}.
+  \item \textbf{Only gravity, drag and Magnus lift act on the ball.} Here and
+    in Section~\ref{sec:exact-fits} we neglect buoyancy, which is
+    \SI{1.6}{\percent} of the ball's weight, and the added mass of the air the
+    ball carries with it; together they change its height at the goal by about
+    \SI{1}{\centi\metre}. We also neglect the random sideways forces that act
+    on balls kicked with almost no spin (``knuckling''), which are strongest
+    below about \SI{1}{\rev\per\second} \citep{mizota2013}.
+    Section~\ref{sec:variants} adds both effects.
   \item \textbf{The air is still.} The two observations cannot detect wind,
     so it cannot be estimated from the data. In our model, ignoring a
     crosswind of \SI{1}{\metre\per\second} moves the predicted crossing
     point by about \SI{1.3}{\centi\metre}.
-  \item \textbf{The coefficients of the Teamgeist ball represent a modern
-    match ball.} Balls with different panel designs have somewhat different
-    drag curves \citep{kiratidis2018}, but at penalty speeds the differences
-    are small next to the effect of the unknown spin.
+  \item \textbf{The ball has the drag and lift of the Teamgeist.} Balls with
+    different panel designs have different drag and lift curves
+    \citep{kiratidis2018}. Here and in Section~\ref{sec:exact-fits} we use the
+    Teamgeist curves; Section~\ref{sec:montecarlo} covers the other balls by
+    scaling both coefficients (Section~\ref{sec:priors}).
   \item \textbf{The spin axis keeps its direction and the spin rate decays
     with distance} as in Equation~\eqref{eq:spindecay} \citep{tsukada2008}.
   \item \textbf{The flight ends at the goal plane.} We do not model the ball
@@ -504,7 +505,10 @@ spin-decay length fixed at $\rho = \SI{1.20}{\kilo\gram\per\metre\cubed}$,
 $m = \SI{0.43}{\kilo\gram}$ (the middle of the legal range
 \SIrange{0.41}{0.45}{\kilo\gram}, \citealp{ifab2025}) and
 $L = \SI{230}{\metre}$ (the middle of the measured range).
-Section~\ref{sec:montecarlo} lets them vary.
+Section~\ref{sec:montecarlo} lets the mass and decay length vary and fixes the
+density at the standard-atmosphere value of \SI{1.225}{\kilo\gram\per\metre\cubed};
+a change in density of this size moves the predicted crossing point by less than
+\SI{2.5}{\centi\metre} (Section~\ref{sec:fixed-results}).
 
 % =====================================================================
 \section{Exact Fits in the Well-Constrained Case}
@@ -546,7 +550,7 @@ With all six unknowns free, the six observations can be matched exactly. We
 solved for them by least squares from several starting points. The only exact
 solutions we found need a screw spin of nearly \SI{1000}{\rev\per\second},
 more than a hundred times the spin of measured kicks
-\citeneeded{measured spin rates of kicked balls}. They arise because screw spin
+\citep{tsukada2011, whiteside2010}. They arise because screw spin
 produces no lift by itself (Equation~\ref{eq:sperp}); it acts only through the
 small angle that opens between the spin axis and the velocity as the path
 bends, so an enormous screw spin is needed to have any effect. These solutions
