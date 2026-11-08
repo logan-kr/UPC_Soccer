@@ -326,33 +326,9 @@ or error bars accompany their equations. This absence of published uncertainty
 bounds directly motivates the sensitivity analyses and Monte Carlo sampling
 framework developed in Section~\ref{sec:montecarlo}.
 
-Their model does show how much the
-coefficients change from one ball to another. Table~\ref{tab:balls} compares
-the other three World Cup balls they characterize with the Teamgeist, using
-their own equations (their Table~1 and Equations~5--9) over the speeds and spin
-parameters of a penalty kick. The Teamgeist has the lowest drag and the most
-lift of the four; the other balls have up to \SI{34}{\percent} more drag and up
-to \SI{25}{\percent} less lift. Independently, \citet{carre2002} measured lift
-coefficients \SIrange{20}{29}{\percent} below the Teamgeist curve, at somewhat
-higher spin parameters, within the same spread. Section~\ref{sec:montecarlo}
-uses this spread as the uncertainty of the coefficients.
-
-\begin{table}[H]
-  \centering
-  \caption{Drag and lift coefficients of the World Cup balls in
-    \citet{kiratidis2018} relative to the Teamgeist, over
-    \SIrange{25}{33}{\metre\per\second} and $0.02 \le S_\perp \le 0.2$.}
-  \label{tab:balls}
-  \begin{tabular}{lcc}
-    \toprule
-    Ball & $C_D / C_D^{\mathrm{Teamgeist}}$ & $C_L / C_L^{\mathrm{Teamgeist}}$ \\
-    \midrule
-    Jabulani & \numrange{1.02}{1.12} & \numrange{0.91}{0.99} \\
-    Tango 12 & \numrange{1.15}{1.25} & \numrange{0.82}{0.90} \\
-    Brazuca  & \numrange{1.20}{1.34} & \numrange{0.75}{0.87} \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+Their model does give different curves for the other World Cup balls they
+characterize, and Section~\ref{sec:priors} uses the spread between balls as
+the uncertainty of the coefficients.
 
 To check that these coefficients are realistic, we compare them with the
 independent wind-tunnel measurements of \citet{kray2014}. They tested an
@@ -960,8 +936,7 @@ Equations~\eqref{eq:cd} and~\eqref{eq:cl} by constant factors,
 \end{equation}
 The factor $f_D$ multiplies the drag force only. The drag coefficient inside
 the lift model (Equation~\eqref{eq:cl}) keeps its published value, so the two
-factors act independently. Their ranges come from the differences between
-balls in Table~\ref{tab:balls}.
+factors act independently. Section~\ref{sec:priors} gives their ranges.
 
 \paragraph{Model variants.} We run three versions of the model on the same
 random draws, so that differences between them are not Monte Carlo noise.
@@ -1025,9 +1000,35 @@ any of them.
 measured by \citet{tsukada2008} (Section~\ref{sec:spin-decay}), and the mass
 spans the legal range \citep{ifab2025}.
 
-\paragraph{Drag and lift factors.} Each factor runs from the Teamgeist value
-of 1 to the most extreme of the other balls in Table~\ref{tab:balls}, rounded
-outward. In the model of \citet{kiratidis2018} a ball with more drag also has
+\paragraph{Drag and lift factors.} The ranges come from how much the
+coefficients differ between balls. Table~\ref{tab:balls} compares the other
+three World Cup balls in \citet{kiratidis2018} with the Teamgeist, using their
+own equations (their Table~1 and Equations~5--9) over the speeds and spin
+parameters of a penalty kick. The Teamgeist has the lowest drag and the most
+lift of the four; the other balls have up to \SI{34}{\percent} more drag and up
+to \SI{25}{\percent} less lift. Each factor runs from the Teamgeist value of 1
+to the most extreme ball, rounded outward. Independently, \citet{carre2002}
+measured lift coefficients \SIrange{20}{29}{\percent} below the Teamgeist
+curve, at somewhat higher spin parameters, within the same spread.
+
+\begin{table}[H]
+  \centering
+  \caption{Drag and lift coefficients of the World Cup balls in
+    \citet{kiratidis2018} relative to the Teamgeist, over
+    \SIrange{25}{33}{\metre\per\second} and $0.02 \le S_\perp \le 0.2$.}
+  \label{tab:balls}
+  \begin{tabular}{lcc}
+    \toprule
+    Ball & $C_D / C_D^{\mathrm{Teamgeist}}$ & $C_L / C_L^{\mathrm{Teamgeist}}$ \\
+    \midrule
+    Jabulani & \numrange{1.02}{1.12} & \numrange{0.91}{0.99} \\
+    Tango 12 & \numrange{1.15}{1.25} & \numrange{0.82}{0.90} \\
+    Brazuca  & \numrange{1.20}{1.34} & \numrange{0.75}{0.87} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+In the model of \citet{kiratidis2018} a ball with more drag also has
 less lift. Drawing the two factors independently ignores this link and allows
 combinations no real ball has, which can only widen the predicted spread.
 
