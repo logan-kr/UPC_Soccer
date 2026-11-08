@@ -98,19 +98,16 @@ def main():
     nospin = physics.trajectory(f.v0, base, r0=r0, n=400)
 
     colors = {"Most likely": ORANGE, "Edge of 95% region (a)": BLUE, "Edge of 95% region (b)": AQUA}
-    fig = plt.figure(figsize=(7.0, 3.8))
-    ax = fig.add_axes((-0.06, 0.10, 1.12, 1.55), projection="3d", computed_zorder=False)
+    fig = plt.figure(figsize=(5.2, 3.0))
+    ax = fig.add_axes((-0.08, 0.13, 1.16, 1.5), projection="3d", computed_zorder=False)
     W, H = 3.66, 2.44
     # goal line
     ax.plot([11, 11], [-4.5, 4.5], [0, 0], color=MUTED, lw=0.8)
     # goal frame
     ax.plot([11, 11, 11, 11], [-W, -W, W, W], [0, H, H, 0], color=INK, lw=2.2)
     for name, (p, rec) in paths.items():
-        ax.plot(p[:, 0], p[:, 1], 0 * p[:, 2], color=colors[name], lw=0.8, alpha=0.35)   # shadow
         ax.plot(p[:, 0], p[:, 1], p[:, 2], color=colors[name], lw=1.8)
         ax.plot([p[-1, 0]], [p[-1, 1]], [p[-1, 2]], marker="o", ms=4, color=colors[name])
-    ax.plot(nospin[:, 0], nospin[:, 1], 0 * nospin[:, 2], color=MUTED, lw=0.8, ls="--", alpha=0.6)
-    ax.plot(nospin[:, 0], nospin[:, 1], nospin[:, 2], color=MUTED, lw=1.2, ls="--")
     ax.plot([r0[0]], [r0[1]], [r0[2]], marker="o", ms=4, color=INK)
     ax.plot(obs[:, 0], obs[:, 1], obs[:, 2], marker="o", ms=4, mfc="white", mec=INK, ls="none")
     ax.set_xlim(0, 11.5)
@@ -134,10 +131,9 @@ def main():
 
     handles = [plt.Line2D([], [], color=colors[n], lw=1.8) for n in paths]
     labels = [f"{n}: {label(rec)}" for n, (p, rec) in paths.items()]
-    handles += [plt.Line2D([], [], color=MUTED, lw=1.2, ls="--"),
-                plt.Line2D([], [], marker="o", ms=4, mfc="white", mec=INK, ls="none")]
-    labels += ["No spin (best fit, does not match the data)", "Observed positions"]
-    fig.legend(handles, labels, loc="lower center", ncol=1, bbox_to_anchor=(0.5, 0.0), fontsize=7.5)
+    handles += [plt.Line2D([], [], marker="o", ms=4, mfc="white", mec=INK, ls="none")]
+    labels += ["Observed positions"]
+    fig.legend(handles, labels, loc="lower center", ncol=1, bbox_to_anchor=(0.5, -0.02), fontsize=6.5)
     FIG.mkdir(exist_ok=True)
     fig.savefig(FIG / "example_trajectories.pdf", bbox_inches=None)
     fig.savefig(FIG / "example_trajectories.png", dpi=300, bbox_inches=None)
