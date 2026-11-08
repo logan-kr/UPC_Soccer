@@ -1050,8 +1050,205 @@ using $N_{\mathrm{eff}}$ in place of $N$ \citep{scott1992}.
 \section{Results}
 \label{sec:results}
 % =====================================================================
-% Scenario answer, figures, comparison methods, synthetic validation,
-% sensitivity analysis.
+
+We apply the Monte Carlo method to the scenario of Table~\ref{tab:scenario}
+and then test it on simulated kicks whose true crossing points are known.
+Unless stated otherwise, results use the standard model
+(Section~\ref{sec:variants}), the measurement error
+$\sigma = \SI{2.9}{\milli\metre}$ that follows from the rounding of the data
+(Section~\ref{sec:priors}), and $N = 100{,}000$ draws.
+
+\subsection{Predicted Crossing Point}
+\label{sec:prediction}
+
+The ball is most likely to cross the goal plane at
+\begin{equation}
+  (y, z) = (2.59, 1.95)\,\si{\metre},
+  \label{eq:answer}
+\end{equation}
+in the upper corner on the kicker's left, \SI{1.07}{\metre} inside the post
+and \SI{0.49}{\metre} below the crossbar
+(Figure~\ref{fig:predicted}, left). The prediction is tight: the standard
+deviation is \SI{8}{\centi\metre} across and \SI{13}{\centi\metre} in height,
+and the 68\% and 95\% regions cover \SI{0.074}{} and
+\SI{0.19}{\metre\squared}. Every weighted draw crosses inside the frame, so
+the probability that the shot is on target exceeds 0.999. The ball reaches
+the goal \SI{0.39}{\second} after the kick.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{predicted_crossings}
+  \caption{Predicted crossing distribution for three values of the
+    measurement error $\sigma$, seen from the kicker's position. Shading is
+    the probability density; the solid and dashed lines enclose 68\% and
+    95\% of the probability. The black lines are the left post and the
+    crossbar. The star is the most likely crossing point, and the open circle
+    is the best exact fit of Section~\ref{sec:exact-fits}. At
+    $\sigma = \SI{1}{\centi\metre}$ the two nearly coincide.}
+  \label{fig:predicted}
+\end{figure}
+
+The prediction is this precise because the observations, read to the
+nearest centimeter, are enough to measure the curl. The weights pull the
+spin from $4.7 \pm 2.7$\,\si{\rev\per\second} in the prior to
+$7.5 \pm 1.4$\,\si{\rev\per\second}, with an axis that is almost pure
+sidespin curling the ball to the kicker's right. They also favor slightly
+more drag ($f_D = 1.25 \pm 0.08$, against $1.18 \pm 0.10$ in the prior). The
+lift factor, the ball's mass and the screw spin keep their prior
+distributions: the observations cannot tell their values apart. Because the
+weights concentrate on a minority of draws, the effective sample size is
+5{,}017 of 100{,}000, still enough for a smooth density.
+
+For comparison, the constant-acceleration curve through the three positions
+(the starting guess of Section~\ref{sec:search}) crosses at
+$(2.49, 1.92)$\,\si{\metre}, with a linearized uncertainty of
+\SI{17}{\centi\metre} in each direction. It lands close to our answer here,
+but it has no physics to say why the path curves, and on simulated kicks its
+errors are 50\% larger (Section~\ref{sec:validation}).
+
+\subsection{Effect of Measurement Precision}
+\label{sec:sigma}
+
+How sharp the prediction is depends mainly on how precisely the ball's
+position is known (Table~\ref{tab:sigma}, Figure~\ref{fig:predicted}). The
+curvature that reveals the sidespin is about \SI{1}{\centi\metre} over the
+first \SI{0.1}{\second} (Section~\ref{sec:fixed-lessons}). With
+$\sigma = \SI{2.9}{\milli\metre}$ that curvature is measured. With
+$\sigma = \SI{1}{\centi\metre}$ it is only partly resolved, and the region
+spreads toward the post and the crossbar. With $\sigma = \SI{2}{\centi\metre}$
+it is lost in the noise: the weights barely change the inputs
+($N_{\mathrm{eff}}$ is 95\% of $N$), the most likely point moves to
+$(3.20, 2.00)$\,\si{\metre}, close to where a ball without spin would cross,
+and the spread is set almost entirely by the spin distribution. At
+$\sigma = \SI{5}{\centi\metre}$ the probability of a goal falls to 0.71.
+A real tracking system or a goalkeeper's eye is closer to the larger values
+than to the rounding of the given data, so in practice the uncertainty is
+likely to be several times larger than in Equation~\eqref{eq:answer}.
+
+\begin{table}[H]
+  \centering
+  \caption{Prediction against measurement error (standard model,
+    $N = 100{,}000$). The spread is the standard deviation across and in
+    height.}
+  \label{tab:sigma}
+  \small
+  \begin{tabular}{cccccccc}
+    \toprule
+    $\sigma$ & Most likely $(y, z)$ & Spread & 95\% region & $N_{\mathrm{eff}}$
+      & $P(\text{on target})$ & $P(\text{wide})$ & $P(\text{over})$ \\
+    (\si{\centi\metre}) & (\si{\metre}) & (\si{\centi\metre}) & (\si{\metre\squared}) & & & & \\
+    \midrule
+    0.29 & $(2.59, 1.95)$ & $8 \times 13$  & 0.19 & 5{,}017  & 1.000 & 0.000 & 0.000 \\
+    1    & $(2.66, 1.92)$ & $31 \times 22$ & 0.92 & 62{,}786 & 0.891 & 0.025 & 0.084 \\
+    2    & $(3.20, 2.00)$ & $38 \times 23$ & 1.24 & 95{,}079 & 0.775 & 0.110 & 0.115 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Effect of the Physics and the Input Distributions}
+\label{sec:sensitivity}
+
+The three model variants give nearly the same answer. At
+$\sigma = \SI{2.9}{\milli\metre}$ the most likely point is
+$(2.60, 1.93)$\,\si{\metre} for the basic model, $(2.59, 1.95)$ for the
+standard model and $(2.59, 1.96)$ for the extended model, with spreads that
+agree to within a few millimeters. Buoyancy, added mass, spin decay and
+knuckling are all real, but for this kick none of them moves the prediction
+by more than \SI{2}{\centi\metre}.
+
+To see how much the answer depends on the input distributions, we changed
+them one at a time (Table~\ref{tab:sensitivity}). These runs use 10{,}000
+draws, so their most likely points are uncertain by a few centimeters. The
+drag factor and the spin decay hardly matter. The lift factor and the range
+of spin rates matter more: fixing the lift at its published value moves the
+most likely point \SI{13}{\centi\metre} toward the center of the goal.
+Halving or widening the spin range moves it by
+\SIrange{7}{14}{\centi\metre} across. These shifts are comparable to the
+stated spread, so the lift curve and the spin range are the assumptions that
+most deserve better data.
+
+\begin{table}[H]
+  \centering
+  \caption{Prediction when one input distribution is changed (standard
+    model, $\sigma = \SI{2.9}{\milli\metre}$, $N = 10{,}000$).}
+  \label{tab:sensitivity}
+  \small
+  \begin{tabular}{lcc}
+    \toprule
+    Change & Most likely $(y, z)$ (\si{\metre}) & Spread (\si{\centi\metre}) \\
+    \midrule
+    None                                              & $(2.61, 2.00)$ & $9 \times 13$ \\
+    Spin rates up to \SI{4.65}{\rev\per\second} (halved) & $(2.75, 1.94)$ & $7 \times 10$ \\
+    Spin rates up to \SI{14}{\rev\per\second} ($\times 1.5$) & $(2.54, 1.93)$ & $8 \times 14$ \\
+    Lift factor fixed at 1                            & $(2.48, 2.02)$ & $10 \times 14$ \\
+    Lift factor fixed at 0.75                         & $(2.65, 2.00)$ & $6 \times 12$ \\
+    Drag factor fixed at 1                            & $(2.60, 1.98)$ & $8 \times 13$ \\
+    Drag factor fixed at 1.35                         & $(2.61, 1.96)$ & $9 \times 13$ \\
+    No spin decay                                     & $(2.61, 1.95)$ & $8 \times 13$ \\
+    Fast spin decay ($L = \SIrange{40}{80}{\metre}$)  & $(2.63, 1.99)$ & $9 \times 13$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Comparison with the Exact Fits}
+\label{sec:compare}
+
+The Monte Carlo answer agrees with Section~\ref{sec:exact-fits}. Its most
+likely point lies \SI{9}{\centi\metre} from the best exact fit at
+$(2.68, 1.92)$\,\si{\metre}, and between that fit and the crossing of the
+fastest measured spins near $(2.5, 2.2)$\,\si{\metre}. Its spread is
+smaller than the range of consistent crossings in Table~\ref{tab:fixed}
+(\SI{0.8}{\metre} by \SI{0.6}{\metre}), because the Monte Carlo draws spin
+only from the range of measured kicks, up to \SI{9.3}{\rev\per\second},
+while the consistent fits reach \SI{28}{\rev\per\second}. Both methods
+place the ball in the same corner, about a meter inside the post.
+
+\subsection{Testing on Simulated Kicks}
+\label{sec:validation}
+
+A prediction with an uncertainty is only useful if the uncertainty is
+honest: the 68\% region should contain the true crossing point 68\% of the
+time. We tested this on 200 simulated kicks. For each kick we drew the true
+inputs from the distributions of Section~\ref{sec:priors}, a launch speed
+between \SI{20}{} and \SI{34}{\metre\per\second}, and an aim point anywhere
+on or around the goal, so that some kicks miss. We flew the ball, rounded
+its positions at \SI{0.05}{} and \SI{0.10}{\second} to the nearest
+centimeter as in the problem, and gave only those rounded positions to the
+method, which still assumes a Gaussian error with
+$\sigma = \SI{2.9}{\milli\metre}$. Each prediction used 5{,}000 draws.
+
+\begin{table}[H]
+  \centering
+  \caption{Predictions for 200 simulated kicks. Coverage is the fraction of
+    kicks whose true crossing lies inside the stated region, with its
+    standard error. The Brier score is the mean squared error of the
+    predicted probability of a goal (lower is better).}
+  \label{tab:validation}
+  \small
+  \begin{tabular}{lcccc}
+    \toprule
+    Method & 68\% coverage & 95\% coverage & Median miss (\si{\centi\metre}) & Brier score \\
+    \midrule
+    Monte Carlo (ours)           & $0.680 \pm 0.033$ & $0.985 \pm 0.015$ & 18 & 0.044 \\
+    Constant acceleration        & $0.675 \pm 0.033$ & $0.960 \pm 0.015$ & 27 & 0.066 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The stated uncertainty is honest (Table~\ref{tab:validation}). The 68\%
+region contains the true crossing in 68.0\% of kicks, and the 95\% region
+in 98.5\%, slightly more than stated and so on the safe side. This holds
+even though the simulated errors come from rounding while the method
+assumes Gaussian errors, which supports that choice. The method misses the
+true crossing by \SI{18}{\centi\metre} in a typical kick, against
+\SI{27}{\centi\metre} for the constant-acceleration curve, and its
+probability of a goal is more accurate. The constant-acceleration curve is
+also honest about its uncertainty here, but only because its regions are
+about 50\% wider; the physics buys a sharper prediction at the same
+reliability. These kicks share the method's own physics and distributions,
+so the test shows that the method is internally consistent, not that its
+assumptions match real football; Section~\ref{sec:discussion} returns to
+this.
 
 % =====================================================================
 \section{Discussion}
