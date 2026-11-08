@@ -1136,18 +1136,11 @@ it is wide.
     $\sigma = \SI{2.9}{\milli\metre}$, from a run of 10{,}000 draws), seen from
     behind the goal looking back toward the kicker: the draw that crosses
     nearest the most likely point and two draws at opposite ends of the 95\%
-    region. The dashed line is the constant-acceleration curve through the
-    kick point and the two observations. Spin rates are in revolutions per
-    second.}
+    region. For reference, the dashed line is a constant-acceleration curve
+    through the kick point and the two observations. Spin rates are in
+    revolutions per second.}
   \label{fig:trajectories}
 \end{figure}
-
-For comparison, the constant-acceleration curve through the three positions
-(the starting guess of Section~\ref{sec:search}) crosses at
-$(2.49, 1.92)$\,\si{\metre}, with a linearized uncertainty of
-\SI{17}{\centi\metre} in each direction. It lands close to our answer here,
-but it has no physics to say why the path curves, and on simulated kicks its
-errors are 50\% larger (Section~\ref{sec:validation}).
 
 \subsection{Effect of Measurement Precision}
 \label{sec:sigma}
@@ -1258,29 +1251,13 @@ Section~\ref{sec:priors}, a launch speed between \SI{20}{} and
 the method only the ball's positions at \SI{0.05}{} and \SI{0.10}{\second},
 rounded to the nearest centimeter as in the problem.
 
-\begin{table}[H]
-  \centering
-  \caption{Results for 200 simulated kicks. With 200 kicks, each fraction is
-    uncertain by about $\pm 0.03$.}
-  \label{tab:validation}
-  \small
-  \begin{tabular}{lccc}
-    \toprule
-    Method & Inside 68\% region & Inside 95\% region & Median miss (\si{\centi\metre}) \\
-    \midrule
-    Monte Carlo (ours)    & 0.680 & 0.985 & 18 \\
-    Constant acceleration & 0.675 & 0.960 & 27 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 The true crossing landed inside the 68\% region for 68\% of the kicks and
-inside the 95\% region for 98.5\% (Table~\ref{tab:validation}), so the
-stated uncertainty is accurate, and if anything slightly cautious. This
-holds even though the data are rounded while the method assumes Gaussian
-errors. The most likely point misses the truth by \SI{18}{\centi\metre} in
-a typical kick, against \SI{27}{\centi\metre} for the constant-acceleration
-curve, whose regions are also about 50\% wider. Because the simulated kicks
+inside the 95\% region for 98.5\%; with 200 kicks, each of these fractions
+is uncertain by about $\pm 0.03$. The stated uncertainty is therefore
+accurate, and if anything slightly cautious, even though the data are
+rounded while the method assumes Gaussian errors. The most likely point
+misses the true crossing by \SI{18}{\centi\metre} in a typical kick. Because the simulated kicks
 follow our own model, this shows that the method is consistent with its
 assumptions, not that the assumptions match real football; we test that
 next.
@@ -1332,8 +1309,7 @@ procedure and the code.
     \toprule
     & Sideways & Height & Overall \\
     \midrule
-    Median miss, Monte Carlo (\si{\centi\metre})        & 14   & 24   & 33 \\
-    Median miss, constant acceleration (\si{\centi\metre}) & & & 107 \\
+    Median miss (\si{\centi\metre})                     & 14   & 24   & 33 \\
     Within two predicted standard deviations            & 0.94 & 0.59 & \\
     Inside 68\% / 95\% region                            &      &      & 0.35 / 0.59 \\
     \bottomrule
@@ -1352,9 +1328,8 @@ horizontal ones, and the error drifts slowly rather than varying
 independently from one reading to the next. A drift between the two
 observations looks like a wrong vertical speed, which grows to tens of
 centimeters by the plane, while our error model assumes independent errors.
-Even so, the physics makes a large difference: the constant-acceleration
-curve, which is far more sensitive to noisy positions, misses by
-\SI{107}{\centi\metre}, three times as much.
+For reference, a constant-acceleration curve through the same positions
+misses by \SI{107}{\centi\metre}.
 
 The test is small, its kicks are passes and shots in open play rather than
 penalties, and the true crossing is measured by the same noisy system. We
