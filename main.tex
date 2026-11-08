@@ -1111,6 +1111,32 @@ distributions: the observations cannot tell their values apart. Because the
 weights concentrate on a minority of draws, the effective sample size is
 5{,}017 of 100{,}000, still enough for a smooth density.
 
+Figure~\ref{fig:trajectories} shows three of the draws: the one that crosses
+nearest the most likely point and two at opposite ends of the 95\% region,
+with the best trajectory without spin for reference. All three pass through
+the observed positions, and by the goal all three have curled about
+\SI{60}{\centi\metre} to the kicker's right of the path without spin. They
+differ mainly in height: a little more backspin carries the ball about
+\SI{25}{\centi\metre} higher than the most likely path, and a little topspin
+about \SI{30}{\centi\metre} lower. The observations pin down the sidespin
+better than the backspin, which is why the predicted region is taller than
+it is wide.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{example_trajectories}
+  \caption{Three trajectories from the Monte Carlo draws (standard model,
+    $\sigma = \SI{2.9}{\milli\metre}$, from a run of 10{,}000 draws): the draw
+    that crosses nearest the most likely point and two draws at opposite ends
+    of the 95\% region. The dashed line is the best fit without spin, which
+    does not match the observations. Top: the flight seen from above and from
+    the side. Bottom: the same flights relative to the path without spin,
+    magnified; the observed positions sit about \SI{1}{\centi\metre} off it,
+    which is the curvature that reveals the spin. Spin rates are in
+    revolutions per second.}
+  \label{fig:trajectories}
+\end{figure}
+
 For comparison, the constant-acceleration curve through the three positions
 (the starting guess of Section~\ref{sec:search}) crosses at
 $(2.49, 1.92)$\,\si{\metre}, with a linearized uncertainty of
