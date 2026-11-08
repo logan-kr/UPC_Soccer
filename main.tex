@@ -552,23 +552,45 @@ kicker's left, $+y$) and $\omega_f$ is screw spin about the direction of
 travel. We quote spin rates in revolutions per second
 (\si{\rev\per\second}).
 
-\subsection{Why Screw spin is Set to Zero}
+\subsection{Screw Spin Simplification}
 \label{sec:screw}
 
-With all six unknowns free, the six observations can be matched exactly. We
-solved for them by least squares from several starting points. The only exact
-solutions we found need a screw spin of nearly \SI{1000}{\rev\per\second},
-more than a hundred times the spin of measured kicks
-\citep{tsukada2011, whiteside2010}. They arise because screw spin
-produces no lift by itself (Equation~\ref{eq:sperp}); it acts only through the
-small angle that opens between the spin axis and the velocity as the path
-bends, so an enormous screw spin is needed to have any effect. These solutions
-are artifacts of the six-equation count, not kicks. Adding up to
-\SI{30}{\rev\per\second} of screw spin to our best fit below changes its
-misses by less than \SI{0.5}{\milli\metre}, so we set $\omega_f = 0$. That
-leaves five unknowns, $\bm{v}_0$, $\omega_b$ and $\omega_s$, for six observed
-numbers. The system is overdetermined, so we cannot expect an exact fit and
-instead ask for a fit within the precision of the data.
+Screw spin is rotation about the direction of travel, like the spiral of a
+thrown American football. Backspin and sidespin turn the ball about axes
+perpendicular to its velocity, so they deflect the airflow and produce Magnus
+lift from the moment of launch. Screw spin does not: at launch its axis is
+parallel to the velocity, so $\bm{\omega}\times\bm{v} = \bm{0}$ and it adds
+nothing to $S_\perp$ (Equation~\ref{eq:sperp}).
+
+Screw spin starts to matter only once the path bends. The spin axis keeps its
+direction (Section~\ref{sec:spin-decay}) while gravity and lift turn the
+velocity, so an angle $\phi$ opens between them, and a screw spin $\omega_f$
+then acts like a perpendicular spin of $\omega_f \sin\phi$. For our best fit
+(Section~\ref{sec:search}) the velocity has turned by only \SI{1.3}{\degree}
+at the first observation and \SI{2.6}{\degree} at the second, so during the
+observed part of the flight screw spin acts at less than \SI{5}{\percent} of
+its rate. Adding up to \SI{30}{\rev\per\second} of screw spin to that fit
+changes its misses by less than \SI{0.5}{\milli\metre}.
+
+With $\omega_f$ included, the model has six unknowns (three components each of
+the launch velocity and the spin), the same as the number of observed
+coordinates (three at each of $t_1$ and $t_2$), so an exact match is possible
+in principle. We searched for exact solutions by least squares from several
+starting points. The only ones we found need a screw spin of nearly
+\SI{1000}{\rev\per\second}, more than a hundred times the spin of measured
+kicks \citep{tsukada2011, whiteside2010}. The other five unknowns already fit
+every coordinate to within \SI{0.9}{\milli\metre}. Removing the last fraction
+of a millimeter takes a lift that grows as the path bends, which screw spin
+produces and backspin and sidespin do not. Because screw spin reaches the ball
+only through the small angle $\phi$, producing even this small correction
+takes an enormous spin rate. These exact solutions come from having as many
+unknowns as equations, not from a realistic kick, so we set $\omega_f = 0$.
+
+That leaves five unknowns, $\bm{v}_0$, $\omega_b$ and $\omega_s$, for six
+observed coordinates. In general no trajectory then passes exactly through
+both observations, so instead of an exact fit we look for trajectories that
+match the observations to within their rounding
+(Section~\ref{sec:consistency}).
 
 \subsection{Existence and Uniqueness}
 \label{sec:uniqueness}
