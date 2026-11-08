@@ -140,7 +140,7 @@ def main():
     labels = [f"{n}: {label(rec)}" for n, (p, rec) in paths.items()]
     handles += [plt.Line2D([], [], color=INK2, lw=1.2, ls="--"),
                 plt.Line2D([], [], marker="o", ms=4, mfc="white", mec=INK, ls="none")]
-    labels += ["Constant acceleration through the observations (no physics)", "Observed positions"]
+    labels += ["Constant-acceleration curve through the observations", "Observed positions"]
     fig.legend(handles, labels, loc="lower center", ncol=1, bbox_to_anchor=(0.5, -0.02), fontsize=6.5)
     FIG.mkdir(exist_ok=True)
     fig.savefig(FIG / "example_trajectories.pdf", bbox_inches=None)
