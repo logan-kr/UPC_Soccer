@@ -874,8 +874,277 @@ everything the observations cannot determine.
 \section{Monte Carlo Model}
 \label{sec:montecarlo}
 % =====================================================================
-% Sampled variables and their priors (with sources), velocity fit per draw,
-% likelihood weights, spin decay, summaries (KDE mode, HPD regions).
+
+Section~\ref{sec:exact-fits} showed that the two observations fix the launch
+velocity to within about \SI{0.5}{\metre\per\second} but leave the spin
+poorly determined, and that the answer depends on quantities we held fixed,
+such as the ball's mass and its aerodynamic coefficients. The Monte Carlo
+method treats every quantity the observations cannot determine as a random
+variable with a distribution taken from measurements. Each sample (a
+\emph{draw}) picks values for these quantities, finds the launch velocity
+that best explains the observations, and flies the ball to the goal. Draws
+whose physics explains the observations well count for more. The weighted
+collection of crossing points is our prediction.
+
+\subsection{Sampled quantities}
+\label{sec:priors}
+
+We write $\bm{\theta}$ for the quantities sampled in each draw. They and
+their distributions are listed in Table~\ref{tab:priors}. All are drawn
+independently and uniformly between bounds taken from the literature. We use
+uniform distributions because the sources report a handful of kicks or balls
+rather than a distribution, and because a uniform range makes the assumption
+easy to state and to test.
+
+\begin{table}[H]
+  \centering
+  \caption{Quantities sampled in each draw. All are independent and uniform.}
+  \label{tab:priors}
+  \small
+  \begin{tabular}{llll}
+    \toprule
+    Quantity & Symbol & Range & Source \\
+    \midrule
+    Spin rate             & $|\bm{\omega}_0|$ & \SIrange{0}{9.3}{\rev\per\second} & \citet{tsukada2011} \\
+    Spin-axis angle       & $\psi$            & \SIrange{-110}{110}{\degree} & \citet{tsukada2011, whiteside2010} \\
+    Spin-decay length     & $L$               & \SIrange{110}{350}{\metre} & \citet{tsukada2008} \\
+    Ball mass             & $m$               & \SIrange{0.41}{0.45}{\kilo\gram} & \citet{ifab2025} \\
+    Drag factor           & $f_D$             & \numrange{1.00}{1.35} & \citet{kiratidis2018} \\
+    Lift factor           & $f_L$             & \numrange{0.75}{1.00} & \citet{kiratidis2018} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Spin.} We use the launch-frame components of
+Section~\ref{sec:spin-frame} and set the screw spin to zero, as in
+Section~\ref{sec:screw}. The spin is then
+\begin{equation}
+  \omega_b = |\bm{\omega}_0| \cos\psi, \qquad
+  \omega_s = |\bm{\omega}_0| \sin\psi, \qquad
+  \omega_f = 0,
+  \label{eq:spinprior}
+\end{equation}
+so $\psi = 0$ is pure backspin and $\psi = \pm\SI{90}{\degree}$ is pure
+sidespin, with positive values curling the ball to the kicker's left.
+
+The ranges come from two high-speed video studies of kicked balls.
+\citet{tsukada2011} measured instep kicks spinning at $3.2 \pm 0.7$ and
+$3.3 \pm 1.0$\,\si{\rev\per\second} (mean $\pm$ standard deviation of ten
+kicks by each of two players), with the axis within about \SI{25}{\degree} of pure backspin,
+and in-front (curled) kicks at $7.5 \pm 0.9$ and
+$7.2 \pm 1.1$\,\si{\rev\per\second}, with the axis
+\SIrange{98}{108}{\degree} from backspin. \citet{whiteside2010} found
+$3.6 \pm 0.7$\,\si{\rev\per\second} for straight kicks and
+$5.8 \pm 0.8$\,\si{\rev\per\second} for curved ones. The upper limit on the
+rate is the mean plus two standard deviations of the fastest-spinning kicks,
+$7.5 + 2 \times 0.9 = \SI{9.3}{\rev\per\second}$, which covers about
+\SI{98}{\percent} of them if their rates are normally distributed. The angle range covers both kick types, curled in
+either direction because we do not know which foot the kicker uses, and stops
+at \SI{110}{\degree} because neither study found strong topspin. We do not
+choose a kick type: the uniform rate and angle cover both without favoring
+either.
+
+\paragraph{Spin decay and mass.} The decay length $L$ of
+Equation~\eqref{eq:spindecay} spans the range measured by
+\citet{tsukada2008} (Section~\ref{sec:spin-decay}), and the mass spans the
+legal range \citep{ifab2025}.
+
+\paragraph{Drag and lift factors.} Each draw multiplies the drag and lift
+coefficients of Equations~\eqref{eq:cd} and~\eqref{eq:cl} by independent
+factors,
+\begin{equation}
+  C_D \;\to\; f_D\, C_D(v, S_\perp), \qquad
+  C_L \;\to\; f_L\, C_L(v, S_\perp).
+  \label{eq:factors}
+\end{equation}
+\citet{kiratidis2018} give no uncertainties for their curves, and we do not
+know which ball is used. We therefore bound each factor by the spread of
+their own model across the four World Cup balls they characterize. For each
+ball we evaluate their drag curve (their Table~1 and Equations~5--7) and
+their lift model (their Equation~9) over the speeds and spin parameters of
+this kick, and divide by the Teamgeist values (Table~\ref{tab:balls}). The
+Teamgeist has the lowest drag and the most lift of the four, so both ranges
+run from the published curve, a factor of 1, to the most extreme ball,
+rounded outward. As an independent check, \citet{carre2002} measured lift
+coefficients \SIrange{20}{29}{\percent} below the Teamgeist curve, at
+somewhat higher spin parameters, which is inside the range of $f_L$.
+
+\begin{table}[H]
+  \centering
+  \caption{Drag and lift coefficients of the World Cup balls in
+    \citet{kiratidis2018} relative to the Teamgeist, over
+    \SIrange{25}{33}{\metre\per\second} and $0.02 \le S_\perp \le 0.2$.}
+  \label{tab:balls}
+  \begin{tabular}{lcc}
+    \toprule
+    Ball & $C_D / C_D^{\mathrm{Teamgeist}}$ & $C_L / C_L^{\mathrm{Teamgeist}}$ \\
+    \midrule
+    Jabulani & \numrange{1.02}{1.12} & \numrange{0.91}{0.99} \\
+    Tango 12 & \numrange{1.15}{1.25} & \numrange{0.82}{0.90} \\
+    Brazuca  & \numrange{1.20}{1.34} & \numrange{0.75}{0.87} \\
+    \midrule
+    Range used & \numrange{1.00}{1.35} & \numrange{0.75}{1.00} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+In their model a ball with more drag also has less lift. Drawing the two
+factors independently ignores this link and allows combinations no real ball
+has, which can only widen the predicted spread. The factor $f_D$ multiplies
+the drag force only; the drag coefficient inside the lift model
+(Equation~\eqref{eq:cl}) keeps its published value.
+
+\paragraph{Fixed quantities.} The air density is not sampled. A goalkeeper
+can know the conditions on the day, so we fix it at the sea-level value of
+the standard atmosphere, $\rho = \SI{1.225}{\kilo\gram\per\metre\cubed}$
+\citep{ussa1976}. The ball radius, gravity and still air are as in
+Section~\ref{sec:assumptions}.
+
+\paragraph{Measurement error.} The observed coordinates are rounded to the
+nearest centimeter. A rounding error spread uniformly over
+$\pm\SI{5}{\milli\metre}$ has standard deviation
+$\SI{1}{\centi\metre}/\sqrt{12} = \SI{2.9}{\milli\metre}$. We model each
+observed coordinate as the true position plus an independent Gaussian error
+with this standard deviation, $\sigma = \SI{2.9}{\milli\metre}$. Unlike the
+hard bound of Section~\ref{sec:consistency}, a Gaussian error lets us grade
+how well each draw fits rather than only accept or reject it. Section~\ref{sec:results}
+repeats the analysis with larger $\sigma$, as for a real tracking system.
+
+\subsection{One draw}
+\label{sec:draw}
+
+Each draw takes five steps.
+\begin{enumerate}
+  \item \textbf{Sample $\bm{\theta}$} from Table~\ref{tab:priors}.
+  \item \textbf{Fit the launch velocity.} Find the $\bm{v}_0^*$ that
+    minimizes
+    \begin{equation}
+      \chi^2(\bm{v}_0) = \sum_{i=1}^{2}
+        \frac{\big\|\bm{r}(t_i;\, \bm{v}_0, \bm{\theta}) - \tilde{\bm{r}}_i\big\|^2}{\sigma^2},
+      \label{eq:chi2}
+    \end{equation}
+    the sum of the six squared misses in units of $\sigma$, by the
+    Levenberg--Marquardt method of Section~\ref{sec:search}. Call the minimum
+    $\chi^2_{\min}$.
+  \item \textbf{Weight the draw} by
+    \begin{equation}
+      w = e^{-\chi^2_{\min}/2},
+      \label{eq:weight}
+    \end{equation}
+    the likelihood of the observations under this draw's physics.
+  \item \textbf{Sample the launch velocity} from a normal distribution
+    centered on $\bm{v}_0^*$ with covariance $(J^\mathsf{T}J)^{-1}$, where $J$
+    is the $6 \times 3$ matrix of derivatives of the six misses (divided by
+    $\sigma$) with respect to $\bm{v}_0$. This is the uncertainty that the
+    measurement error alone leaves in the launch velocity, about
+    \SI{0.03}{\metre\per\second} in each component.
+  \item \textbf{Fly the ball} from $\bm{r}_0$ with this launch velocity until
+    its center reaches $x = 11$, and record the crossing point $(y, z)$ and
+    whether the shot is on target, wide or over.
+\end{enumerate}
+Every draw has its own random seed, so the results are reproducible and
+independent of how the draws are split across processors. We use
+$N = 100{,}000$ draws per run.
+
+\paragraph{Why this gives the right distribution.} By Bayes' theorem, the
+probability of $\bm{\theta}$ and $\bm{v}_0$ given the observations $d$ is
+proportional to the probability of the observations given them, times the
+prior probability of $\bm{\theta}$:
+\begin{equation}
+  p(\bm{\theta}, \bm{v}_0 \mid d) \;\propto\;
+  e^{-\chi^2(\bm{v}_0;\, \bm{\theta})/2}\; p(\bm{\theta}).
+  \label{eq:bayes}
+\end{equation}
+We take all launch velocities to be equally likely beforehand, since the
+observations fix $\bm{v}_0$ far more tightly than any prior knowledge could.
+Step~1 samples $\bm{\theta}$ from $p(\bm{\theta})$, and the weight of step~3
+supplies the remaining factor. This is importance sampling with the prior as
+the proposal \citep{robert2004}. Near its minimum $\chi^2$ is close to
+quadratic in $\bm{v}_0$, so for a given $\bm{\theta}$ the launch velocity is
+approximately normal with the mean and covariance of step~4. Integrating that
+normal over $\bm{v}_0$ would add a factor $|J^\mathsf{T}J|^{-1/2}$ to the
+weight \citep{tierney1986}. We omit it: it varies by at most about
+\SI{5}{\percent} across draws, because the launch velocity is set mainly by
+the positions and times rather than by the physics.
+
+The spread of the weights measures how much the observations narrow down
+$\bm{\theta}$. We report the effective sample size
+\begin{equation}
+  N_{\mathrm{eff}} = \frac{\left(\sum_n w_n\right)^2}{\sum_n w_n^2},
+  \label{eq:ess}
+\end{equation}
+which is $N$ when every draw fits equally well and approaches 1 when a single
+draw dominates \citep{kish1965}.
+
+\subsection{From draws to a prediction}
+\label{sec:summaries}
+
+The weighted crossing points sample the probability distribution of where
+the ball crosses the goal plane. We estimate its density with a weighted
+Gaussian kernel density estimate, with the bandwidth set by Scott's rule
+using $N_{\mathrm{eff}}$ in place of $N$ \citep{scott1992}.
+\begin{itemize}
+  \item \textbf{Most likely crossing point.} The peak of the density, found on
+    a $120 \times 120$ grid and refined with the Nelder--Mead method
+    \citep{nelder1965}.
+  \item \textbf{Uncertainty regions.} The 68\% and 95\% highest-density
+    regions: the smallest regions that contain that fraction of the
+    probability. Each is the set of points where the density exceeds a
+    threshold, chosen so that the draws above it carry 68\% or 95\% of the
+    total weight \citep{hyndman1996}.
+  \item \textbf{Spread.} The weighted mean and standard deviation of $y$ and
+    $z$.
+  \item \textbf{Outcome probabilities.} The weighted fractions of draws that
+    are on target, wide or over.
+\end{itemize}
+
+\subsection{Model variants}
+\label{sec:variants}
+
+To see how much the answer depends on the physics, we run three versions of
+the model on the same random draws, so that differences between them are not
+Monte Carlo noise.
+\begin{itemize}
+  \item \textbf{Basic:} gravity, drag and lift
+    (Equations~\eqref{eq:accel} and~\eqref{eq:factors}) with constant spin.
+  \item \textbf{Standard:} the basic model with spin decay
+    (Equation~\eqref{eq:spindecay}), buoyancy and added mass.
+  \item \textbf{Extended:} the standard model with a knuckling force.
+\end{itemize}
+Wind is left out of all three (Section~\ref{sec:assumptions}).
+
+\paragraph{Buoyancy and added mass.} The ball displaces a mass of air
+$\rho V = \SI{6.8}{\gram}$, where $V = \tfrac{4}{3}\pi r^3$, about
+\SI{1.6}{\percent} of its own mass. Buoyancy reduces its weight by $\rho V g$.
+Accelerating the ball also accelerates the air around it, which adds half the
+displaced mass to its inertia but not to its weight \citep{batchelor1967}.
+With both effects, Equation~\eqref{eq:eom} becomes
+\begin{equation}
+  \left(m + \tfrac{1}{2}\rho V\right) \dot{\bm{v}}
+  = (m - \rho V)\,\bm{g} + \bm{F}_D + \bm{F}_L .
+  \label{eq:eom-air}
+\end{equation}
+
+\paragraph{Knuckling.} A ball kicked with little spin can swerve erratically
+as its wake sheds unevenly \citep{mizota2013}. We model this as an
+oscillating sideways force,
+\begin{equation}
+  \bm{F}_k = \tfrac{1}{2}\rho A\, C_k\, |\bm{v}|^2\,
+  \min\!\left(1, \frac{\omega_c}{|\bm{\omega}|}\right)
+  \sin(2\pi f t + \phi)\, \hat{\bm{k}},
+  \label{eq:knuckle}
+\end{equation}
+where $\hat{\bm{k}}$ is a unit vector perpendicular to the launch velocity.
+Its direction around the flight path and the phase $\phi$ are drawn uniformly
+in each draw. We take the peak coefficient $C_k = 0.10$, the low end of the
+forces \citet{hong2010} measured on kicked knuckleballs (about \SI{2}{\newton}
+at \SIrange{20}{30}{\metre\per\second}), and their average frequency
+$f = \SI{3.5}{\hertz}$. The force is at full strength up to
+$\omega_c = \SI{1}{\rev\per\second}$, below which \citet{mizota2013} observed
+knuckling, and weakens in proportion to $1/|\bm{\omega}|$ above it, because a
+spinning ball turns the force around and averages it out. Where the two
+sources differ we take the more modest value, so the extended model is more
+likely to understate knuckling than to overstate it.
 
 % =====================================================================
 \section{Results}
