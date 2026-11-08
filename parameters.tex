@@ -1,0 +1,51 @@
+\begin{table}[!p]
+\centering
+\caption{Physical parameters, empirical priors, and numerical constraints.}
+\label{tab:parameters_constants}
+\footnotesize % 1-2 points smaller than body text (9pt in 11pt document; change to \scriptsize for 8pt if desired)
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.02}
+\begin{tabularx}{\textwidth}{@{} l l c c X @{}}
+\toprule
+Symbol & Parameter Name & Value / Prior & Units & Bounds, Constraints \& Literature Origin \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{1. Ball and Pitch Geometry}} \\
+$r$ & Ball radius & $0.11$ & $\text{m}$ & $[0.11, 0.11]$ fixed; matches rest height $z_0 = 0.11\,\text{m}$ (FIFA Law 2 size 5: $68\text{--}70\,\text{cm}$ circumference). \\
+$m$ & Ball mass & $\mathcal{U}(0.41, 0.45)$ & $\text{kg}$ & $[0.41, 0.45]$; uniform prior from FIFA Law 2 match ball kickoff specifications. \\
+$x_{\text{goal}}$ & Goal distance & $11.0$ & $\text{m}$ & Fixed terminal plane; penalty mark to goal line ($12\,\text{yards} = 10.97\,\text{m} \approx 11.0\,\text{m}$; FIFA Law 1). \\
+$y_{\text{goal}}$ & Goal half-width & $3.66$ & $\text{m}$ & On-target threshold $\lvert y \rvert < 3.66\,\text{m}$ (total goal width $8\,\text{yards} = 7.32\,\text{m}$; FIFA Law 1). \\
+$z_{\text{goal}}$ & Crossbar height & $2.44$ & $\text{m}$ & On-target threshold $0 < z < 2.44\,\text{m}$ (crossbar height $8\,\text{feet} = 2.44\,\text{m}$; FIFA Law 1). \\
+$\varepsilon_g$ & Ground contact offset & $10^{-6}$ & $\text{m}$ & Fixed offset for terminal absorbing ground event $z = r - \varepsilon_g$ (prevents $t=0$ trigger). \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{2. Environmental and Fluid Properties}} \\
+$g$ & Gravitational accel. & $9.81$ & $\text{m/s}^2$ & Fixed sea-level terrestrial gravity. \\
+$\rho$ & Ambient air density & $\mathcal{N}(1.20, 0.03^2)$ & $\text{kg/m}^3$ & Feasible $[1.10, 1.30]$; truncated at $\rho > 0$. Covers stadium temperature and pressure variations. \\
+$\mathbf{v}_{\text{wind}}$ & Ambient wind & $[0, 0, 0]^T$ & $\text{m/s}$ & Default off; camera observations over $0.10\,\text{s}$ cannot detect wind ($\Delta \chi^2 \approx 0.02$). \\
+$k$ & Aerodynamic factor & $0.053$ & $\text{m}^{-1}$ & $\rho \pi r^2 / (2m)$; derived frontal area mass loading scale. \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{3. Launch Kinematics and Rotational Dynamics}} \\
+$v_0$ & Launch speed & $31.5$ & $\text{m/s}$ & $[20.0, 34.0]$ ($72\text{--}122\,\text{km/h}$); fitted per draw by least squares in MC pipeline. \\
+$N$ & Spin rate & $\mathcal{U}(0.0, 8.0)$ & $\text{rev/s}$ & $[0.0, 8.0]$; \textbf{Tsukada \& Sakurai} ($3.2\text{--}7.5\,\text{rev/s}$) and \textbf{Whiteside et al.} ($3.1\text{--}6.6\,\text{rev/s}$). \\
+$\psi$ & Spin tilt angle & $\mathcal{U}(-110, 110)$ & $\text{deg}$ & Angle from backspin ($\psi = 0^\circ$). \textbf{Tsukada \& Sakurai}: $-8^\circ\text{--}+24^\circ$ instep, $98^\circ\text{--}108^\circ$ infront. \\
+$L$ & Spin decay length & $\mathcal{U}(110, 350)$ & $\text{m}$ & $[110.0, 350.0]$; \textbf{Tsukada \& Sakurai (2008)}: $5\text{--}15\%$ spin decay over $18\,\text{m}$ ($L = -18/\ln(1-f)$). \\
+$\dot{\omega}/\omega$ & Spin-down rate & $-u / L$ & $\text{s}^{-1}$ & \textbf{Tavares et al.} and \textbf{James \& Haake (2008)}: roll damping proportional to $\omega \times u$. \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{4. Aerodynamic Drag and Lift Models (Kiratidis \& Leinweber 2018)}} \\
+$a$ & Subcritical drag & $0.4927$ & --- & Laminar non-spinning drag coefficient $C_{D0}$ at low airspeed ($u \to 0$). \\
+$b_{\min}, b_{\max}$ & Supercritical drag & $0.1440, 0.1540$ & --- & Post-crisis turbulent drag plateau for Teamgeist ball ($u > 23\,\text{m/s}$). \\
+$v_c, v_s$ & Drag crisis center/width & $12.58, 1.071$ & $\text{m/s}$ & Midpoint speed and velocity transition width of boundary-layer drag crisis. \\
+$b_{\text{spin}}$ & Spin-drag slope & $0.514$ & --- & Transverse spin-drag increment in $C_D = C_{D0}(u) + b_{\text{spin}} S_\perp$. \\
+$\alpha, \beta$ & Lift coefficients & $1.15, 0.83$ & --- & Power-law fit parameters in $C_L \propto \alpha S_\perp^\beta$ to \textbf{Asai et al. (2007)} wind-tunnel data. \\
+$\text{Re}_{\text{ref}}, S_{\text{ref}}$ & Reference parameters & $333{,}793, 0.19$ & --- & Calibration anchor point ($C_L = 0.29$) with $v_{\text{ref}} = 23.58\,\text{m/s}$ (\textbf{Goff \& Carr\'e 2010}). \\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{5. Knuckling, Observational Noise, and Solver Constraints}} \\
+$\text{amp}$ & Knuckle amplitude & $\mathcal{U}(0.05, 0.15)$ & --- & \textbf{Mizota et al. (2013)}: Std dev of random $C_L(t)$ and $C_S(t)$ forces ($0.05$ tunnel, $0.15$ flight). \\
+$f_{\text{band}}$ & Knuckle frequency & $[0.7, 2.5]$ & $\text{Hz}$ & Unsteady wake vortex fluctuation band from wind-tunnel power spectra. \\
+$N_{\text{full}}, N_{\text{off}}$ & Knuckle spin cutoffs & $1.0, 3.0$ & $\text{rev/s}$ & \textbf{Zhao et al. (2012)}: Full strength $\le 1.0\,\text{rev/s}$, fading to $0$ by $3.0\,\text{rev/s}$ where Magnus dominates. \\
+$\sigma$ & Observation uncertainty & $[0.02, 0.02, 0.02]$ & $\text{m}$ & Camera spatial noise per Cartesian coordinate; sets the $\chi^2$ scale in least squares. \\
+$\delta$ & Kick-time offset & $\mathcal{N}(0, 0.002^2)$ & $\text{s}$ & Sub-frame shutter synchronization offset ($2\,\text{ms}$ std dev; default off). \\
+$t_{\max}$ & Integration horizon & $2.0$ & $\text{s}$ & Safety cutoff time; penalty kicks reach the goal plane in $0.35\text{--}0.55\,\text{s}$. \\
+$\text{rtol}, \text{atol}$ & Integrator tolerances & $10^{-7}, 10^{-9}$ & --- & 8th-order Runge--Prince (\texttt{DOP853}) tolerances verified to $< 1\,\text{mm}$ crossing accuracy. \\
+\bottomrule
+\end{tabularx}
+\end{table}
