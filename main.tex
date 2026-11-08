@@ -1011,7 +1011,8 @@ five steps.
 \end{enumerate}
 Every draw has its own random seed, so the results are reproducible and
 independent of how the draws are split across processors. We use
-$N = 100{,}000$ draws per run.
+$N = 100{,}000$ draws per run. Appendix~\ref{app:mccode} lists the core of
+the code.
 
 By Bayes' theorem,
 the probability of $\bm{\theta}$ and $\bm{v}_0$ given the observations $d$ is
@@ -1380,6 +1381,58 @@ Section~\ref{sec:coefficients} is based.
 \end{figure}
 
 % =====================================================================
+% =====================================================================
+\section{Core of the Monte Carlo Code}
+\label{app:mccode}
+% =====================================================================
+
+Listing~\ref{lst:mc} shows the core of the Monte Carlo method of
+Section~\ref{sec:montecarlo}, condensed from our code. Two helper functions
+are not shown: \texttt{simulate} integrates the equations of motion
+(Section~\ref{sec:integration}) and returns the positions at the observation
+times together with their derivatives with respect to $\bm{v}_0$, and
+\texttt{fly\_to\_goal} integrates to the goal plane and returns the crossing
+point and outcome. \texttt{sample\_inputs} draws the inputs of
+Table~\ref{tab:priors}.
+
+\begin{lstlisting}[caption={Core of the Monte Carlo method: one draw, then the summary of all draws.}, label=lst:mc, captionpos=b]
+# One draw, number n (Section 5.3)
+rng = np.random.default_rng(np.random.SeedSequence(seed, spawn_key=(n,)))
+theta = sample_inputs(rng)          # spin, decay, mass, f_D, f_L (Table 3)
+
+def residuals(v0):                  # the six misses, in units of sigma
+    pos, _ = simulate(v0, theta, times)
+    return ((pos - obs) / sigma).ravel()
+
+def jacobian(v0):                   # their derivatives with respect to v0
+    _, dpos = simulate(v0, theta, times)
+    return (dpos / sigma[None, :, None]).reshape(6, 3)
+
+fit = scipy.optimize.least_squares(residuals, v_init, jac=jacobian, method="lm")
+chi2_min = fit.fun @ fit.fun
+w = np.exp(-chi2_min / 2)           # weight of the draw
+J = jacobian(fit.x)
+cov = np.linalg.inv(J.T @ J)        # uncertainty left in v0 by the measurement error
+v0 = fit.x + np.linalg.cholesky(cov) @ rng.standard_normal(3)
+y, z, outcome = fly_to_goal(v0, theta)
+
+# All N draws: arrays w, y, z, outcome (Section 5.4)
+w = w / w.sum()
+n_eff = 1 / np.sum(w ** 2)          # effective sample size
+pts = np.vstack([y, z])
+kde = scipy.stats.gaussian_kde(pts, weights=w)  # Scott's rule with n_eff
+dens = kde(pts)
+order = np.argsort(-dens)           # draws from the densest outward
+mass = np.cumsum(w[order])
+level = {p: dens[order][np.searchsorted(mass, p)] for p in (0.68, 0.95)}
+# region for p: every point where kde(point) >= level[p]
+gy, gz = np.meshgrid(np.linspace(*y_range, 120), np.linspace(*z_range, 120))
+grid = kde(np.vstack([gy.ravel(), gz.ravel()]))
+start = [gy.ravel()[grid.argmax()], gz.ravel()[grid.argmax()]]
+mode = scipy.optimize.minimize(lambda p: -kde(p)[0], start, method="Nelder-Mead").x
+p_on_target = w[outcome == "on_target"].sum()
+\end{lstlisting}
+
 % =====================================================================
 \section{Real-Kick Test Procedure}
 \label{app:realdata}
