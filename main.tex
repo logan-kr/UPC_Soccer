@@ -263,10 +263,9 @@ therefore replace $\omega$ by its perpendicular component:
 where $\theta$ represents the angle between the spin axis and the velocity. Spin
 directed strictly along the trajectory (``rifle'' or screw spin, $\theta = 0$)
 generates no cross-stream pressure imbalance and therefore no Magnus deflection.
-Furthermore, extensive wind-tunnel investigations spanning both smooth spheres
-and panelled soccer balls confirm that cross-flow aerodynamic forces are
-governed by the perpendicular component, with negligible lateral cross-coupling
-from axial rotation \citep{kray2014}. Because the soccer ball decelerates due
+Wind-tunnel measurements of the Magnus force on soccer balls likewise spin the
+ball about an axis perpendicular to the flow and use the same spin parameter,
+$S_P = \omega D/(2u_\infty)$ \citep{kray2014}. Because the soccer ball decelerates due
 to drag and curves under lift, both $S_\perp$ and the resulting force
 coefficients are evaluated dynamically at each numerical integration step.
 
@@ -355,48 +354,44 @@ uses this spread as the uncertainty of the coefficients.
   \end{tabular}
 \end{table}
 
-To verify whether these formulations and our simulation bounds represent
-physically realistic aerodynamics rather than isolated model artifacts, we
-compare them against the independent wind-tunnel measurements of
-\citet{kray2014}, who tested an identical 14-panel Teamgeist geometry mounted
-on an internal drive sting across $0.96\times 10^5 \le \mathrm{Re} \le 4.62\times 10^5$
-and $0 \le S_\perp \le 1.1$:
-\begin{enumerate}
-  \item \textbf{Supercritical drag baseline ($C_D$):} In our simulation engine,
-    penalty kicks launch between \SI{20}{} and \SI{34}{\metre\per\second}
-    ($\mathrm{Re} \approx 2.8\times 10^5\text{ to }4.9\times 10^5$). Across this
-    entire window, Equation~\eqref{eq:cd0} yields a virtually flat non-spinning
-    baseline of $C_{D0} \approx 0.144\text{--}0.154$. \citet{kray2014} report
-    supercritical drag coefficients of $C_D \approx 0.15\text{--}0.24$ in the
-    post-critical plateau ($\mathrm{Re} > 2.5\times 10^5$), corroborating our
-    baseline magnitude.
-  \item \textbf{Spin-induced drag increment:} Equation~\eqref{eq:cd} adds
-    $\Delta C_D = 0.514\,S_\perp$, predicting an increase of
-    $\Delta C_D \approx 0.15$ at maximum realistic penalty spin rates
-    ($S_\perp \approx 0.30$, corresponding to \SI{8}{\rev\per\second}). This
-    closely mirrors \citet[Fig.~9]{kray2014}, where at
-    $\mathrm{Re} = 3.42\times 10^5$, drag rises from $C_D \approx 0.20$ at
-    $S_\perp = 0$ to $C_D \approx 0.35$ at $S_\perp = 0.30$.
-  \item \textbf{Lift saturation ceiling ($C_L$):} Equation~\eqref{eq:cl} yields
-    $C_L \approx 0.33$ at $S_\perp \approx 0.30$. \citet{kray2014} demonstrate
-    that for supercritical Reynolds numbers, the Magnus coefficient levels off
-    into a plateau between $0.30 < C_M < 0.35$. The Monte Carlo model of
-    Section~\ref{sec:montecarlo} also lets the lift coefficient fall by up to
-    \SI{25}{\percent} to cover other balls (Table~\ref{tab:balls}).
-  \item \textbf{Regime consistency and anomalous effects:} While \citet{kray2014}
-    documented a ``negative Magnus effect'' ($C_M \approx -0.09$) caused by
-    asymmetric boundary-layer laminarization, they showed that this inversion
-    is strictly confined to the critical transition regime
-    ($\mathrm{Re} \approx 2.06\times 10^5$) at low spin ($S_\perp \approx 0.12$).
-    Because high-speed penalty kicks operate at $\mathrm{Re} > 3.0\times 10^5$,
-    the boundary layers on both sides remain fully turbulent, ensuring that the
-    Magnus force operates exclusively in the classical positive regime
-    ($C_L > 0$). Furthermore, \citet{kray2014} observed that below rotational
-    frequencies of \SI{2}{\hertz} ($S_\perp < 0.1$), coherent Magnus circulation
-    gives way to erratic lateral force fluctuations (``knuckling''). This is
-    why we treat knuckling as a separate force that acts only at low spin
-    (Section~\ref{sec:variants}).
-\end{enumerate}
+To check that these coefficients are realistic, we compare them with the
+independent wind-tunnel measurements of \citet{kray2014}. They tested an
+aluminum model with the 14-panel layout of the Teamgeist and a textured
+surface, spun by a motor inside the ball about an axis perpendicular to the
+flow, at $0.96\times10^5 < \mathrm{Re} < 4.62\times10^5$. Spin parameters reached
+$S_P = 1.12$ at the lowest Reynolds number but only about 0.33 at the
+supercritical ones, where the motor's power set the limit. Penalty speeds of
+\SIrange{20}{34}{\metre\per\second} correspond to
+$\mathrm{Re} \approx 2.9\times10^5$ to $4.9\times10^5$, the supercritical
+range of their data, where the boundary layer is turbulent on both sides of
+the ball.
+
+Over these speeds Equation~\eqref{eq:cd0} gives a non-spinning drag
+coefficient $C_{D0} \approx 0.144$--$0.153$. This matches the Teamgeist data
+of \citet{asai2007} that \citet[Fig.~2]{kray2014} reproduce, but is lower than
+the $C_D \approx 0.24$ of their own model at $\mathrm{Re} = 3.45\times10^5$,
+which they attribute to later boundary-layer separation on the real
+Teamgeist. Their model therefore does not replace the real ball's drag, but it
+does test the size of the spin terms. At $\mathrm{Re} = 3.42\times10^5$ and
+$4.62\times10^5$ their drag coefficient rises by roughly 0.1 between
+$S_P = 0$ and $0.2$ \citep[Fig.~9]{kray2014}, against
+$\Delta C_D = 0.514\,S_\perp \approx 0.10$ from Equation~\eqref{eq:cd}. Over
+the same range their Magnus coefficient climbs to about 0.23--0.27, against
+$C_L \approx 0.29$ from Equation~\eqref{eq:cl}, and at high spin it levels off
+between 0.30 and 0.35, where Equation~\eqref{eq:cl} gives 0.31--0.33 at
+$S_\perp = 0.3$. The Monte Carlo model of Section~\ref{sec:montecarlo} also
+lets the lift coefficient fall by up to \SI{25}{\percent} to cover other balls
+(Table~\ref{tab:balls}).
+
+Their data also show two effects that our model leaves out. A negative Magnus
+force, down to $C_M = -0.09$ at $S_P = 0.12$, appears in the critical range
+near $\mathrm{Re} = 2.06\times10^5$, below penalty speeds; at the
+supercritical Reynolds numbers $C_M$ increases with spin and the side force
+stays near zero. For spin below about \SI{2}{\hertz}, the sideways force
+fluctuates instead of following the Magnus law (knuckling), and
+\citet{kray2014} recommend their Magnus data only above this rate. This is why
+we treat knuckling as a separate force that acts only at low spin
+(Section~\ref{sec:variants}).
 
 \subsection{Spin Decay}
 \label{sec:spin-decay}
