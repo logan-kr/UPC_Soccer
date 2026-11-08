@@ -33,6 +33,14 @@ BLUE, ORANGE, AQUA = "#2a78d6", "#eb6834", "#1baf7a"
 INK, INK2, MUTED, GRID = "#0b0b0b", "#52514e", "#8a8984", "#e6e5e0"
 SEQ = LinearSegmentedColormap.from_list("blue_seq", ["#e8f1fc", "#a9cbf3", "#5598e7", "#2a78d6", "#1c5cab", "#0d366b"])
 
+# Custom palette strictly defined from user specifications & param_sensitivity:
+COLOR_MINT     = "#d7fff7"   # Swatch 1: light mint ice (ball body)
+COLOR_SLATE    = "#82a0b9"   # Swatch 2: slate / steel blue (velocity vector v)
+COLOR_NAVY     = "#2e457d"   # Swatch 3: classic deep navy (Magnus lift FL, ball outline)
+COLOR_INDIGO   = "#272652"   # Swatch 4: midnight indigo (Drag force FD)
+COLOR_OBSIDIAN = "#111227"   # Swatch 5: obsidian ink (Gravity mg, spin axis omega)
+
+
 plt.rcParams.update({
     "font.family": "serif", "font.serif": ["Charter", "Bitstream Charter", "DejaVu Serif"],
     "mathtext.fontset": "dejavuserif", "font.size": 9, "axes.labelsize": 9, "axes.titlesize": 9.5,
@@ -64,32 +72,57 @@ def hcolorbar(fig, mappable, ax, label, pad=0.16, **kw):
 
 # ------------------------------------------------------------------ forces schematic
 def forces():
-    fig, ax = plt.subplots(figsize=(4.2, 3.0))
+    fig, ax = plt.subplots(figsize=(4.5, 3.3))
     ax.set_aspect("equal")
     ax.axis("off")
-    ax.add_patch(Circle((0, 0), 1.0, fc="#f3f2ee", ec=INK2, lw=1.2))
 
-    def arrow(x0, y0, x1, y1, c, lw=1.8):
-        ax.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=13,
-                                     color=c, lw=lw, shrinkA=0, shrinkB=0))
+    # Ball: crisp mint fill with navy border and subtle inner white highlight rim
+    ball = Circle((0, 0), 1.0, fc=COLOR_MINT, ec=COLOR_NAVY, lw=1.8, zorder=2)
+    ax.add_patch(ball)
+    rim = Circle((0, 0), 0.965, fc="none", ec="#ffffff", lw=1.2, alpha=0.85, zorder=3)
+    ax.add_patch(rim)
 
-    d = np.array([math.cos(math.radians(20)), math.sin(math.radians(20))])   # velocity direction
-    n = np.array([-d[1], d[0]])                                              # perpendicular (lift)
-    arrow(*(1.05 * d), *(3.0 * d), BLUE)
-    ax.text(*(3.1 * d + [0.05, 0.05]), r"$\mathbf{v}$", color=BLUE, fontsize=11)
-    arrow(*(-1.05 * d), *(-2.6 * d), ORANGE)
-    ax.text(*(-2.75 * d + [-0.55, -0.15]), r"$\mathbf{F}_D$", color=ORANGE, fontsize=11)
-    arrow(*(1.05 * n), *(2.4 * n), AQUA)
-    ax.text(*(2.5 * n + [-0.2, 0.05]), r"$\mathbf{F}_L$", color=AQUA, fontsize=11)
-    arrow(0, -1.05, 0, -2.3, INK2)
-    ax.text(0.12, -2.25, r"$m\mathbf{g}$", color=INK2, fontsize=11)
-    ax.plot([0], [0], marker="o", ms=5, color=INK)          # spin axis out of the page
-    ax.plot([0], [0], marker="o", ms=11, mfc="none", mec=INK, mew=1.0)
-    ax.text(0.18, 0.18, r"$\boldsymbol{\omega}$", fontsize=11)
-    ax.text(-3.3, -1.55, "Spin axis out of the page\n(backspin)", fontsize=7.5,
-            color=INK2, va="top")
-    ax.set_xlim(-3.4, 3.6)
-    ax.set_ylim(-2.5, 2.6)
+    def arrow(x0, y0, x1, y1, c, lw=2.3, mut=15):
+        ax.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=mut,
+                                     color=c, lw=lw, shrinkA=0, shrinkB=0,
+                                     capstyle="round", joinstyle="miter", zorder=4))
+
+    theta = math.radians(22)
+    d = np.array([math.cos(theta), math.sin(theta)])   # velocity direction
+    n = np.array([-d[1], d[0]])                        # perpendicular (lift direction)
+
+    # 1. Velocity v (Slate)
+    arrow(*(1.06 * d), *(3.05 * d), COLOR_SLATE, lw=2.3, mut=15)
+    ax.text(3.18 * d[0] + 0.05, 3.18 * d[1] + 0.02, r"$\mathbf{v}$",
+            color=COLOR_SLATE, fontsize=12, fontweight="bold", va="center", ha="left")
+
+    # 2. Lift F_L (Navy)
+    arrow(*(1.06 * n), *(2.55 * n), COLOR_NAVY, lw=2.3, mut=15)
+    ax.text(2.65 * n[0] - 0.10, 2.65 * n[1] + 0.08, r"$\mathbf{F}_L$",
+            color=COLOR_NAVY, fontsize=12, fontweight="bold", va="bottom", ha="right")
+
+    # 3. Drag F_D (Indigo)
+    arrow(*(-1.06 * d), *(-2.70 * d), COLOR_INDIGO, lw=2.3, mut=15)
+    ax.text(-2.82 * d[0] - 0.22, -2.82 * d[1] - 0.08, r"$\mathbf{F}_D$",
+            color=COLOR_INDIGO, fontsize=12, fontweight="bold", va="top", ha="right")
+
+    # 4. Gravity m g (Obsidian)
+    arrow(0, -1.06, 0, -2.40, COLOR_OBSIDIAN, lw=2.3, mut=15)
+    ax.text(0.14, -2.38, r"$m\mathbf{g}$",
+            color=COLOR_OBSIDIAN, fontsize=12, fontweight="bold", va="center", ha="left")
+
+    # 5. Spin axis out of the page (circle with dot in Obsidian)
+    ax.plot([0], [0], marker="o", ms=13.0, mfc="#ffffff", mec=COLOR_OBSIDIAN, mew=1.6, zorder=5)
+    ax.plot([0], [0], marker="o", ms=4.5, mfc=COLOR_OBSIDIAN, mec=COLOR_OBSIDIAN, zorder=6)
+    ax.text(0.22, 0.17, r"$\boldsymbol{\omega}$",
+            color=COLOR_OBSIDIAN, fontsize=12, fontweight="bold", zorder=7)
+
+    # 6. Explanatory text annotation
+    ax.text(-3.35, -1.70, "Spin axis out of the page\n(backspin)",
+            fontsize=8.0, color=COLOR_NAVY, linespacing=1.25, va="top", ha="left")
+
+    ax.set_xlim(-3.6, 3.8)
+    ax.set_ylim(-2.65, 2.65)
     save(fig, "forces")
 
 
