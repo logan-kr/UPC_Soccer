@@ -52,10 +52,6 @@ def save(fig, name):
     print("wrote", FIG / f"{name}.pdf")
 
 
-def ylabel_top(ax, text):
-    """Horizontal y-axis label above the top-left corner of the axes (no rotated text)."""
-    ax.set_ylabel("")
-    ax.text(0.0, 1.03, text, transform=ax.transAxes, ha="left", va="bottom", fontsize=9, color=INK)
 
 
 def hcolorbar(fig, mappable, ax, label, pad=0.16, **kw):
@@ -107,7 +103,8 @@ def coefficients():
     a.axvspan(26, 33, color=GRID, alpha=0.6, lw=0)
     a.text(29.5, 0.115, "Penalty\nspeeds", ha="center", va="bottom", fontsize=7.5, color=INK2)
     a.set_xlabel(r"Speed, $|\mathbf{v}|$ (m/s)")
-    ylabel_top(a, r"(a) Drag coefficient, $C_D$")
+    a.set_ylabel(r"Drag coefficient, $C_D$")
+    a.set_title("(a)", loc="left")
     a.set_ylim(0.1, 0.55)
     a.legend(loc="upper right")
 
@@ -118,7 +115,8 @@ def coefficients():
     b.axvspan(0, 0.26, color=GRID, alpha=0.6, lw=0)
     b.text(0.13, 0.375, "Measured kicks", ha="center", fontsize=7.5, color=INK2)
     b.set_xlabel(r"Perpendicular spin parameter, $S_\perp$")
-    ylabel_top(b, r"(b) Lift coefficient, $C_L$")
+    b.set_ylabel(r"Lift coefficient, $C_L$")
+    b.set_title("(b)", loc="left")
     b.set_ylim(0, 0.4)
     b.legend(loc="lower right")
     fig.tight_layout(w_pad=2.0)
@@ -157,7 +155,7 @@ def spin_map(df):
     ax.set_ylim(-36, 24)
     ax.grid(False)
     ax.set_xlabel("Backspin, $\\omega_b$ (rev/s)")
-    ylabel_top(ax, "Sidespin, $\\omega_s$ (rev/s)")
+    ax.set_ylabel("Sidespin, $\\omega_s$ (rev/s)")
     hcolorbar(fig, pc, ax, "Largest coordinate miss, $\\delta_{\\max}$ (mm)", extend="max")
     save(fig, "spin_map")
 
@@ -184,7 +182,7 @@ def goal_crossings(df):
     ax.set_ylim(1.2, 2.8)
     ax.set_aspect("equal")
     ax.set_xlabel("Lateral position, $y$ (m)")
-    ylabel_top(ax, "Height, $z$ (m)")
+    ax.set_ylabel("Height, $z$ (m)")
     hcolorbar(fig, sc, ax, "Spin rate, $|\\boldsymbol{\\omega}_0|$ (rev/s)", pad=0.24)
     save(fig, "goal_crossings")
 
@@ -204,7 +202,7 @@ def residuals(df):
            label=f"Best fit ({math.hypot(best.back_rps, best.side_rps):.1f} rev/s)")
     ax.axhline(0, color=INK2, lw=0.8)
     ax.set_xticks(x, labels)
-    ylabel_top(ax, "Model minus observation (mm)")
+    ax.set_ylabel("Residual (mm)")
     ax.grid(axis="x", visible=False)
     ax.legend(loc="lower right")
     save(fig, "residuals")
