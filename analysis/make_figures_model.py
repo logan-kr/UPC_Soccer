@@ -145,7 +145,7 @@ def spin_map(df):
     best = df.loc[df.max_miss_mm.idxmin()]
     ax.plot(best.back_rps, best.side_rps, marker="*", ms=13, mfc=ORANGE, mec="white", mew=1.0, ls="none")
     ax.plot(0, 0, marker="o", ms=6, mfc="white", mec=INK, mew=1.0, ls="none")
-    ax.annotate("smallest miss", (best.back_rps, best.side_rps), xytext=(14, -18), textcoords="offset points",
+    ax.annotate("smallest miss", (best.back_rps, best.side_rps), xytext=(12, -46), textcoords="offset points",
                 fontsize=7.5, color=INK, arrowprops=dict(arrowstyle="-", color=INK2, lw=0.7))
     ax.annotate("no spin", (0, 0), xytext=(-40, 14), textcoords="offset points", fontsize=7.5,
                 arrowprops=dict(arrowstyle="-", color=INK2, lw=0.7))
