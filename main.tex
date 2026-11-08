@@ -551,27 +551,22 @@ can never exceed half the last digit.
 \label{sec:search}
 
 \label{sec:screw}
-A first pass at numerically solving this system let all six unknowns vary. In this case, three components each of launch
-velocity and spin match the six observed coordinates in number, so exact fits
-are possible, and least squares from several starting points found them.
-Every one of these solutions, however, needed a screw spin of nearly \SI{1000}{\rev\per\second}, more than
-a hundred times the spin of measured kicks \citep{tsukada2011, whiteside2010}.
-Screw spin produces no lift at launch, because its axis lies along the
-velocity and $\bm{\omega}\times\bm{v} = \bm{0}$. It acts only through the
-angle $\phi$ that opens between the fixed spin axis and the velocity as the
-path bends, as a perpendicular spin of $\omega_f \sin\phi$. For the best fit
-found below, $\phi$ is only \SI{1.3}{\degree} at the first observation and
-\SI{2.6}{\degree} at the second. Without screw spin, that fit already matches every
-coordinate to within \SI{0.9}{\milli\metre}; removing the last fraction of a
-millimeter takes a lift that grows as the path bends, which only screw spin
-provides, and through so small an angle that takes an enormous rate. Screw
-spin at realistic rates has almost no effect: adding up to
-\SI{30}{\rev\per\second} to the best fit changes its misses by less than
-\SI{0.5}{\milli\metre}. We therefore set $\omega_f = 0$. That leaves five
-unknowns for six observed coordinates, so in general no trajectory passes
-exactly through both observations, and we search instead for the trajectories
-that are consistent with them.
-
+Screw spin barely affects the observed part of the flight, so we set
+$\omega_f = 0$ and search over backspin and sidespin only.\footnote{Screw spin
+gives no lift at launch, since its axis lies along the velocity and
+$\bm{\omega}\times\bm{v} = \bm{0}$. It acts only through the angle $\phi$ that
+opens between the spin axis and the velocity as the path bends, as a
+perpendicular spin of $\omega_f \sin\phi$. For the best fit below, $\phi$ is
+only \SI{1.3}{\degree} at $t_1$ and \SI{2.6}{\degree} at $t_2$, and adding up
+to \SI{30}{\rev\per\second} of screw spin changes its misses by less than
+\SI{0.5}{\milli\metre}. With screw spin free, the six unknowns match the six
+observed coordinates in number and exact fits exist, but every one we found
+(by least squares from several starting points) needs nearly
+\SI{1000}{\rev\per\second} of screw spin, over a hundred times the spin of
+measured kicks \citep{tsukada2011, whiteside2010}.}
+This leaves five unknowns for six observed coordinates, so in general no
+trajectory passes exactly through both observations, and we look instead for
+every trajectory that is consistent with them.
 The data fix the launch velocity sharply but the spin only weakly, so we
 treat the two differently: we search over spin, and for each spin we solve
 for the launch velocity.
