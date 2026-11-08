@@ -19,6 +19,10 @@
 \DeclareSIUnit\rev{rev}
 \graphicspath{{figures/}}
 \usepackage{float}
+\usepackage{listings}
+\lstset{basicstyle=\ttfamily\footnotesize, columns=fullflexible, keepspaces=true,
+        frame=lines, framesep=4pt, xleftmargin=1em, commentstyle=\itshape,
+        language=Python, showstringspaces=false, upquote=true}
 
 % ---------- Header: "Problem X | Team NNN | page" with a rule ----------
 \usepackage{fancyhdr}
@@ -1298,7 +1302,24 @@ the ball's position at the start (\SI{0.02}{\second} after the foot struck
 it) and \SI{0.05}{} and \SI{0.10}{\second} later, and predicted where it
 would cross the plane. From the scatter of the tracks, the tracking error is
 about \SI{0.8}{\centi\metre} horizontally and \SI{2.5}{\centi\metre}
-vertically, and we used these values for $\sigma$.
+vertically, and we used these values for $\sigma$. Figure~\ref{fig:realkicks}(a)
+shows these steps on one kick, and Appendix~\ref{app:realdata} gives the full
+procedure and the code.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{real_kicks}
+  \caption{(a) Speed of one ball in the tracking data around a kick, with
+    the times the test uses: the peak acceleration (taken as the strike),
+    the start of the test \SI{0.02}{\second} later, the two observations and
+    the plane. The speed reported by the tracker overshoots just after the
+    strike; the speed computed from the positions does not, and the test
+    uses positions only. (b) Predicted minus true crossing point on the
+    plane for all 17 kicks. The dashed ellipse is the typical predicted
+    two-standard-deviation range; misses spread far more in height than the
+    method expects.}
+  \label{fig:realkicks}
+\end{figure}
 
 \begin{table}[H]
   \centering
@@ -1383,6 +1404,94 @@ Section~\ref{sec:coefficients} is based.
 \end{figure}
 
 % =====================================================================
+% =====================================================================
+\section{Real-Kick Test Procedure}
+\label{app:realdata}
+% =====================================================================
+
+This appendix describes the test of Section~\ref{sec:realdata} step by step.
+Listing~\ref{lst:realdata} shows the core of the code.
+
+\paragraph{Data.} The DEBS 2013 data \citep{debs2013} list one sensor reading
+per line: sensor number, time in picoseconds, position $(x, y, z)$ in
+millimeters, and the speed and acceleration magnitudes estimated by the
+tracker. Our copy of the file is cut off after 8.6 minutes of play, giving
+8.5 million readings, 4.2 million of them from ball sensors. Three ball
+sensors report about 2{,}000 times a second; every other sensor reports
+about 200 times a second. For each kick we keep every fourth ball reading,
+one every \SI{2}{\milli\second}.
+
+\paragraph{Finding kicks.} A kick is a moment when the ball's reported speed
+rises past \SI{12}{\metre\per\second} and gains at least
+\SI{6}{\metre\per\second} within \SI{0.05}{\second} on either side. We time
+the strike by the largest reported acceleration in the \SI{0.05}{\second}
+before the speed crosses \SI{12}{\metre\per\second}, and treat candidates
+less than \SI{0.5}{\second} apart as one kick. This finds 121 kicks.
+
+\paragraph{Choosing kicks.} The test starts \SI{0.02}{\second} after the
+strike, once the ball has left the foot, and runs for \SI{0.38}{\second}. A
+kick is kept if, over that time, the ball stays above the ground, rises
+above \SI{0.5}{\metre} at some point, travels at least \SI{5}{\metre}
+horizontally, and never changes its reported speed by more than
+\SI{2}{\metre\per\second} between readings, which would mean a touch, block
+or bounce. Seventeen kicks pass. The tracker's reported speed overshoots for
+a few hundredths of a second after the strike (Figure~\ref{fig:realkicks}),
+so we use it only to find and screen kicks; every position the method sees
+comes from the tracked positions.
+
+\paragraph{Coordinates.} The starting point $\bm{r}_0$ is a quadratic fit to
+the positions within $\pm\SI{0.01}{\second}$ of the start, evaluated at the
+start, to reduce noise in a point the method treats as exact. The $x$ axis
+points along the horizontal direction from $\bm{r}_0$ to the position
+\SI{0.10}{\second} later, $y$ points to the kicker's left and $z$ up. The
+plane is where the ball is after \SI{0.38}{\second}, at a distance $D$ along
+$x$; shifting the frame so that the plane is at $x = 11$, as in the problem,
+puts the start at $(11 - D, 0, z_0)$.
+
+\paragraph{Observations, truth and noise.} The two observations are the
+positions \SI{0.05}{} and \SI{0.10}{\second} after the start, interpolated
+between readings, and the true crossing is the position at
+\SI{0.38}{\second}. For $\sigma$ we fit a smooth (cubic) curve to each
+track over the test and take the scatter of the readings about it, in each
+direction; the medians over the 17 kicks are \SI{0.8}{}, \SI{0.8}{} and
+\SI{2.5}{\centi\metre}.
+
+\paragraph{Prediction.} Each kick is predicted with the standard model and
+4{,}000 draws, exactly as for the penalty, using these three values of
+$\sigma$. The constant-acceleration curve uses the same start and
+observations.
+
+\begin{lstlisting}[caption={Core of the real-kick test. The arrays t, pos, speed and acc hold one ball's readings in seconds, meters, meters per second and meters per second squared.}, label=lst:realdata, captionpos=b]
+# Finding kicks
+up = np.flatnonzero((speed[1:] >= 12) & (speed[:-1] < 12)) + 1
+for i in up:
+    lo, hi = np.searchsorted(t, [t[i] - 0.05, t[i] + 0.05])
+    if speed[i:hi + 1].max() - speed[lo:i + 1].min() < 6:
+        continue                                 # not a kick
+    strike = lo + np.argmax(acc[lo:i + 1])       # peak acceleration
+
+# One kick: s is the time from the start of the test, 0.02 s after the strike
+s = t - (t[strike] + 0.02)
+w = (s >= 0) & (s <= 0.38)
+if (pos[w, 2].max() < 0.5 or pos[w, 2].min() <= 0
+        or np.abs(np.diff(speed[w])).max() >= 2):
+    skip()                                       # rolling, touched or bounced
+near = np.abs(s) <= 0.01
+r0 = np.array([np.polyval(np.polyfit(s[near], pos[near, i], 2), 0) for i in range(3)])
+p1 = np.array([np.interp(0.10, s, pos[:, i]) for i in range(3)])
+u = (p1 - r0)[:2] / np.linalg.norm((p1 - r0)[:2])  # horizontal direction
+left = np.array([-u[1], u[0]])
+X = (pos[:, :2] - r0[:2]) @ u
+Y = (pos[:, :2] - r0[:2]) @ left
+D = np.interp(0.38, s, X)
+if D < 5:
+    skip()                                       # lob or bounce
+frame = np.column_stack([X - D + 11, Y, pos[:, 2]])   # plane at x = 11
+start = np.array([11 - D, 0, r0[2]])
+obs = [[np.interp(si, s, frame[:, i]) for i in range(3)] for si in (0.05, 0.10)]
+truth = [np.interp(0.38, s, frame[:, i]) for i in (1, 2)]
+\end{lstlisting}
+
 \bibliography{references}
 
 \end{document}
