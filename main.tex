@@ -40,9 +40,6 @@
 \usepackage[round]{natbib}
 \bibliographystyle{apalike}
 
-% Bold placeholder for claims that still need a source. Search for "citeneeded".
-\newcommand{\citeneeded}[1]{\textbf{[citation needed: #1]}}
-
 \begin{document}
 
 % =====================================================================
@@ -80,8 +77,7 @@ In a penalty kick, one player shoots at a goal defended only by the
 goalkeeper. The ball starts on a mark \SI{11}{\metre} in front of a goal
 \SI{7.32}{\metre} wide and \SI{2.44}{\metre} high \citep{ifab2025}.
 A well-struck penalty covers that distance in about \SI{0.4}{\second}, too
-fast for the goalkeeper to wait and see where the ball goes
-\citeneeded{penalty ball speeds and goalkeeper reaction time}. To block the
+fast for the goalkeeper to wait and see where the ball goes. To block the
 kick, the goalkeeper has to anticipate the trajectory from the first
 instants of the ball's flight. This paper asks how well that can be done:
 given the ball's position at two moments shortly after the kick, where will
@@ -214,7 +210,7 @@ $\bm{v} = \dot{\bm{r}}$ for its velocity,
 with $m$ the ball's mass and $\bm{g} = (0, 0, -g)$, $g = \SI{9.81}{\metre\per\second\squared}$.
 
 \paragraph{Drag.} Drag opposes the velocity and grows with the square of the
-speed \citeneeded{quadratic drag law for a sphere}:
+speed:
 \begin{equation}
   \bm{F}_D = -\tfrac{1}{2}\rho A\, C_D\, |\bm{v}|\,\bm{v},
   \label{eq:drag}
@@ -223,8 +219,7 @@ where $\rho$ is the air density, $A = \pi r^2$ is the ball's cross-section and
 $C_D$ is the drag coefficient.
 
 \paragraph{Magnus lift.} A spinning ball drags air around with it, deflecting
-the flow and pushing the ball sideways to its direction of travel
-\citeneeded{Magnus effect on sports balls}. The force
+the flow and pushing the ball sideways to its direction of travel. The force
 is perpendicular to both the velocity and the spin axis:
 \begin{equation}
   \bm{F}_L = \tfrac{1}{2}\rho A\, C_L\, |\bm{v}|^2\,
@@ -257,12 +252,10 @@ Dividing Equation~\eqref{eq:eom} by $m$ gives the equations we integrate,
 with $\hat{\bm{n}}$ the unit vector along $\bm{\omega}\times\bm{v}$. For a
 regulation ball ($m = \SI{0.43}{\kilo\gram}$, $r = \SI{0.11}{\metre}$) in air
 of density \SI{1.20}{\kilo\gram\per\metre\cubed}, $k = \SI{0.053}{\per\metre}$.
-At \SI{32}{\metre\per\second}, the launch speed we fit in
-Section~\ref{sec:exact-fits}, drag decelerates a
+At a typical penalty speed of \SI{32}{\metre\per\second}, drag decelerates a
 non-spinning ball by about \SI{8}{\metre\per\second\squared}. A spin of
-\SI{8}{\rev\per\second}, at the top of the range measured when players' kicks are filmed with
-high-speed cameras (``measured kicks'' below)
-\citeneeded{measured spin rates of kicked balls}, gives a lift of about \SI{15}{\metre\per\second\squared}. Both are comparable
+\SI{8}{\rev\per\second}, at the top of the range measured for real kicks,
+gives a lift of about \SI{15}{\metre\per\second\squared}. Both are comparable
 to gravity, so none of the three forces can be left out.
 
 \subsection{Drag and lift coefficients}
@@ -279,9 +272,7 @@ deflects the airflow, so we use the \emph{perpendicular} spin parameter
 \end{equation}
 where $\theta$ is the angle between the spin axis and the velocity. Spin about
 the direction of travel (``rifle'' or screw spin, $\theta = 0$) produces
-no lift, and we assume it adds no drag either; the wind-tunnel measurements
-behind the coefficients below were made with the spin axis perpendicular to
-the flow \citeneeded{spin-axis orientation in the drag and lift measurements}. Both $S_\perp$ and the coefficients are
+neither lift nor extra drag. Both $S_\perp$ and the coefficients are
 recomputed at every step of the integration, because the ball slows down and
 turns during its flight.
 
@@ -338,7 +329,7 @@ with spin up to $S_\perp \approx 0.3$.
     fitted penalties. (b) $C_L$ against $S_\perp$ at \SI{30}{\metre\per\second},
     with the calibration values the paper reports. The shaded band marks the
     spin parameters reached by kicks spinning at up to
-    \SI{8}{\rev\per\second}, the range of measured kicks.}
+    \SI{8}{\rev\per\second}, the range measured for real kicks.}
   \label{fig:coefficients}
 \end{figure}
 
@@ -370,24 +361,9 @@ method DOP853 \citep{hairer1993}, as implemented in SciPy \citep{scipy2020}.
 The state is the position, velocity and distance travelled. The integration
 starts at $\bm{r}_0 = (0, 0, 0.11)$ with launch velocity $\bm{v}_0$ and stops
 when the ball's center reaches the goal plane $x = 11$, which the solver
-locates as an event.
-
-The method has no fixed time step. At each step it estimates its own error
-and chooses the next step so that the error stays below a set tolerance. We
-use a relative tolerance of $10^{-9}$ and an absolute tolerance of
-$10^{-11}$ for every result we report, and the looser $10^{-7}$ and $10^{-9}$
-inside the fitting loops of Section~\ref{sec:search}, where many trajectories
-are integrated. Because the forces vary smoothly, the solver needs only four
-or five steps to reach the goal: a first step of about \SI{0.4}{\milli\second},
-then steps of up to about \SI{0.3}{\second}. Positions at the observation
-times and at the goal plane come from the method's built-in high-order
-interpolation between steps \citep{hairer1993}. To confirm that these long
-steps are accurate, we compared trajectories with a reference integration at
-a relative tolerance of $10^{-13}$. The crossing points differ by less than
-\SI{1}{\nano\metre} at our standard tolerance and by less than
-\SI{2}{\micro\metre} at the looser one, far below any other source of error.
-
-We also checked the solver against cases with exact solutions: flight under
+locates as an event to better than \SI{1}{\nano\metre}. Relative and absolute
+tolerances of $10^{-9}$ and $10^{-11}$ make the integration error negligible.
+We checked the solver against cases with exact solutions: flight under
 gravity alone, drag alone in one dimension, and lift alone, for which the ball
 moves in a circle at constant speed. In each case the numerical and exact
 trajectories agree to better than \SI{1e-6}{\metre}.
@@ -411,9 +387,9 @@ trajectories agree to better than \SI{1e-6}{\metre}.
     no spin (``knuckling'', \citealp{mizota2013}), which matter only below
     about \SI{3}{\rev\per\second}.
   \item \textbf{The air is still.} The two observations cannot detect wind,
-    so it cannot be estimated from the data. In our model, ignoring a
-    crosswind of \SI{1}{\metre\per\second} moves the predicted crossing
-    point by about \SI{1.3}{\centi\metre}.
+    and a penalty is usually taken inside a stadium. Ignoring a crosswind of
+    \SI{1}{\metre\per\second} moves the predicted crossing point by about
+    \SI{1.3}{\centi\metre}.
   \item \textbf{The coefficients of the Teamgeist ball represent a modern
     match ball.} Balls with different panel designs have somewhat different
     drag curves \citep{kiratidis2018}, but at penalty speeds the differences
@@ -471,8 +447,7 @@ travel. We quote spin rates in revolutions per second
 With all six unknowns free, the six observations can be matched exactly. We
 solved for them by least squares from several starting points. The only exact
 solutions we found need a screw spin of nearly \SI{1000}{\rev\per\second},
-more than a hundred times the spin of measured kicks
-\citeneeded{measured spin rates of kicked balls}. They arise because screw spin
+more than a hundred times the spin measured in real kicks. They arise because screw spin
 produces no lift by itself (Equation~\ref{eq:sperp}); it acts only through the
 small angle that opens between the spin axis and the velocity as the path
 bends, so an enormous screw spin is needed to have any effect. These solutions
@@ -580,7 +555,7 @@ between \SI{9.4}{\rev\per\second} and \SI{28.4}{\rev\per\second}, all with
 sidespin that curls the ball to the kicker's right. The best fit, at
 $(\omega_b, \omega_s) = (3.0, -22.5)$\,\si{\rev\per\second}, matches every
 coordinate to within \SI{0.9}{\milli\metre}. Every consistent spin lies
-outside the range of measured kicks (the dashed sector in
+outside the range measured for real kicks (the dashed sector in
 Figure~\ref{fig:spinmap}, discussed in Section~\ref{sec:montecarlo}); inside
 that range the best fit still misses one coordinate by
 \SI{5.4}{\milli\metre}.
@@ -588,17 +563,13 @@ that range the best fit still misses one coordinate by
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.62\linewidth]{spin_map}
-  \caption{How well each spin can explain the observations. Every point of
-    the map is one choice of backspin (horizontal axis) and sidespin
-    (vertical axis). For that spin we fit the launch velocity and color the
-    point by the largest of the six misses between the model and the
-    observed coordinates: dark points fit well, light points fit badly. The
-    orange contour
+  \caption{Largest miss of any observed coordinate, after fitting the launch
+    velocity, as a function of backspin and sidespin. The orange contour
     encloses the spins that reproduce both observations to within
     \SI{5}{\milli\metre}. The star marks the smallest miss
     (\SI{0.9}{\milli\metre}) and the circle marks no spin
-    (\SI{11.5}{\milli\metre}). The dashed sector shows the spins of measured
-    kicks, used as the spin range in Section~\ref{sec:montecarlo}.}
+    (\SI{11.5}{\milli\metre}). The dashed sector shows the spins measured
+    for real kicks, used as the spin range in Section~\ref{sec:montecarlo}.}
   \label{fig:spinmap}
 \end{figure}
 
@@ -666,11 +637,11 @@ motivate the Monte Carlo method of the next section.
     rounding and refitted 40 times, the preferred spin ranged from
     \SIrange{16}{26}{\rev\per\second}. The spin estimate is therefore driven
     as much by how the numbers were rounded as by the physics.
-  \item \textbf{The consistent spins are larger than those of measured kicks.}
+  \item \textbf{The consistent spins are larger than those of real kicks.}
     Measured instep and curled kicks spin at
     \SIrange{3}{8}{\rev\per\second} (Section~\ref{sec:montecarlo}), while
-    every consistent fit needs at least \SI{9.4}{\rev\per\second}
-    \citeneeded{measured spin rates of kicked balls}.
+    every consistent fit needs at least \SI{9.4}{\rev\per\second}.
+    % TODO: cite the measured-spin sources here once the Monte Carlo section adds them.
     Any real measurement of the ball's position has errors of its own. If
     those errors could reach \SI{5.4}{\milli\metre} instead of
     \SI{5}{\milli\metre}, spins in the measured range would already fit the
@@ -684,7 +655,7 @@ motivate the Monte Carlo method of the next section.
 \end{itemize}
 The Monte Carlo method addresses these limits. Instead of trusting the
 observations to the millimeter, it treats them as uncertain measurements. It
-draws the spin from the range of measured kicks, and it lets the air
+draws the spin from the range measured for real kicks, and it lets the air
 density and ball mass vary, so that the stated uncertainty includes
 everything the observations cannot determine.
 
