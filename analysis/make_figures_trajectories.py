@@ -20,7 +20,7 @@ import pandas as pd
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1] / "monte-carlo-penalty-kick"))
-from penalty_mc import montecarlo as mc, physics            # noqa: E402
+from penalty_mc import baseline, montecarlo as mc, physics  # noqa: E402
 from penalty_mc.fit import fit_v0                           # noqa: E402
 from penalty_mc.priors import load_config, theta_from_record  # noqa: E402
 from penalty_mc.summarize import summarize                  # noqa: E402
@@ -108,6 +108,13 @@ def main():
     for name, (p, rec) in paths.items():
         ax.plot(p[:, 0], p[:, 1], p[:, 2], color=colors[name], lw=1.8)
         ax.plot([p[-1, 0]], [p[-1, 1]], [p[-1, 2]], marker="o", ms=4, color=colors[name])
+    # constant-acceleration curve through the kick point and the two observations (baseline)
+    v, acc = baseline._fit_va(obs, times, r0)
+    t_k = baseline.extrapolate(obs, times, r0)[0]
+    tt = np.linspace(0.0, t_k, 200)
+    K = r0 + np.outer(tt, v) + 0.5 * np.outer(tt ** 2, acc)
+    ax.plot(K[:, 0], K[:, 1], K[:, 2], color=INK2, lw=1.2, ls="--")
+    ax.plot([K[-1, 0]], [K[-1, 1]], [K[-1, 2]], marker="o", ms=3.5, mfc="white", mec=INK2)
     ax.plot([r0[0]], [r0[1]], [r0[2]], marker="o", ms=4, color=INK)
     ax.plot(obs[:, 0], obs[:, 1], obs[:, 2], marker="o", ms=4, mfc="white", mec=INK, ls="none")
     ax.set_xlim(0, 11.5)
@@ -131,15 +138,16 @@ def main():
 
     handles = [plt.Line2D([], [], color=colors[n], lw=1.8) for n in paths]
     labels = [f"{n}: {label(rec)}" for n, (p, rec) in paths.items()]
-    handles += [plt.Line2D([], [], marker="o", ms=4, mfc="white", mec=INK, ls="none")]
-    labels += ["Observed positions"]
+    handles += [plt.Line2D([], [], color=INK2, lw=1.2, ls="--"),
+                plt.Line2D([], [], marker="o", ms=4, mfc="white", mec=INK, ls="none")]
+    labels += ["Constant acceleration through the observations (no physics)", "Observed positions"]
     fig.legend(handles, labels, loc="lower center", ncol=1, bbox_to_anchor=(0.5, -0.02), fontsize=6.5)
     FIG.mkdir(exist_ok=True)
     fig.savefig(FIG / "example_trajectories.pdf", bbox_inches=None)
     fig.savefig(FIG / "example_trajectories.png", dpi=300, bbox_inches=None)
     for name, (p, rec) in paths.items():
         print(f"{name}: cross ({rec.y:.2f}, {rec.z:.2f}) | {label(rec)} | w/max {rec.w / df.w.max():.2f}")
-    print("no spin crossing:", nospin[-1].round(2))
+    print("no spin crossing:", nospin[-1].round(2), "| constant acceleration crossing:", K[-1].round(2))
 
 
 if __name__ == "__main__":
