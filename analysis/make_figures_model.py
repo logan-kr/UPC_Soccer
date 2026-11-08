@@ -55,7 +55,7 @@ plt.rcParams.update({
 def save(fig, name):
     FIG.mkdir(exist_ok=True)
     fig.savefig(FIG / f"{name}.pdf")
-    fig.savefig(FIG / f"{name}.png", dpi=200)   # for quick previews only
+    fig.savefig(FIG / f"{name}.png", dpi=300)
     plt.close(fig)
     print("wrote", FIG / f"{name}.pdf")
 
