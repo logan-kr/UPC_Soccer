@@ -1030,7 +1030,7 @@ the proposal \citep{robert2004}. Near its minimum $\chi^2$ is close to
 quadratic in $\bm{v}_0$, so for a given $\bm{\theta}$ the launch velocity is
 approximately normal with the mean and covariance of step~4. Integrating that
 normal over $\bm{v}_0$ would add a factor $|J^\mathsf{T}J|^{-1/2}$ to the
-weight \citep{tierney1986}. We omit it: it varies by at most about
+weight \citep{tierney1986}. We omit this since it varies by at most about
 \SI{5}{\percent} across draws, because the launch velocity is set mainly by
 the positions and times rather than by the physics.
 
@@ -1116,7 +1116,7 @@ more drag ($f_D = 1.25 \pm 0.08$, against $1.18 \pm 0.10$ in the prior). The
 lift factor, the ball's mass and the screw spin keep their prior
 distributions: the observations cannot tell their values apart. Because the
 weights concentrate on a minority of draws, the effective sample size is
-5{,}017 of 100{,}000, still enough for a smooth density.
+5{,}017 of 100{,}000, still enough for a smooth density map.
 
 Figure~\ref{fig:trajectories} shows three of the draws: the one that crosses
 nearest the most likely point and two at opposite ends of the 95\% region.
@@ -1125,7 +1125,7 @@ have curled about \SI{60}{\centi\metre} to the kicker's right of where a ball
 without spin would go. They
 differ mainly in height: a little more backspin carries the ball about
 \SI{25}{\centi\metre} higher than the most likely path, and a little topspin
-about \SI{30}{\centi\metre} lower. The observations pin down the sidespin
+about \SI{30}{\centi\metre} lower. The observations narrow down the sidespin
 better than the backspin, which is why the predicted region is taller than
 it is wide.
 
