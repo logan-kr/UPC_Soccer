@@ -46,16 +46,14 @@ def main():
     r = pd.read_csv(RESULTS)
     fig, (a, b) = plt.subplots(1, 2, figsize=(7.0, 2.8), gridspec_kw=dict(width_ratios=[1.35, 1.0]))
 
-    # speed from the positions (straight-line fit over +/-5 ms) and as reported by the tracker
+    # speed from the positions (straight-line fit over +/-5 ms)
     tt, P = tr.t.to_numpy(), tr[["x", "y", "z"]].to_numpy()
     tc = tt[(tt > -0.045) & (tt < 0.445)]
     vp = [np.linalg.norm([np.polyfit(tt[(tt >= c - 0.005) & (tt <= c + 0.005)],
                                      P[(tt >= c - 0.005) & (tt <= c + 0.005), i], 1)[0] for i in range(3)])
           for c in tc]
-    a.plot(tr.t, tr.speed, color=MUTED, lw=1.0, label="reported by the tracker")
-    a.plot(tc, vp, color=BLUE, lw=1.2, label="from the positions")
-    a.legend(loc="lower right", fontsize=7.5)
-    marks = [(0.0, "strike"), (T_START, "start"), (T_START + 0.05, "sightings"),
+    a.plot(tc, vp, color=BLUE, lw=1.2)
+    marks = [(0.0, "strike"), (T_START, "start"), (T_START + 0.05, "observations"),
              (T_START + 0.10, None), (T_START + HORIZON, "plane")]
     top = tr.speed.max() * 1.12
     for t, lbl in marks:
@@ -64,7 +62,7 @@ def main():
             a.text(t + 0.006, top, lbl, fontsize=7.5, color=INK2, rotation=90, va="top", ha="left")
     a.set_xlim(-0.05, 0.45)
     a.set_ylim(0, top * 1.02)
-    a.set_xlabel("Time after the peak acceleration (s)")
+    a.set_xlabel("Time after the strike (s)")
     a.set_ylabel("Ball speed (m/s)")
     a.set_title(f"(a) One kick in the tracking data", loc="left")
 

@@ -1291,11 +1291,8 @@ procedure and the code.
   \centering
   \includegraphics[width=\linewidth]{real_kicks}
   \caption{(a) Speed of one ball in the tracking data around a kick, with
-    the times the test uses: the peak acceleration (taken as the strike),
-    the start of the test \SI{0.02}{\second} later, the two observations and
-    the plane. The speed reported by the tracker overshoots just after the
-    strike; the speed computed from the positions does not, and the test
-    uses positions only. (b) Predicted minus true crossing point on the
+    the times the test uses: the strike, the start of the test
+    \SI{0.02}{\second} later, the two observations and the plane. (b) Predicted minus true crossing point on the
     plane for all 17 kicks. The dashed ellipse is the typical predicted
     two-standard-deviation range; misses spread far more in height than the
     method expects.}
@@ -1413,10 +1410,11 @@ kick is kept if, over that time, the ball stays above the ground, rises
 above \SI{0.5}{\metre} at some point, travels at least \SI{5}{\metre}
 horizontally, and never changes its reported speed by more than
 \SI{2}{\metre\per\second} between readings, which would mean a touch, block
-or bounce. Seventeen kicks pass. The tracker's reported speed overshoots for
-a few hundredths of a second after the strike (Figure~\ref{fig:realkicks}),
-so we use it only to find and screen kicks; every position the method sees
-comes from the tracked positions.
+or bounce. Seventeen kicks pass. The speed the tracker reports overshoots
+for a few hundredths of a second after the strike, by about
+\SI{3}{\metre\per\second}, while the speed computed from the tracked
+positions does not. We therefore use the reported speed only to find and
+screen kicks; everything the method sees comes from the tracked positions.
 
 \paragraph{Coordinates.} The starting point $\bm{r}_0$ is a quadratic fit to
 the positions within $\pm\SI{0.01}{\second}$ of the start, evaluated at the
