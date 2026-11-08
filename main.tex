@@ -1283,8 +1283,68 @@ errors. The most likely point misses the truth by \SI{18}{\centi\metre} in
 a typical kick, against \SI{27}{\centi\metre} for the constant-acceleration
 curve, whose regions are also about 50\% wider. Because the simulated kicks
 follow our own model, this shows that the method is consistent with its
-assumptions, not that the assumptions match real football
-(Section~\ref{sec:discussion}).
+assumptions, not that the assumptions match real football; we test that
+next.
+
+\subsection{Testing on Real Kicks}
+\label{sec:realdata}
+
+To see how the method does on real kicks, we used ball-tracking data from a
+match recorded at the Nuremberg football stadium with a radio-based system
+that locates a sensor inside the ball about 2{,}000 times a second
+\citep{debs2013}. Our copy of the data covers only the first 8.6 minutes of
+play, and only two kicks in it reach a goal line untouched. We therefore
+used a different target. For every kick that flew freely through the air
+for \SI{0.38}{\second}, about the flight time of the penalty, we placed an
+imaginary plane across its path where the ball was at that time, between
+\SI{6}{} and \SI{9}{\metre} from the kick. Seventeen kicks qualified, at
+\SIrange{20}{31}{\metre\per\second}. As for the penalty, the method saw only
+the ball's position at the start (\SI{0.02}{\second} after the foot struck
+it) and \SI{0.05}{} and \SI{0.10}{\second} later, and predicted where it
+would cross the plane. From the scatter of the tracks, the tracking error is
+about \SI{0.8}{\centi\metre} horizontally and \SI{2.5}{\centi\metre}
+vertically, and we used these values for $\sigma$.
+
+\begin{table}[H]
+  \centering
+  \caption{Predictions for 17 real kicks on a plane 6--9\,m from the kick.
+    With a correct uncertainty, 95\% of misses would lie within two predicted
+    standard deviations.}
+  \label{tab:realdata}
+  \small
+  \begin{tabular}{lccc}
+    \toprule
+    & Sideways & Height & Overall \\
+    \midrule
+    Median miss, Monte Carlo (\si{\centi\metre})        & 14   & 24   & 33 \\
+    Median miss, constant acceleration (\si{\centi\metre}) & & & 107 \\
+    Within two predicted standard deviations            & 0.94 & 0.59 & \\
+    Inside 68\% / 95\% region                            &      &      & 0.35 / 0.59 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Sideways, the method works on real kicks as it does on simulated ones
+(Table~\ref{tab:realdata}): the typical miss is \SI{14}{\centi\metre}, and
+16 of the 17 kicks land within two predicted standard deviations. In height
+it is less accurate and overconfident: the typical miss is
+\SI{24}{\centi\metre}, and only 59\% of kicks land within two standard
+deviations, so the 68\% and 95\% regions contain the true crossing for only
+35\% and 59\% of kicks. The likely cause is the tracking system rather than
+the physics. Its height readings are three times noisier than its
+horizontal ones, and the error drifts slowly rather than varying
+independently from one reading to the next. A drift between the two
+observations looks like a wrong vertical speed, which grows to tens of
+centimeters by the plane, while our error model assumes independent errors.
+Even so, the physics makes a large difference: the constant-acceleration
+curve, which is far more sensitive to noisy positions, misses by
+\SI{107}{\centi\metre}, three times as much.
+
+The test is small, its kicks are passes and shots in open play rather than
+penalties, and the true crossing is measured by the same noisy system. We
+read it as evidence that the method transfers to real kicks for the curl,
+and that a real application would need an error model that matches the
+tracking system, especially in height.
 
 % =====================================================================
 \section{Discussion}
