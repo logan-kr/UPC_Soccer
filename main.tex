@@ -910,10 +910,11 @@ and~\ref{sec:summaries}).
 \subsection{Extending the Model}
 \label{sec:variants}
 
-We extend the model of Section~\ref{sec:simple-model} with three more effects:
-buoyancy and the added mass of the surrounding air, knuckling, and differences
-in aerodynamics between balls. Each is small for this kick, but including them
-shows how much the answer depends on the physics.
+We extend the model of Section~\ref{sec:simple-model} with two more effects:
+buoyancy and the added mass of the surrounding air, and knuckling. Each is
+small for this kick, but including them shows how much the answer depends on
+the physics. Differences in aerodynamics between balls are treated as
+uncertainty in the drag and lift coefficients (Section~\ref{sec:priors}).
 
 \paragraph{Buoyancy and added mass.} The ball displaces a mass of air
 $\rho V = \SI{6.8}{\gram}$, where $V = \tfrac{4}{3}\pi r^3$, about
@@ -947,18 +948,6 @@ knuckling, and weakens in proportion to $1/|\bm{\omega}|$ above it, because a
 spinning ball turns the force around and averages it out. Where the two
 sources differ we take the more modest value, so this model is more likely to
 understate knuckling than to overstate it.
-
-\paragraph{Drag and lift factors.} To let the ball's aerodynamics differ from
-the Teamgeist's, we multiply the drag and lift coefficients of
-Equations~\eqref{eq:cd} and~\eqref{eq:cl} by constant factors,
-\begin{equation}
-  C_D \;\to\; f_D\, C_D(v, S_\perp), \qquad
-  C_L \;\to\; f_L\, C_L(v, S_\perp).
-  \label{eq:factors}
-\end{equation}
-The factor $f_D$ multiplies the drag force only. The drag coefficient inside
-the lift model (Equation~\eqref{eq:cl}) keeps its published value, so the two
-factors act independently. Section~\ref{sec:priors} gives their ranges.
 
 \paragraph{Model variants.} We run three versions of the model on the same
 random draws, so that differences between them are not Monte Carlo noise.
@@ -1022,8 +1011,20 @@ any of them.
 measured by \citet{tsukada2008} (Section~\ref{sec:spin-decay}), and the mass
 spans the legal range \citep{ifab2025}.
 
-\paragraph{Drag and lift factors.} The ranges come from how much the
-coefficients differ between balls. Table~\ref{tab:balls} compares the other
+\paragraph{Drag and lift factors.} To let the ball's aerodynamics differ from
+the Teamgeist's, each draw multiplies the drag and lift coefficients of
+Equations~\eqref{eq:cd} and~\eqref{eq:cl} by constant factors,
+\begin{equation}
+  C_D \;\to\; f_D\, C_D(v, S_\perp), \qquad
+  C_L \;\to\; f_L\, C_L(v, S_\perp).
+  \label{eq:factors}
+\end{equation}
+The factor $f_D$ multiplies the drag force only. The drag coefficient inside
+the lift model (Equation~\eqref{eq:cl}) keeps its published value, so the two
+factors act independently.
+
+The ranges come from how much the coefficients differ between balls.
+Table~\ref{tab:balls} compares the other
 three World Cup balls in \citet{kiratidis2018} with the Teamgeist, using their
 own equations (their Table~1 and Equations~5--9) over the speeds and spin
 parameters of a penalty kick. The Teamgeist has the lowest drag and the most
