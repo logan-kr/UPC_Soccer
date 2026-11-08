@@ -76,11 +76,9 @@ def forces():
     ax.set_aspect("equal")
     ax.axis("off")
 
-    # Ball: crisp mint fill with navy border and subtle inner white highlight rim
-    ball = Circle((0, 0), 1.0, fc=COLOR_MINT, ec=COLOR_NAVY, lw=1.8, zorder=2)
+    # Ball: crisp circle without fill color
+    ball = Circle((0, 0), 1.0, fc="none", ec=COLOR_NAVY, lw=1.8, zorder=2)
     ax.add_patch(ball)
-    rim = Circle((0, 0), 0.965, fc="none", ec="#ffffff", lw=1.2, alpha=0.85, zorder=3)
-    ax.add_patch(rim)
 
     def arrow(x0, y0, x1, y1, c, lw=2.3, mut=15):
         ax.add_patch(FancyArrowPatch((x0, y0), (x1, y1), arrowstyle="-|>", mutation_scale=mut,
