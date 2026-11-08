@@ -90,7 +90,7 @@ def forces():
     ax.plot([0], [0], marker="o", ms=5, color=INK)          # spin axis out of the page
     ax.plot([0], [0], marker="o", ms=11, mfc="none", mec=INK, mew=1.0)
     ax.text(0.18, 0.18, r"$\boldsymbol{\omega}$", fontsize=11)
-    ax.text(-3.3, -1.55, "spin axis out of\nthe page: backspin", fontsize=7.5,
+    ax.text(-3.3, -1.55, "Spin axis out of the page\n(backspin)", fontsize=7.5,
             color=INK2, va="top")
     ax.set_xlim(-3.4, 3.6)
     ax.set_ylim(-2.5, 2.6)
@@ -105,20 +105,20 @@ def coefficients():
     for S, c in zip((0.0, 0.1, 0.2), (BLUE, ORANGE, AQUA)):
         a.plot(v, ball.cd(v, S), color=c, lw=1.8, label=rf"$S_\perp = {S:g}$")
     a.axvspan(26, 33, color=GRID, alpha=0.6, lw=0)
-    a.text(29.5, 0.115, "penalty\nspeeds", ha="center", va="bottom", fontsize=7.5, color=INK2)
-    a.set_xlabel(r"speed $|\mathbf{v}|$ (m/s)")
-    ylabel_top(a, r"(a) drag coefficient $C_D$")
+    a.text(29.5, 0.115, "Penalty\nspeeds", ha="center", va="bottom", fontsize=7.5, color=INK2)
+    a.set_xlabel(r"Speed, $|\mathbf{v}|$ (m/s)")
+    ylabel_top(a, r"(a) Drag coefficient, $C_D$")
     a.set_ylim(0.1, 0.55)
     a.legend(loc="upper right")
 
     S = np.linspace(0, 0.4, 400)
-    b.plot(S, ball.cl(30.0, S), color=BLUE, lw=1.8, label="model, 30 m/s")
+    b.plot(S, ball.cl(30.0, S), color=BLUE, lw=1.8, label="Model at 30 m/s")
     b.plot([0.06, 0.19, 0.31], [0.14, 0.29, 0.33], ls="none", marker="o", ms=6, mfc=ORANGE, mec="white",
-           mew=1.0, label="calibration points\n(Kiratidis & Leinweber)")
+           mew=1.0, label="Calibration values\n(Kiratidis and Leinweber, 2018)")
     b.axvspan(0, 0.26, color=GRID, alpha=0.6, lw=0)
-    b.text(0.13, 0.375, "measured kicks", ha="center", fontsize=7.5, color=INK2)
-    b.set_xlabel(r"perpendicular spin parameter $S_\perp$")
-    ylabel_top(b, r"(b) lift coefficient $C_L$")
+    b.text(0.13, 0.375, "Measured kicks", ha="center", fontsize=7.5, color=INK2)
+    b.set_xlabel(r"Perpendicular spin parameter, $S_\perp$")
+    ylabel_top(b, r"(b) Lift coefficient, $C_L$")
     b.set_ylim(0, 0.4)
     b.legend(loc="lower right")
     fig.tight_layout(w_pad=2.0)
@@ -145,20 +145,20 @@ def spin_map(df):
     best = df.loc[df.max_miss_mm.idxmin()]
     ax.plot(best.back_rps, best.side_rps, marker="*", ms=13, mfc=ORANGE, mec="white", mew=1.0, ls="none")
     ax.plot(0, 0, marker="o", ms=6, mfc="white", mec=INK, mew=1.0, ls="none")
-    ax.annotate("smallest miss", (best.back_rps, best.side_rps), xytext=(12, -46), textcoords="offset points",
+    ax.annotate("Best fit", (best.back_rps, best.side_rps), xytext=(12, -46), textcoords="offset points",
                 fontsize=7.5, color=INK, arrowprops=dict(arrowstyle="-", color=INK2, lw=0.7))
-    ax.annotate("no spin", (0, 0), xytext=(-40, 14), textcoords="offset points", fontsize=7.5,
+    ax.annotate("No spin", (0, 0), xytext=(-40, 14), textcoords="offset points", fontsize=7.5,
                 arrowprops=dict(arrowstyle="-", color=INK2, lw=0.7))
-    ax.annotate("measured\nkicks", (6.5, 4.5), xytext=(14, 30), textcoords="offset points", fontsize=7.5,
+    ax.annotate("Measured\nkicks", (6.5, 4.5), xytext=(14, 30), textcoords="offset points", fontsize=7.5,
                 color=INK2, arrowprops=dict(arrowstyle="-", color=INK2, lw=0.7))
-    ax.text(-12, -31, "within 5 mm", color=ORANGE, fontsize=8)
+    ax.text(-12, -31, "5 mm boundary", color=ORANGE, fontsize=8)
     ax.set_aspect("equal")
     ax.set_xlim(-30, 30)
     ax.set_ylim(-36, 24)
     ax.grid(False)
-    ax.set_xlabel("backspin (+) / topspin (−) (rev/s)")
-    ylabel_top(ax, "sidespin (rev/s), + curls to the kicker's left")
-    hcolorbar(fig, pc, ax, "largest miss of an observed coordinate (mm)", extend="max")
+    ax.set_xlabel("Backspin, $\\omega_b$ (rev/s)")
+    ylabel_top(ax, "Sidespin, $\\omega_s$ (rev/s)")
+    hcolorbar(fig, pc, ax, "Largest coordinate miss, $\\delta_{\\max}$ (mm)", extend="max")
     save(fig, "spin_map")
 
 
@@ -172,20 +172,20 @@ def goal_crossings(df):
     zero = df[(df.back_rps == 0) & (df.side_rps == 0)].iloc[0]
     best = df.loc[df.max_miss_mm.idxmin()]
     ax.plot(zero.y_goal, zero.z_goal, marker="o", ms=7, mfc="white", mec=INK, mew=1.0, ls="none")
-    ax.annotate("no spin\n(misses by 11 mm)", (zero.y_goal, zero.z_goal), xytext=(10, -48),
+    ax.annotate("No spin\n($\\delta_{\\max}$ = 11.5 mm)", (zero.y_goal, zero.z_goal), xytext=(10, -48),
                 textcoords="offset points", fontsize=7.5, ha="left",
                 arrowprops=dict(arrowstyle="-", color=INK2, lw=0.7))
     ax.plot(best.y_goal, best.z_goal, marker="*", ms=13, mfc=ORANGE, mec="white", mew=1.0, ls="none")
-    ax.annotate("smallest miss", (best.y_goal, best.z_goal), xytext=(20, -26), textcoords="offset points",
+    ax.annotate("Best fit", (best.y_goal, best.z_goal), xytext=(20, -26), textcoords="offset points",
                 fontsize=7.5, arrowprops=dict(arrowstyle="-", color=INK2, lw=0.7))
-    ax.text(3.62, 1.3, "post", fontsize=7.5, color=INK2, ha="right")
-    ax.text(1.4, 2.5, "crossbar", fontsize=7.5, color=INK2)
+    ax.text(3.72, 1.3, "Post", fontsize=7.5, color=INK2, ha="right")
+    ax.text(1.4, 2.5, "Crossbar", fontsize=7.5, color=INK2)
     ax.set_xlim(4.0, 1.0)                          # kicker's view: +y on the left
     ax.set_ylim(1.2, 2.8)
     ax.set_aspect("equal")
-    ax.set_xlabel("y at the goal plane (m), kicker's view")
-    ylabel_top(ax, "z at the goal plane (m)")
-    hcolorbar(fig, sc, ax, "spin rate (rev/s)", pad=0.24)
+    ax.set_xlabel("Lateral position, $y$ (m)")
+    ylabel_top(ax, "Height, $z$ (m)")
+    hcolorbar(fig, sc, ax, "Spin rate, $|\\boldsymbol{\\omega}_0|$ (rev/s)", pad=0.24)
     save(fig, "goal_crossings")
 
 
@@ -198,13 +198,13 @@ def residuals(df):
     w = 0.36
     fig, ax = plt.subplots(figsize=(5.0, 2.6))
     ax.axhspan(-TOL_MM, TOL_MM, color=GRID, alpha=0.7, lw=0)
-    ax.text(-0.45, 4.3, "±5 mm (rounding)", fontsize=7.5, color=INK2, ha="left", va="top")
-    ax.bar(x - w / 2 - 0.01, zero[cols].to_numpy(float), w, color=MUTED, label="no spin")
+    ax.text(-0.45, 4.3, "Rounding bound, ±5 mm", fontsize=7.5, color=INK2, ha="left", va="top")
+    ax.bar(x - w / 2 - 0.01, zero[cols].to_numpy(float), w, color=MUTED, label="No spin")
     ax.bar(x + w / 2 + 0.01, best[cols].to_numpy(float), w, color=BLUE,
-           label=f"best spin ({math.hypot(best.back_rps, best.side_rps):.0f} rev/s)")
+           label=f"Best fit ({math.hypot(best.back_rps, best.side_rps):.1f} rev/s)")
     ax.axhline(0, color=INK2, lw=0.8)
     ax.set_xticks(x, labels)
-    ylabel_top(ax, "model − observed position (mm)")
+    ylabel_top(ax, "Model minus observation (mm)")
     ax.grid(axis="x", visible=False)
     ax.legend(loc="lower right")
     save(fig, "residuals")

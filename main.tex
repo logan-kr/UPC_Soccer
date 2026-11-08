@@ -567,7 +567,7 @@ curvature.
   \includegraphics[width=0.75\linewidth]{residuals}
   \caption{Model position minus observed position for the six observed
     coordinates, for the best launch velocity with no spin (gray) and with
-    the best spin (blue). In each case $\bm{v}_0$ is chosen to make the
+    the best-fit spin (blue). In each case $\bm{v}_0$ is chosen to make the
     largest miss as small as possible, which is why several of the gray bars
     have the same height. The shaded band is the $\pm\SI{5}{\milli\metre}$
     rounding of the data.}
@@ -589,15 +589,16 @@ that range the best fit still misses one coordinate by
   \centering
   \includegraphics[width=0.62\linewidth]{spin_map}
   \caption{How well each spin can explain the observations. Every point of
-    the map is one choice of backspin (horizontal axis) and sidespin
-    (vertical axis). For that spin we fit the launch velocity and color the
+    the map is one choice of backspin $\omega_b$ (horizontal axis; negative
+    values are topspin) and sidespin $\omega_s$ (vertical axis; positive
+    values curl the ball toward $+y$, the kicker's left). For that spin we fit the launch velocity and color the
     point by the largest of the six misses between the model and the
     observed coordinates: dark points fit well, light points fit badly. The
     orange contour
     encloses the spins that reproduce both observations to within
-    \SI{5}{\milli\metre}. The star marks the smallest miss
-    (\SI{0.9}{\milli\metre}) and the circle marks no spin
-    (\SI{11.5}{\milli\metre}). The dashed sector shows the spins of measured
+    \SI{5}{\milli\metre}. The star marks the best fit
+    ($\delta_{\max} = \SI{0.9}{\milli\metre}$) and the circle marks no spin
+    ($\delta_{\max} = \SI{11.5}{\milli\metre}$). The dashed sector shows the spins of measured
     kicks, used as the spin range in Section~\ref{sec:montecarlo}.}
   \label{fig:spinmap}
 \end{figure}
