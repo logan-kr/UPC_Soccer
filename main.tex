@@ -1250,49 +1250,42 @@ place the ball in the same corner, about a meter inside the post.
 \subsection{Testing on Simulated Kicks}
 \label{sec:validation}
 
-A prediction with an uncertainty is only useful if the uncertainty is
-honest: the 68\% region should contain the true crossing point 68\% of the
-time. We tested this on 200 simulated kicks. For each kick we drew the true
-inputs from the distributions of Section~\ref{sec:priors}, a launch speed
-between \SI{20}{} and \SI{34}{\metre\per\second}, and an aim point anywhere
-on or around the goal, so that some kicks miss. We flew the ball, rounded
-its positions at \SI{0.05}{} and \SI{0.10}{\second} to the nearest
-centimeter as in the problem, and gave only those rounded positions to the
-method, which still assumes a Gaussian error with
-$\sigma = \SI{2.9}{\milli\metre}$. Each prediction used 5{,}000 draws.
+We check that the stated uncertainty is honest: the true crossing point
+should land inside the 68\% region about 68\% of the time, and inside the
+95\% region about 95\% of the time. The true crossing of the given kick is
+unknown, so we simulated 200 kicks whose crossings we know. Each had its
+spin, ball and mass drawn from the distributions of
+Section~\ref{sec:priors}, a launch speed between \SI{20}{} and
+\SI{34}{\metre\per\second}, and a random aim on or around the goal. We gave
+the method only the ball's positions at \SI{0.05}{} and \SI{0.10}{\second},
+rounded to the nearest centimeter as in the problem.
 
 \begin{table}[H]
   \centering
-  \caption{Predictions for 200 simulated kicks. Coverage is the fraction of
-    kicks whose true crossing lies inside the stated region, with its
-    standard error. The Brier score is the mean squared error of the
-    predicted probability of a goal (lower is better).}
+  \caption{Results for 200 simulated kicks. With 200 kicks, each fraction is
+    uncertain by about $\pm 0.03$.}
   \label{tab:validation}
   \small
-  \begin{tabular}{lcccc}
+  \begin{tabular}{lccc}
     \toprule
-    Method & 68\% coverage & 95\% coverage & Median miss (\si{\centi\metre}) & Brier score \\
+    Method & Inside 68\% region & Inside 95\% region & Median miss (\si{\centi\metre}) \\
     \midrule
-    Monte Carlo (ours)           & $0.680 \pm 0.033$ & $0.985 \pm 0.015$ & 18 & 0.044 \\
-    Constant acceleration        & $0.675 \pm 0.033$ & $0.960 \pm 0.015$ & 27 & 0.066 \\
+    Monte Carlo (ours)    & 0.680 & 0.985 & 18 \\
+    Constant acceleration & 0.675 & 0.960 & 27 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-The stated uncertainty is honest (Table~\ref{tab:validation}). The 68\%
-region contains the true crossing in 68.0\% of kicks, and the 95\% region
-in 98.5\%, slightly more than stated and so on the safe side. This holds
-even though the simulated errors come from rounding while the method
-assumes Gaussian errors, which supports that choice. The method misses the
-true crossing by \SI{18}{\centi\metre} in a typical kick, against
-\SI{27}{\centi\metre} for the constant-acceleration curve, and its
-probability of a goal is more accurate. The constant-acceleration curve is
-also honest about its uncertainty here, but only because its regions are
-about 50\% wider; the physics buys a sharper prediction at the same
-reliability. These kicks share the method's own physics and distributions,
-so the test shows that the method is internally consistent, not that its
-assumptions match real football; Section~\ref{sec:discussion} returns to
-this.
+The true crossing landed inside the 68\% region for 68\% of the kicks and
+inside the 95\% region for 98.5\% (Table~\ref{tab:validation}), so the
+stated uncertainty is accurate, and if anything slightly cautious. This
+holds even though the data are rounded while the method assumes Gaussian
+errors. The most likely point misses the truth by \SI{18}{\centi\metre} in
+a typical kick, against \SI{27}{\centi\metre} for the constant-acceleration
+curve, whose regions are also about 50\% wider. Because the simulated kicks
+follow our own model, this shows that the method is consistent with its
+assumptions, not that the assumptions match real football
+(Section~\ref{sec:discussion}).
 
 % =====================================================================
 \section{Discussion}
