@@ -233,9 +233,12 @@ regulation ball ($m = \SI{0.43}{\kilo\gram}$, $r = \SI{0.11}{\metre}$) in air
 of density \SI{1.20}{\kilo\gram\per\metre\cubed}, $k = \SI{0.053}{\per\metre}$.
 At \SI{32}{\metre\per\second}, the launch speed we fit in
 Section~\ref{sec:exact-fits}, drag decelerates a
-non-spinning ball by about \SI{8}{\metre\per\second\squared}. EXPLAIN THAT WE USED A PAPER THAT HAS THIS DATA A spin of
-\SI{9.3}{\rev\per\second}, at the top CITE THE SOURCE HERE of the range measured when players' kicks are filmed with
-high-speed cameras (Section~\ref{sec:kick-spin}), gives a lift of about
+non-spinning ball by about \SI{8}{\metre\per\second\squared}, using the drag
+coefficient $C_D \approx 0.15$ that \citet{kiratidis2018} fit to wind-tunnel
+measurements of the Teamgeist ball \citep{asai2007}
+(Section~\ref{sec:coefficients}). A spin of \SI{9.3}{\rev\per\second}, at the
+top of the range measured when players' kicks are filmed with high-speed
+cameras (\citealp{tsukada2011}; Section~\ref{sec:kick-spin}), gives a lift of about
 \SI{16}{\metre\per\second\squared}.
 
 \subsection{Drag and lift coefficients}
@@ -245,8 +248,13 @@ The aerodynamic coefficients $C_D$ and $C_L$ are not constants. They depend
 dynamically on the ball's instantaneous speed and on the ratio of surface
 rotational speed to translational velocity, characterized by the non-dimensional
 spin parameter. Because only the component of angular velocity orthogonal to the
-flight path deflects the oncoming airflow, we define the GIVE SOME JUSTIFICATION FROM A CITATION LIKE AS IN X\emph{perpendicular}
-spin parameter:
+flight path deflects the oncoming airflow, we define the \emph{perpendicular}
+spin parameter. \citet{kiratidis2018} define the spin parameter as
+$S_p = r\omega/v$ (their Eq.~4) for a ball spinning about an axis perpendicular
+to its flight (their Fig.~1), and give the lift force the direction
+$\bm{\omega}\times\bm{v}$, whose magnitude $|\bm{\omega}||\bm{v}|\sin\theta$
+counts only the perpendicular part of the spin. For a general spin axis we
+therefore replace $\omega$ by its perpendicular component:
 \begin{equation}
   S_\perp = \frac{r\,|\bm{\omega}\times\bm{v}|}{|\bm{v}|^2}
           = \frac{r\,|\bm{\omega}|\sin\theta}{|\bm{v}|},
@@ -311,7 +319,7 @@ measured 0.15.
 
 It is important to note that \citet{kiratidis2018} did not report experimental
 uncertainties or error bounds for their digitized wind-tunnel datasets and
-trajectory fits (shown in Figure~\ref{fig:coefficients}). As they noted,
+trajectory fits (reproduced in Figure~\ref{fig:coefficients}, Appendix~\ref{app:coef-data}). As they noted,
 empirical measurements of sports balls exhibit considerable trial-to-trial
 scatter due to unpredictable seam orientations relative to the airflow and
 subtle boundary-layer tripping during launch, yet no formal confidence intervals
@@ -389,27 +397,6 @@ and $0 \le S_\perp \le 1.1$:
     why we treat knuckling as a separate force that acts only at low spin
     (Section~\ref{sec:variants}).
 \end{enumerate}
-
-\begin{figure}[H]
-  \centering
-  \begin{subfigure}[b]{0.48\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{kiratidis_cd_comparison.pdf}
-    \caption{Non-spinning drag coefficient $C_{D0}$ against speed for modern World Cup match balls \citep[Fig.~5]{kiratidis2018}.}
-    \label{fig:kiratidis-cd0}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.48\linewidth}
-    \centering
-    \includegraphics[width=\linewidth]{kiratidis_cd_vs_spin.pdf}
-    \caption{Teamgeist drag coefficient $C_D$ against spin parameter $S_p$ at various Reynolds numbers in the turbulent regime, fitted by $a + b\,S_p$ \citep[Fig.~6]{kiratidis2018}.}
-    \label{fig:kiratidis-cd-spin}
-  \end{subfigure}
-  \caption{Aerodynamic drag characteristics reproduced from \citet{kiratidis2018}.
-    (a) Comparison of $C_{D0}(v)$ across four tournament balls, demonstrating the Teamgeist's smooth post-crisis plateau ($C_{D0} \approx 0.15$) and the Jabulani's delayed transition.
-    (b) Wind-tunnel data for the Teamgeist ball across five supercritical Reynolds numbers ($3.34\times 10^5 \le \mathrm{Re} \le 4.55\times 10^5$), showing linear drag enhancement with spin ($b = \SI{0.514}{\per\radian}$, black line) with no explicit experimental error bars reported.}
-  \label{fig:coefficients}
-\end{figure}
 
 \subsection{Spin Decay}
 \label{sec:spin-decay}
@@ -1424,6 +1411,36 @@ physical regime ($C_D < C_{D0}(0)$ and $\bm{\omega}_0 \neq \bm{0}$), every
 building block of $\bm{F}$ is real-analytic ($C^\omega$), which by the analytic
 Cauchy--Kowalevski theorem guarantees that the forward flow map
 $(\bm{v}_0, \omega_b, \omega_s) \mapsto \bm{r}(t)$ is real-analytic as well.
+
+% =====================================================================
+\section{Calibration Data for the Aerodynamic Coefficients}
+\label{app:coef-data}
+% =====================================================================
+
+Figure~\ref{fig:coefficients} reproduces the drag data and fits of
+\citet{kiratidis2018} on which the coefficient model of
+Section~\ref{sec:coefficients} is based.
+
+\begin{figure}[H]
+  \centering
+  \begin{subfigure}[b]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{kiratidis_cd_comparison.pdf}
+    \caption{Non-spinning drag coefficient $C_{D0}$ against speed for modern World Cup match balls \citep[Fig.~5]{kiratidis2018}.}
+    \label{fig:kiratidis-cd0}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{kiratidis_cd_vs_spin.pdf}
+    \caption{Teamgeist drag coefficient $C_D$ against spin parameter $S_p$ at various Reynolds numbers in the turbulent regime, fitted by $a + b\,S_p$ \citep[Fig.~6]{kiratidis2018}.}
+    \label{fig:kiratidis-cd-spin}
+  \end{subfigure}
+  \caption{Aerodynamic drag characteristics reproduced from \citet{kiratidis2018}.
+    (a) Comparison of $C_{D0}(v)$ across four tournament balls, demonstrating the Teamgeist's smooth post-crisis plateau ($C_{D0} \approx 0.15$) and the Jabulani's delayed transition.
+    (b) Wind-tunnel data for the Teamgeist ball across five supercritical Reynolds numbers ($3.34\times 10^5 \le \mathrm{Re} \le 4.55\times 10^5$), showing linear drag enhancement with spin ($b = \SI{0.514}{\per\radian}$, black line) with no explicit experimental error bars reported.}
+  \label{fig:coefficients}
+\end{figure}
 
 % =====================================================================
 \bibliography{references}
