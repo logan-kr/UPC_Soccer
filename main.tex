@@ -13,6 +13,7 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{caption}
+\usepackage{subcaption}
 \captionsetup{font=small,labelfont=bf}
 \usepackage[per-mode=symbol]{siunitx}
 \DeclareSIUnit\rev{rev}
@@ -335,7 +336,17 @@ viscosity $\nu = \SI{1.54e-5}{\metre\squared\per\second}$ and diameter
 $D = \SI{0.218}{\metre}$; \citealp{goff2010}). This calibration reproduces the
 empirically observed benchmarks of \citet{goff2010}: $C_L = 0.14$ at
 $S_\perp = 0.06$, $C_L = 0.29$ at $S_\perp = 0.19$, and $C_L = 0.33$ at
-$S_\perp = 0.31$. Figure~\ref{fig:coefficients} shows both coefficients.
+$S_\perp = 0.31$.
+
+It is important to note that \citet{kiratidis2018} did not report experimental
+uncertainties or error bounds for their digitized wind-tunnel datasets and
+trajectory fits (shown in Figure~\ref{fig:coefficients}). As they noted,
+empirical measurements of sports balls exhibit considerable trial-to-trial
+scatter due to unpredictable seam orientations relative to the airflow and
+subtle boundary-layer tripping during launch, yet no formal confidence intervals
+or error bars accompany their equations. This absence of published uncertainty
+bounds directly motivates the sensitivity analyses and Monte Carlo sampling
+framework developed in Section~\ref{sec:montecarlo}.
 
 \paragraph{Cross-validation with Kray et al. (2014) and simulation bounds.}
 To verify whether these formulations and our simulation bounds represent
@@ -386,14 +397,22 @@ and $0 \le S_\perp \le 1.1$:
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=\linewidth]{coefficients}
-  \caption{Drag and lift coefficients of the model (Teamgeist parameters of
-    \citealp{kiratidis2018}). (a) $C_D$ against speed for three values of the
-    perpendicular spin parameter; the shaded band marks the speeds of the
-    fitted penalties. (b) $C_L$ against $S_\perp$ at \SI{30}{\metre\per\second},
-    with the calibration values the paper reports. The shaded band marks the
-    spin parameters reached by kicks spinning at up to
-    \SI{8}{\rev\per\second}, the range of measured kicks.}
+  \begin{subfigure}[b]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{kiratidis_cd_comparison.pdf}
+    \caption{Non-spinning drag coefficient $C_{D0}$ against speed for modern World Cup match balls \citep[Fig.~5]{kiratidis2018}.}
+    \label{fig:kiratidis-cd0}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{kiratidis_cd_vs_spin.pdf}
+    \caption{Teamgeist drag coefficient $C_D$ against spin parameter $S_p$ at various Reynolds numbers in the turbulent regime, fitted by $a + b\,S_p$ \citep[Fig.~6]{kiratidis2018}.}
+    \label{fig:kiratidis-cd-spin}
+  \end{subfigure}
+  \caption{Aerodynamic drag characteristics reproduced from \citet{kiratidis2018}.
+    (a) Comparison of $C_{D0}(v)$ across four tournament balls, demonstrating the Teamgeist's smooth post-crisis plateau ($C_{D0} \approx 0.15$) and the Jabulani's delayed transition.
+    (b) Wind-tunnel data for the Teamgeist ball across five supercritical Reynolds numbers ($3.34\times 10^5 \le \mathrm{Re} \le 4.55\times 10^5$), showing linear drag enhancement with spin ($b = \SI{0.514}{\per\radian}$, black line) with no explicit experimental error bars reported.}
   \label{fig:coefficients}
 \end{figure}
 
