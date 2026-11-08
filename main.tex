@@ -15,6 +15,9 @@
 \usepackage{caption}
 \captionsetup{font=small,labelfont=bf}
 \usepackage[per-mode=symbol]{siunitx}
+\DeclareSIUnit\rev{rev}
+\graphicspath{{figures/}}
+\usepackage{float}
 
 % ---------- Header: "Problem X | Team NNN | page" with a rule ----------
 \usepackage{fancyhdr}
@@ -46,7 +49,7 @@
 % the title and a summary of at most 300 words. The header carries the team number.
 \begin{center}
   \vspace*{3cm}
-  {\LARGE Aerodynamic Modelling and Monte Carlo Simulations\\[4pt]
+  {\LARGE Aerodynamic Modeling and Monte Carlo Simulations\\[4pt]
    for FIFA Penalty Kick Trajectory Prediction}\\[1.5cm]
   {\large Team \teamnumber, Problem \problemletter}\\[1.5cm]
   {\bfseries Abstract}
@@ -85,7 +88,7 @@ decide where the ball ends up. Over the first \SI{0.1}{\second} the ball
 travels about \SI{3}{\metre}, and the curve that spin puts into its path
 is only about \SI{1}{\centi\metre}, the same size as the precision of the
 positions we are given. By the time the ball reaches the goal, the same spin
-has moved it by tens of centimetres. Drag, which slows the ball, depends on
+has moved it by tens of centimeters. Drag, which slows the ball, depends on
 its speed and spin in ways that cannot be measured from two positions.
 Predicting the crossing point is therefore not a curve-fitting problem but
 an extrapolation problem, and an honest answer has to say how uncertain the
@@ -112,7 +115,7 @@ and weaknesses of the approach.
 % =====================================================================
 
 A penalty kick is taken from the penalty mark. We use the coordinate system
-of the problem, in metres:
+of the problem, in meters:
 \begin{itemize}
   \item the origin is at the penalty mark;
   \item the $x$-axis points toward the goal, which lies in the plane $x = 11$;
@@ -120,7 +123,7 @@ of the problem, in metres:
   \item the $z$-axis points up.
 \end{itemize}
 The goal mouth is the region $-3.66 < y < 3.66$, $0 < z < 2.44$ of the
-plane $x = 11$. At $t = 0$ the centre of the ball is at
+plane $x = 11$. At $t = 0$ the center of the ball is at
 $\bm{r}_0 = (0, 0, 0.11)$, one ball radius above the mark. The position of
 the ball is then observed at $t_1 = \SI{0.05}{\second}$ and
 $t_2 = \SI{0.10}{\second}$.
@@ -136,7 +139,7 @@ Table~\ref{tab:scenario}.
 
 \begin{table}[h]
   \centering
-  \caption{Observed positions of the ball's centre in the given scenario.
+  \caption{Observed positions of the ball's center in the given scenario.
     The position at $t = 0$ is given exactly.}
   \label{tab:scenario}
   \begin{tabular}{S[table-format=1.2] S[table-format=1.2] S[table-format=1.2] S[table-format=1.2]}
@@ -156,12 +159,12 @@ We interpret the problem as follows.
     positions as input. Nothing in it is tuned to the given scenario,
     which serves as one application of it.
   \item \textbf{Coordinates of the ball.} The problem gives the position
-    at $t = 0$ as the centre of the ball, so we take the observed
-    coordinates at $t_1$ and $t_2$ to be positions of the centre as well.
+    at $t = 0$ as the center of the ball, so we take the observed
+    coordinates at $t_1$ and $t_2$ to be positions of the center as well.
   \item \textbf{Entering the goal.} We take the point where the ball
-    ``enters the goal'' to be the $(y, z)$ position of its centre when the
-    centre reaches the goal plane $x = 11$. A shot counts as on target when
-    the centre crosses inside the goal mouth defined above, as \emph{wide}
+    ``enters the goal'' to be the $(y, z)$ position of its center when the
+    center reaches the goal plane $x = 11$. A shot counts as on target when
+    the center crosses inside the goal mouth defined above, as \emph{wide}
     when $|y| \geq 3.66$, and as \emph{over} when $z \geq 2.44$.
   \item \textbf{Off-target shots are part of the answer.} The ball is not
     guaranteed to enter the goal, so we predict where it crosses the whole
@@ -169,7 +172,7 @@ We interpret the problem as follows.
     point we report the probability that the ball enters the goal, and the
     probabilities that it goes wide or over.
   \item \textbf{Precision of the data.} The observed positions are given
-    to the nearest centimetre, so each coordinate is known only to within
+    to the nearest centimeter, so each coordinate is known only to within
     about $\pm\SI{5}{\milli\metre}$. A trajectory that passes within this
     distance of every observation is consistent with the data.
   \item \textbf{Most likely point and uncertainty.} Because the observations
@@ -187,15 +190,474 @@ We interpret the problem as follows.
 \section{Simplified Model and Assumptions}
 \label{sec:simple-model}
 % =====================================================================
-% Forces (gravity, drag, Magnus lift), equations of motion,
-% drag and lift coefficients, assumptions list with justifications.
+
+We first build a deterministic model: given the ball's launch velocity, its
+spin and a few physical constants, it predicts the whole flight. The method in
+Sections~\ref{sec:exact-fits} and~\ref{sec:montecarlo} uses this model to work
+backward from the two observed positions.
+
+\subsection{Forces on the ball}
+\label{sec:forces}
+
+Once the ball has left the foot, three forces act on it
+(Figure~\ref{fig:forces}): gravity, aerodynamic drag, and the Magnus lift that
+comes from spin. Writing $\bm{r}(t)$ for the position of the ball's center and
+$\bm{v} = \dot{\bm{r}}$ for its velocity,
+\begin{equation}
+  m\,\dot{\bm{v}} \;=\; m\bm{g} \;+\; \bm{F}_D \;+\; \bm{F}_L ,
+  \label{eq:eom}
+\end{equation}
+with $m$ the ball's mass and $\bm{g} = (0, 0, -g)$, $g = \SI{9.81}{\metre\per\second\squared}$.
+
+\paragraph{Drag.} Drag opposes the velocity and grows with the square of the
+speed:
+\begin{equation}
+  \bm{F}_D = -\tfrac{1}{2}\rho A\, C_D\, |\bm{v}|\,\bm{v},
+  \label{eq:drag}
+\end{equation}
+where $\rho$ is the air density, $A = \pi r^2$ is the ball's cross-section and
+$C_D$ is the drag coefficient.
+
+\paragraph{Magnus lift.} A spinning ball drags air around with it, deflecting
+the flow and pushing the ball sideways to its direction of travel. The force
+is perpendicular to both the velocity and the spin axis:
+\begin{equation}
+  \bm{F}_L = \tfrac{1}{2}\rho A\, C_L\, |\bm{v}|^2\,
+             \frac{\bm{\omega} \times \bm{v}}{|\bm{\omega} \times \bm{v}|},
+  \label{eq:lift}
+\end{equation}
+where $\bm{\omega}$ is the spin (angular velocity) and $C_L$ is the lift
+coefficient. Backspin lifts the ball, topspin makes it dip and sidespin makes
+it curl.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.5\linewidth]{forces}
+  \caption{Forces on the ball in flight: gravity $m\bm{g}$, drag $\bm{F}_D$
+    opposite the velocity $\bm{v}$, and Magnus lift $\bm{F}_L$ perpendicular to
+    both $\bm{v}$ and the spin $\bm{\omega}$. Here $\bm{\omega}$ points out of
+    the page, which for a ball moving to the right is backspin, so the lift
+    points up.}
+  \label{fig:forces}
+\end{figure}
+
+Dividing Equation~\eqref{eq:eom} by $m$ gives the equations we integrate,
+\begin{equation}
+  \dot{\bm{r}} = \bm{v}, \qquad
+  \dot{\bm{v}} = \bm{g} \;-\; k\, C_D\, |\bm{v}|\,\bm{v}
+                 \;+\; k\, C_L\, |\bm{v}|^2\, \hat{\bm{n}},
+  \qquad k = \frac{\rho A}{2m},
+  \label{eq:accel}
+\end{equation}
+with $\hat{\bm{n}}$ the unit vector along $\bm{\omega}\times\bm{v}$. For a
+regulation ball ($m = \SI{0.43}{\kilo\gram}$, $r = \SI{0.11}{\metre}$) in air
+of density \SI{1.20}{\kilo\gram\per\metre\cubed}, $k = \SI{0.053}{\per\metre}$.
+At a typical penalty speed of \SI{32}{\metre\per\second}, drag decelerates a
+non-spinning ball by about \SI{8}{\metre\per\second\squared}. A spin of
+\SI{8}{\rev\per\second}, at the top of the range measured for real kicks,
+gives a lift of about \SI{15}{\metre\per\second\squared}. Both are comparable
+to gravity, so none of the three forces can be left out.
+
+\subsection{Drag and lift coefficients}
+\label{sec:coefficients}
+
+The coefficients $C_D$ and $C_L$ are not constants. They depend on the ball's
+speed and on how fast it spins relative to how fast it moves, measured by the
+spin parameter. Only the part of the spin perpendicular to the velocity
+deflects the airflow, so we use the \emph{perpendicular} spin parameter
+\begin{equation}
+  S_\perp = \frac{r\,|\bm{\omega}\times\bm{v}|}{|\bm{v}|^2}
+          = \frac{r\,|\bm{\omega}|\sin\theta}{|\bm{v}|},
+  \label{eq:sperp}
+\end{equation}
+where $\theta$ is the angle between the spin axis and the velocity. Spin about
+the direction of travel (``rifle'' or screw spin, $\theta = 0$) produces
+neither lift nor extra drag. Both $S_\perp$ and the coefficients are
+recomputed at every step of the integration, because the ball slows down and
+turns during its flight.
+
+We take both coefficients from \citet{kiratidis2018}, who fitted published
+drag and lift measurements of recent World Cup balls, including the
+wind-tunnel data of \citet{asai2007} and the trajectory data of
+\citet{goff2010}. We use
+their parameters for the Adidas Teamgeist ball, the ball on which their lift
+model is calibrated. The drag coefficient of a non-spinning ball has a sharp
+drop, the \emph{drag crisis}, near \SI{13}{\metre\per\second}, followed by a
+slow rise at high speed \citep[Eq.~5]{kiratidis2018}:
+\begin{equation}
+  C_{D0}(v) = \frac{a - b_{\min}}{1 + e^{(v - v_c)/v_s}} + b_{\min}
+  + \frac{v - v_{\min}}{1 + e^{-(v - v_{\min})/v_s}}\,
+    \frac{b_{\max} - b_{\min}}{v_{\max} - v_{\min}},
+  \label{eq:cd0}
+\end{equation}
+with $v = |\bm{v}|$, $a = 0.4927$, $v_c = \SI{12.58}{\metre\per\second}$,
+$v_s = \SI{1.071}{\metre\per\second}$, $b_{\min} = 0.1440$,
+$b_{\max} = 0.1540$, $v_{\min} = \SI{23.17}{\metre\per\second}$ and
+$v_{\max} = \SI{35.00}{\metre\per\second}$. Spin adds drag in proportion to
+$S_\perp$ \citep[Eq.~7]{kiratidis2018}:
+\begin{equation}
+  C_D(v, S_\perp) = C_{D0}(v) + 0.514\, S_\perp .
+  \label{eq:cd}
+\end{equation}
+The lift coefficient is a power law in $S_\perp$, reduced as the drag rises
+toward its low-speed value \citep[Eqs.~8--9]{kiratidis2018}:
+\begin{equation}
+  C_L(v, S_\perp) = 1.15\, S_\perp^{0.83}\;
+  \frac{C_{D0}(0) - \min\!\big(C_D(v, S_\perp),\, C_{D0}(0)\big)}
+       {C_{D0}(0) - C_{D,\mathrm{ref}}},
+  \label{eq:cl}
+\end{equation}
+where $C_{D0}(0) \approx 0.493$ is the drag coefficient at very low speed and
+$C_{D,\mathrm{ref}} \approx 0.242$ is the drag coefficient at the
+calibration point of the fit (Reynolds number $3.34\times10^5$,
+$S_\perp = 0.19$). To convert that Reynolds number to a speed we use a
+kinematic viscosity of \SI{1.54e-5}{\metre\squared\per\second} and a ball
+diameter of \SI{0.218}{\metre} \citep{goff2010}, which gives
+\SI{23.6}{\metre\per\second}. With these values Equation~\eqref{eq:cl}
+reproduces the calibration values the paper reports, $C_L = 0.14$, $0.29$ and
+$0.33$ at $S_\perp = 0.06$, $0.19$ and $0.31$. Figure~\ref{fig:coefficients}
+shows both coefficients. At penalty speeds the non-spinning drag coefficient
+is nearly constant at about $0.15$, and the lift coefficient rises steeply
+with spin up to $S_\perp \approx 0.3$.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{coefficients}
+  \caption{Drag and lift coefficients of the model (Teamgeist parameters of
+    \citealp{kiratidis2018}). (a) $C_D$ against speed for three values of the
+    perpendicular spin parameter; the shaded band marks the speeds of the
+    fitted penalties. (b) $C_L$ against $S_\perp$ at \SI{30}{\metre\per\second},
+    with the calibration values the paper reports. The shaded band marks the
+    spin parameters reached by kicks spinning at up to
+    \SI{8}{\rev\per\second}, the range measured for real kicks.}
+  \label{fig:coefficients}
+\end{figure}
+
+\subsection{Spin decay}
+\label{sec:spin-decay}
+
+Air friction slows the ball's spin during flight. \citet{tsukada2008} filmed
+22 kicks at \SIrange{19}{31}{\metre\per\second} and found that they lost
+\SIrange{5}{15}{\percent} of their spin over \SI{18}{\metre}, independent of
+the initial spin, with the direction of the spin axis unchanged. We model this
+as an exponential decay with the distance $s$ the ball has travelled,
+\begin{equation}
+  |\bm{\omega}(t)| = |\bm{\omega}_0|\, e^{-s(t)/L}, \qquad \dot{s} = |\bm{v}|,
+  \label{eq:spindecay}
+\end{equation}
+with the axis fixed. This is the form that follows from an aerodynamic
+spin-down torque proportional to spin times speed, which
+\citet{james2008} measured for a football. The measured losses correspond to a decay
+length $L$ between \SI{110}{\metre} and \SI{350}{\metre}. Over the
+\SI{11}{\metre} of a penalty the spin therefore falls by only
+\SIrange{3}{10}{\percent}.
+
+\subsection{Solving the equations}
+\label{sec:integration}
+
+Equations~\eqref{eq:accel}--\eqref{eq:spindecay} have no closed-form solution,
+so we integrate them numerically with the adaptive eighth-order Runge--Kutta
+method DOP853 \citep{hairer1993}, as implemented in SciPy \citep{scipy2020}.
+The state is the position, velocity and distance travelled. The integration
+starts at $\bm{r}_0 = (0, 0, 0.11)$ with launch velocity $\bm{v}_0$ and stops
+when the ball's center reaches the goal plane $x = 11$, which the solver
+locates as an event to better than \SI{1}{\nano\metre}. Relative and absolute
+tolerances of $10^{-9}$ and $10^{-11}$ make the integration error negligible.
+We checked the solver against cases with exact solutions: flight under
+gravity alone, drag alone in one dimension, and lift alone, for which the ball
+moves in a circle at constant speed. In each case the numerical and exact
+trajectories agree to better than \SI{1e-6}{\metre}.
+
+\subsection{Assumptions}
+\label{sec:assumptions}
+
+\begin{enumerate}
+  \item \textbf{The ball is a rigid sphere of radius \SI{0.11}{\metre}.}
+    The problem places the ball's center \SI{0.11}{\metre} above the ground,
+    and the Laws of the Game require a circumference of
+    \SIrange{68}{70}{\centi\metre}, a radius of
+    \SIrange{10.8}{11.1}{\centi\metre} \citep{ifab2025}.
+  \item \textbf{The ball leaves the foot at $t = 0$ from $\bm{r}_0$.} This is
+    how the problem defines the kick. After $t = 0$ the foot no longer touches
+    the ball.
+  \item \textbf{Only gravity, drag and Magnus lift act on the ball.} We
+    neglect buoyancy, which is \SI{1.6}{\percent} of the ball's weight and
+    changes its height at the goal by about \SI{1}{\centi\metre}. We also
+    neglect the random sideways forces that act on balls kicked with almost
+    no spin (``knuckling'', \citealp{mizota2013}), which matter only below
+    about \SI{3}{\rev\per\second}.
+  \item \textbf{The air is still.} The two observations cannot detect wind,
+    and a penalty is usually taken inside a stadium. Ignoring a crosswind of
+    \SI{1}{\metre\per\second} moves the predicted crossing point by about
+    \SI{1.3}{\centi\metre}.
+  \item \textbf{The coefficients of the Teamgeist ball represent a modern
+    match ball.} Balls with different panel designs have somewhat different
+    drag curves \citep{kiratidis2018}, but at penalty speeds the differences
+    are small next to the effect of the unknown spin.
+  \item \textbf{The spin axis keeps its direction and the spin rate decays
+    with distance} as in Equation~\eqref{eq:spindecay} \citep{tsukada2008}.
+  \item \textbf{The flight ends at the goal plane.} We do not model the ball
+    hitting a post, the crossbar or the ground. The crossing point is that of
+    the ball's center, as the problem defines it.
+\end{enumerate}
+
+In this section and the next we also hold the air density, ball mass and
+spin-decay length fixed at $\rho = \SI{1.20}{\kilo\gram\per\metre\cubed}$,
+$m = \SI{0.43}{\kilo\gram}$ (the middle of the legal range
+\SIrange{0.41}{0.45}{\kilo\gram}, \citealp{ifab2025}) and
+$L = \SI{230}{\metre}$ (the middle of the measured range).
+Section~\ref{sec:montecarlo} lets them vary.
 
 % =====================================================================
 \section{Exact Fits in the Well-Constrained Case}
 \label{sec:exact-fits}
 % =====================================================================
-% Fix rho and m; fit launch velocity and spin to the six observed coordinates;
-% trajectories within the +/-5 mm rounding; what the data can and cannot fix.
+
+With the air density, ball mass and spin-decay length fixed, a trajectory is
+determined by six numbers: the three components of the launch velocity
+$\bm{v}_0$ and the three components of the spin $\bm{\omega}_0$. The two
+observations also supply six numbers. In this section we ask which launch
+velocities and spins reproduce both observations to within their rounding,
+and where those trajectories cross the goal plane. The method applies to any
+pair of observations; we apply it to the scenario of
+Table~\ref{tab:scenario}.
+
+\subsection{Spin components}
+\label{sec:spin-frame}
+
+We describe the spin relative to the direction of launch. Let
+$\hat{\bm{f}} = \bm{v}_0/|\bm{v}_0|$ point along the launch velocity, let
+$\hat{\bm{e}}_r = \hat{\bm{f}}\times\hat{\bm{z}}/|\hat{\bm{f}}\times\hat{\bm{z}}|$
+point horizontally to the right of the flight, and let
+$\hat{\bm{e}}_u = \hat{\bm{e}}_r\times\hat{\bm{f}}$ point up. We write
+\begin{equation}
+  \bm{\omega}_0 = \omega_b\,\hat{\bm{e}}_r + \omega_s\,\hat{\bm{e}}_u
+                + \omega_f\,\hat{\bm{f}},
+  \label{eq:spinframe}
+\end{equation}
+where $\omega_b$ is backspin (positive values lift the ball, negative values
+are topspin), $\omega_s$ is sidespin (positive values curl the ball to the
+kicker's left, $+y$) and $\omega_f$ is screw spin about the direction of
+travel. We quote spin rates in revolutions per second
+(\si{\rev\per\second}).
+
+\subsection{Why the screw spin is set to zero}
+\label{sec:screw}
+
+With all six unknowns free, the six observations can be matched exactly. We
+solved for them by least squares from several starting points. The only exact
+solutions we found need a screw spin of nearly \SI{1000}{\rev\per\second},
+more than a hundred times the spin measured in real kicks. They arise because screw spin
+produces no lift by itself (Equation~\ref{eq:sperp}); it acts only through the
+small angle that opens between the spin axis and the velocity as the path
+bends, so an enormous screw spin is needed to have any effect. These solutions
+are artifacts of the six-equation count, not kicks. Adding up to
+\SI{30}{\rev\per\second} of screw spin to our best fit below changes its
+misses by less than \SI{0.5}{\milli\metre}, so we set $\omega_f = 0$. That
+leaves five unknowns, $\bm{v}_0$, $\omega_b$ and $\omega_s$, for six observed
+numbers. The system is overdetermined, so we cannot expect an exact fit and
+instead ask for a fit within the precision of the data.
+
+\subsection{Consistency with the data}
+\label{sec:consistency}
+
+The observed positions are given to the nearest centimeter, so each true
+coordinate lies within \SI{5}{\milli\metre} of the stated value. Let
+$\bm{r}(t;\, \bm{v}_0, \omega_b, \omega_s)$ be the model's position and
+$\tilde{\bm{r}}_1$, $\tilde{\bm{r}}_2$ the observed positions at $t_1$ and
+$t_2$. We call a trajectory \emph{consistent} with the data if all six
+coordinate misses are at most \SI{5}{\milli\metre}:
+\begin{equation}
+  \delta_{\max} \;=\; \max_{i = 1,2}\;
+  \big\| \bm{r}(t_i;\, \bm{v}_0, \omega_b, \omega_s) - \tilde{\bm{r}}_i \big\|_\infty
+  \;\le\; \SI{5}{\milli\metre},
+  \label{eq:consistent}
+\end{equation}
+where $\|\cdot\|_\infty$ is the largest of the three coordinate differences.
+This is a hard bound rather than a statistical one, because rounding error
+can never exceed half the last digit.
+
+\subsection{Finding every consistent trajectory}
+\label{sec:search}
+
+The data fix the launch velocity sharply but the spin only weakly, so we
+treat the two differently: we search over spin, and for each spin we solve
+for the launch velocity.
+\begin{enumerate}
+  \item \textbf{Starting guess.} The constant-acceleration curve through
+    $\bm{r}_0$, $\tilde{\bm{r}}_1$ and $\tilde{\bm{r}}_2$ has initial velocity
+    \begin{equation}
+      \bm{v}_{\mathrm{init}} = \frac{4\tilde{\bm{r}}_1 - \tilde{\bm{r}}_2 - 3\bm{r}_0}{2\,\Delta t},
+      \qquad \Delta t = \SI{0.05}{\second},
+      \label{eq:vinit}
+    \end{equation}
+    which for the scenario is $(30.4, 9.4, 6.9)$\,\si{\metre\per\second}.
+  \item \textbf{Fit the launch velocity.} For a given spin
+    $(\omega_b, \omega_s)$, we find the $\bm{v}_0$ that minimizes the sum of
+    the six squared misses, using the Levenberg--Marquardt algorithm
+    \citep{levenberg1944, marquardt1963, more1978} from
+    $\bm{v}_{\mathrm{init}}$. Each evaluation integrates the equations of
+    motion to $t_2$. The derivatives of the positions with respect to
+    $\bm{v}_0$ are computed by central differences, integrating the
+    perturbed trajectories together with the main one so that all of them
+    use the same time steps.
+  \item \textbf{Minimize the worst miss.} The least-squares fit makes the
+    misses small on average, but Equation~\eqref{eq:consistent} limits the
+    largest one. Near the least-squares solution the misses depend almost
+    linearly on $\bm{v}_0$, so we find the change in $\bm{v}_0$ that
+    minimizes the largest miss by solving a small linear program
+    \citep{huangfu2018}. We then integrate the corrected trajectory again and
+    keep the correction only if it reduces $\delta_{\max}$. This lowers the
+    largest miss by about \SI{2}{\milli\metre} on average.
+  \item \textbf{Scan the spin.} We repeat steps 2--3 on a grid of spins,
+    $\omega_b$ and $\omega_s$ each from \SIrange{-40}{40}{\rev\per\second} in
+    steps of \SI{0.5}{\rev\per\second}, a total of 25{,}921 spins. The
+    consistent spins lie well inside the grid, so the grid does not cut off
+    any solutions.
+  \item \textbf{Fly each trajectory to the goal.} For every grid point we
+    integrate the trajectory to $x = 11$ and record the crossing point.
+\end{enumerate}
+As an independent check on step 4, we also minimized the sum of squared
+misses over all five unknowns at once, from 200 random starting spins of up to
+\SI{30}{\rev\per\second}. Of the 200 starts, 162 converged to the same
+minimum, next to the best grid point. The other 38 stopped on a ring of
+spins near \SI{30}{\rev\per\second}. There $S_\perp \approx 0.64$, the drag in
+Equation~\eqref{eq:cd} approaches its low-speed value and the lift of
+Equation~\eqref{eq:cl} almost vanishes, so the direction of the spin no longer
+matters. This ring is an edge of the lift model rather than a separate
+solution, and none of its points is consistent with the data.
+
+\subsection{Results for the scenario}
+\label{sec:fixed-results}
+
+Table~\ref{tab:fixed} summarizes the results. A ball without spin cannot
+reproduce the observations: even with the best launch velocity it misses one
+coordinate by \SI{11.5}{\milli\metre}, more than twice the rounding
+(Figure~\ref{fig:residuals}). The observed path curves more than the
+non-spinning model allows, and the model needs spin to explain the extra
+curvature.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.75\linewidth]{residuals}
+  \caption{Model position minus observed position for the six observed
+    coordinates, for the best launch velocity with no spin (gray) and with
+    the best spin (blue). In each case $\bm{v}_0$ is chosen to make the
+    largest miss as small as possible, which is why several of the gray bars
+    have the same height. The shaded band is the $\pm\SI{5}{\milli\metre}$
+    rounding of the data.}
+  \label{fig:residuals}
+\end{figure}
+
+Of the 25{,}921 spins on the grid, 1{,}425 give trajectories consistent with
+the data (Figure~\ref{fig:spinmap}). They form a single region of spin rates
+between \SI{9.4}{\rev\per\second} and \SI{28.4}{\rev\per\second}, all with
+sidespin that curls the ball to the kicker's right. The best fit, at
+$(\omega_b, \omega_s) = (3.0, -22.5)$\,\si{\rev\per\second}, matches every
+coordinate to within \SI{0.9}{\milli\metre}. Every consistent spin lies
+outside the range measured for real kicks (the dashed sector in
+Figure~\ref{fig:spinmap}, discussed in Section~\ref{sec:montecarlo}); inside
+that range the best fit still misses one coordinate by
+\SI{5.4}{\milli\metre}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.62\linewidth]{spin_map}
+  \caption{Largest miss of any observed coordinate, after fitting the launch
+    velocity, as a function of backspin and sidespin. The orange contour
+    encloses the spins that reproduce both observations to within
+    \SI{5}{\milli\metre}. The star marks the smallest miss
+    (\SI{0.9}{\milli\metre}) and the circle marks no spin
+    (\SI{11.5}{\milli\metre}). The dashed sector shows the spins measured
+    for real kicks, used as the spin range in Section~\ref{sec:montecarlo}.}
+  \label{fig:spinmap}
+\end{figure}
+
+The launch velocity, by contrast, is pinned down well. Across all consistent
+trajectories its components vary by only about \SI{0.5}{\metre\per\second},
+and the launch speed lies between \SI{32.3}{\metre\per\second} and
+\SI{32.8}{\metre\per\second}. The uncertainty in where the ball crosses the
+goal plane therefore comes from the spin, not from the launch.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.68\linewidth]{goal_crossings}
+  \caption{Goal-plane crossing points of all trajectories consistent with the
+    data to within \SI{5}{\milli\metre}, colored by spin rate, seen from the
+    kicker's position. The black lines are the left post ($y = 3.66$) and the
+    crossbar ($z = 2.44$). The star is the best fit. The open circle is the
+    trajectory without spin, which is not consistent with the data.}
+  \label{fig:crossings}
+\end{figure}
+
+All consistent trajectories cross the goal plane inside the goal, in the
+upper corner on the kicker's left (Figure~\ref{fig:crossings}). The crossing
+points span \SI{0.8}{\metre} across ($y$ from \SIrange{2.34}{3.16}{\metre})
+and \SI{0.6}{\metre} in height ($z$ from \SIrange{1.62}{2.25}{\metre}), and
+the ball takes \SIrange{0.39}{0.42}{\second} to get there. The best fit
+crosses at $(y, z) = (2.68, 1.92)$\,\si{\metre}.
+
+\begin{table}[H]
+  \centering
+  \caption{Fits to the scenario with $\rho$, $m$ and $L$ held fixed.
+    ``Largest miss'' is $\delta_{\max}$ of Equation~\eqref{eq:consistent}.}
+  \label{tab:fixed}
+  \begin{tabular}{lccc}
+    \toprule
+    & No spin & Best fit & All consistent fits \\
+    \midrule
+    Spin $(\omega_b, \omega_s)$ (\si{\rev\per\second})
+      & $(0, 0)$ & $(3.0, -22.5)$ & rate \numrange{9.4}{28.4} \\
+    Largest miss (\si{\milli\metre})       & 11.5 & 0.9 & $\le 5.0$ \\
+    Launch speed (\si{\metre\per\second})  & 32.1 & 32.6 & \numrange{32.3}{32.8} \\
+    Crossing $y$ (\si{\metre})             & 3.23 & 2.68 & \numrange{2.34}{3.16} \\
+    Crossing $z$ (\si{\metre})             & 1.97 & 1.92 & \numrange{1.62}{2.25} \\
+    Flight time (\si{\second})             & 0.38 & 0.41 & \numrange{0.39}{0.42} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Effect of the fixed parameters.} We repeated the best fit with the
+air density at \SI{1.14}{} and \SI{1.26}{\kilo\gram\per\metre\cubed}, the mass
+at \SI{0.41}{} and \SI{0.45}{\kilo\gram}, and the decay length at
+\SI{110}{\metre}, \SI{350}{\metre} and with no spin decay. None of these
+changes moves the best-fit crossing point by more than \SI{2.5}{\centi\metre},
+small next to the spread caused by the spin.
+
+\subsection{What the fixed-parameter case shows}
+\label{sec:fixed-lessons}
+
+This analysis gives the crossing point implied by the model if the
+observations are exact up to rounding. It also exposes three limits that
+motivate the Monte Carlo method of the next section.
+\begin{itemize}
+  \item \textbf{The data determine the spin only weakly.} The extra curvature
+    that spin must explain is about \SI{1}{\centi\metre}, the size of the
+    rounding itself. When we moved the observations randomly within their
+    rounding and refitted 40 times, the preferred spin ranged from
+    \SIrange{16}{26}{\rev\per\second}. The spin estimate is therefore driven
+    as much by how the numbers were rounded as by the physics.
+  \item \textbf{The consistent spins are larger than those of real kicks.}
+    Measured instep and curled kicks spin at
+    \SIrange{3}{8}{\rev\per\second} (Section~\ref{sec:montecarlo}), while
+    every consistent fit needs at least \SI{9.4}{\rev\per\second}.
+    % TODO: cite the measured-spin sources here once the Monte Carlo section adds them.
+    Any real measurement of the ball's position has errors of its own. If
+    those errors could reach \SI{5.4}{\milli\metre} instead of
+    \SI{5}{\milli\metre}, spins in the measured range would already fit the
+    data.
+  \item \textbf{The fits rely on the lift model beyond its data.} The
+    consistent spins correspond to $S_\perp$ between $0.20$ and $0.60$, and
+    \SI{93}{\percent} of them lie above $S_\perp = 0.31$, the largest spin
+    parameter in the wind-tunnel data behind Equation~\eqref{eq:cl}. The exact
+    location of the consistent region therefore depends on an extrapolated
+    part of the lift curve.
+\end{itemize}
+The Monte Carlo method addresses these limits. Instead of trusting the
+observations to the millimeter, it treats them as uncertain measurements. It
+draws the spin from the range measured for real kicks, and it lets the air
+density and ball mass vary, so that the stated uncertainty includes
+everything the observations cannot determine.
 
 % =====================================================================
 \section{Monte Carlo Model}

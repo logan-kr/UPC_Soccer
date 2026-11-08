@@ -1,0 +1,12 @@
+figures/*.png
+analysis/data/
+__pycache__/
+*.aux
+*.log
+*.bbl
+*.blg
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
