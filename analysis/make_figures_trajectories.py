@@ -76,6 +76,9 @@ def label(rec):
             f"$f_L$ = {rec.lift_scale:.2f}")
 
 
+VIEW = dict(elev=20, azim=-25, focal=0.4)   # behind the goal, looking back at the kicker
+
+
 def main():
     cfg = load_config()
     sc = cfg["scenario"]
@@ -95,55 +98,49 @@ def main():
     nospin = physics.trajectory(f.v0, base, r0=r0, n=400)
 
     colors = {"Most likely": ORANGE, "Edge of 95% region (a)": BLUE, "Edge of 95% region (b)": AQUA}
-    fig, ax = plt.subplots(2, 2, figsize=(7.0, 5.0), gridspec_kw=dict(height_ratios=[1.0, 0.8]))
-    (top, side), (dy, dz) = ax
-
-    def ref(p, i):
-        return np.interp(p[:, 0], nospin[:, 0], nospin[:, i])
-
-    for a, i in ((top, 1), (side, 2)):
-        a.plot(nospin[:, 0], nospin[:, i], color=MUTED, lw=1.0, ls="--")
+    fig = plt.figure(figsize=(7.0, 3.8))
+    ax = fig.add_axes((-0.06, 0.10, 1.12, 1.55), projection="3d", computed_zorder=False)
+    W, H = 3.66, 2.44
+    # goal line
+    ax.plot([11, 11], [-4.5, 4.5], [0, 0], color=MUTED, lw=0.8)
+    # goal frame
+    ax.plot([11, 11, 11, 11], [-W, -W, W, W], [0, H, H, 0], color=INK, lw=2.2)
     for name, (p, rec) in paths.items():
-        top.plot(p[:, 0], p[:, 1], color=colors[name], lw=1.4)
-        side.plot(p[:, 0], p[:, 2], color=colors[name], lw=1.4)
-        dy.plot(p[:, 0], 100 * (p[:, 1] - ref(p, 1)), color=colors[name], lw=1.4)
-        dz.plot(p[:, 0], 100 * (p[:, 2] - ref(p, 2)), color=colors[name], lw=1.4)
-    for a, i in ((top, 1), (side, 2)):
-        a.plot([0.0], [r0[i]], marker="o", ms=4, color=INK, ls="none")
-        a.plot(obs[:, 0], obs[:, i], marker="o", ms=4, mfc="white", mec=INK, ls="none")
-    for a, i in ((dy, 1), (dz, 2)):
-        a.plot(obs[:, 0], 100 * (obs[:, i] - ref(obs, i)), marker="o", ms=4, mfc="white", mec=INK, ls="none")
-        a.axhline(0, color=MUTED, lw=1.0, ls="--")
-    top.plot([11, 11], [-3.66, 3.66], color=INK, lw=2.2)          # goal mouth, seen from above
-    side.plot([11, 11], [0, 2.44], color=INK, lw=2.2)              # post and crossbar height
-    top.set_ylim(-0.5, 3.9)
-    side.set_ylim(0, 2.8)
-    top.set_ylabel("Lateral position, $y$ (m)")
-    side.set_ylabel("Height, $z$ (m)")
-    dy.set_ylabel("Sideways shift (cm)")
-    dz.set_ylabel("Height shift (cm)")
-    top.set_title("Top view")
-    side.set_title("Side view")
-    for a in ax.flat:
-        a.set_xlim(0, 11.3)
-    for a in (dy, dz):
-        a.set_xlabel("Distance toward goal, $x$ (m)")
-    top.text(10.85, 3.66, "post", fontsize=7.5, color=INK2, ha="right", va="center")
-    side.text(10.85, 2.44, "crossbar", fontsize=7.5, color=INK2, ha="right", va="center")
-    dy.text(0.3, dy.get_ylim()[0] * 0.8, "relative to the path without spin;\nnegative is toward the kicker's right",
-            fontsize=7.5, color=INK2, va="bottom")
-    dz.text(0.3, dz.get_ylim()[1] * 0.8, "relative to the path without spin", fontsize=7.5, color=INK2, va="top")
+        ax.plot(p[:, 0], p[:, 1], 0 * p[:, 2], color=colors[name], lw=0.8, alpha=0.35)   # shadow
+        ax.plot(p[:, 0], p[:, 1], p[:, 2], color=colors[name], lw=1.8)
+        ax.plot([p[-1, 0]], [p[-1, 1]], [p[-1, 2]], marker="o", ms=4, color=colors[name])
+    ax.plot(nospin[:, 0], nospin[:, 1], 0 * nospin[:, 2], color=MUTED, lw=0.8, ls="--", alpha=0.6)
+    ax.plot(nospin[:, 0], nospin[:, 1], nospin[:, 2], color=MUTED, lw=1.2, ls="--")
+    ax.plot([r0[0]], [r0[1]], [r0[2]], marker="o", ms=4, color=INK)
+    ax.plot(obs[:, 0], obs[:, 1], obs[:, 2], marker="o", ms=4, mfc="white", mec=INK, ls="none")
+    ax.set_xlim(0, 11.5)
+    ax.set_ylim(-4.5, 4.5)
+    ax.set_zlim(0, 2.6)
+    ax.set_box_aspect((11.5, 9.0, 2.6), zoom=0.95)
+    ax.view_init(**{k: v for k, v in VIEW.items() if k != "focal"})
+    if VIEW.get("focal"):
+        ax.set_proj_type("persp", focal_length=VIEW["focal"])
+    ax.set_xlabel("$x$ (m)", labelpad=6)
+    ax.set_ylabel("$y$ (m)", labelpad=2)
+    ax.set_zlabel("$z$ (m)", labelpad=0)
+    ax.set_yticks([-4, -2, 0, 2, 4])
+    ax.set_zticks([0, 1, 2, 3])
+    ax.tick_params(pad=0)
+    for a in (ax.xaxis, ax.yaxis, ax.zaxis):
+        a.pane.set_facecolor((1, 1, 1, 0))
+        a.pane.set_edgecolor(GRID)
+        a._axinfo["grid"]["color"] = GRID
+        a._axinfo["grid"]["linewidth"] = 0.5
 
-    handles = [plt.Line2D([], [], color=colors[n], lw=1.6) for n in paths]
+    handles = [plt.Line2D([], [], color=colors[n], lw=1.8) for n in paths]
     labels = [f"{n}: {label(rec)}" for n, (p, rec) in paths.items()]
-    handles += [plt.Line2D([], [], color=MUTED, lw=1.0, ls="--"),
+    handles += [plt.Line2D([], [], color=MUTED, lw=1.2, ls="--"),
                 plt.Line2D([], [], marker="o", ms=4, mfc="white", mec=INK, ls="none")]
     labels += ["No spin (best fit, does not match the data)", "Observed positions"]
-    fig.tight_layout(rect=(0, 0.17, 1, 1))
     fig.legend(handles, labels, loc="lower center", ncol=1, bbox_to_anchor=(0.5, 0.0), fontsize=7.5)
     FIG.mkdir(exist_ok=True)
-    fig.savefig(FIG / "example_trajectories.pdf")
-    fig.savefig(FIG / "example_trajectories.png", dpi=300)
+    fig.savefig(FIG / "example_trajectories.pdf", bbox_inches=None)
+    fig.savefig(FIG / "example_trajectories.png", dpi=300, bbox_inches=None)
     for name, (p, rec) in paths.items():
         print(f"{name}: cross ({rec.y:.2f}, {rec.z:.2f}) | {label(rec)} | w/max {rec.w / df.w.max():.2f}")
     print("no spin crossing:", nospin[-1].round(2))
