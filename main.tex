@@ -1367,75 +1367,91 @@ tracking system, especially in height measurements.
 \label{sec:discussion}
 % =====================================================================
 
-The ball is most likely to cross the goal plane at
-$(y, z) = (2.59, 1.95)$\,\si{\metre}, in the upper corner on the kicker's
-left, about a meter inside the post. Read to the nearest centimeter, the two
-observations are enough to see the ball curl, which pins the crossing point
-down to about \SI{8}{\centi\metre} across and \SI{13}{\centi\metre} in height
-and makes a goal almost certain. If the positions were known only to
-\SIrange{1}{2}{\centi\metre}, as from a real tracking system, the curl would
-be hidden in the noise: the likely region would grow to about a meter across,
-and the chance of a goal would fall to between 0.8 and 0.9. For a goalkeeper, the first
-tenth of a second already says where the ball is going, but only if the
-ball's position is measured very precisely.
-
 \subsection{Strengths}
 
-\begin{itemize}
-  \item \textbf{Physics based on measurements.} The drag and lift come from
-    published wind-tunnel and trajectory data, and the ranges of spin, spin
-    decay and mass come from measured kicks and the Laws of the Game. Every
-    input has a source.
-  \item \textbf{Uncertainty from stated assumptions.} Each unknown has an
-    explicit distribution (Table~\ref{tab:priors}), so a reader can see where
-    the uncertainty comes from and test any assumption by changing it, as in
-    Section~\ref{sec:sensitivity}.
-  \item \textbf{Honest uncertainty.} On 200 simulated kicks, the 68\% and
-    95\% regions contained the true crossing point 68\% and 98.5\% of the time
-    (Section~\ref{sec:validation}).
-  \item \textbf{Two methods agree.} The exact fits of
-    Section~\ref{sec:exact-fits} and the Monte Carlo method place the ball
-    within \SI{9}{\centi\metre} of each other.
-  \item \textbf{Robust to the details of the physics.} Buoyancy, added mass,
-    spin decay, knuckling and differences in drag between balls each change
-    the answer by \SI{2}{\centi\metre} or less.
-  \item \textbf{A general method.} It works for any two observations, and we
-    tested it on real match kicks as well as on the given scenario.
-\end{itemize}
+The main strength of the approach is that each of its parts can be tested
+independently. The numerical integration agrees with exact solutions for
+flight under gravity alone, drag alone and lift alone to better than
+\SI{1}{\micro\metre}, and with a far more accurate reference integration to
+better than \SI{1}{\nano\metre} at the goal. The physical model rests on
+published measurements: the drag and lift coefficients come from wind-tunnel
+and trajectory data for the Teamgeist ball, and the ranges of spin, spin
+decay and ball mass come from filmed kicks and the Laws of the Game, so every
+assumption has a stated source and range. Because each uncertain input enters
+through an explicit distribution, the effect of each assumption can be
+measured directly. Adding buoyancy, added mass, spin decay and knuckling
+moved the most likely point by at most \SI{2}{\centi\metre}; changing one
+input distribution at a time identified the inputs that control the answer;
+and repeating the prediction for measurement errors of
+\SI{2.9}{\milli\metre}, \SI{1}{\centi\metre} and \SI{2}{\centi\metre} showed
+how its precision depends on the quality of the observations. The two methods
+of the paper also agree, with the Monte Carlo answer lying
+\SI{9}{\centi\metre} from the best exact fit. The stated uncertainty was
+validated on 200 simulated kicks with known crossing points, for which the
+68\% and 95\% regions contained the true crossing for 68\% and 98.5\% of
+kicks, and the most likely point missed by a median of \SI{18}{\centi\metre}
+against \SI{27}{\centi\metre} for a constant-acceleration fit. Finally, the
+method takes any two observed positions as input, so the same procedure
+applies to kicks other than the given scenario, as the test on match data
+demonstrates.
 
 \subsection{Weaknesses}
 
-\begin{itemize}
-  \item \textbf{The lift curve and the spin range matter most.} Changing
-    either moves the most likely point by \SIrange{7}{14}{\centi\metre},
-    about as much as the stated uncertainty. The lift curve comes from one
-    ball, with no published error bars.
-  \item \textbf{The data favor fast spins.} Only the fastest measured kicks
-    reach the spins that fit the observations exactly
-    (Section~\ref{sec:exact-fits}). Either this kick spun unusually fast, or
-    the rounding of the data exaggerates the curl.
-  \item \textbf{The uncertainty depends on the error model.} On real kicks,
-    misses in height were larger than predicted, most likely because the
-    tracking errors drift over time while our model treats them as
-    independent (Section~\ref{sec:realdata}). A real system would need an
-    error model fitted to its own tracker.
-  \item \textbf{A small real-data test.} It used 17 kicks from open play, not
-    penalties, and an imaginary plane instead of the goal line.
-  \item \textbf{What the model leaves out.} The ball can hit a post or the
-    crossbar, the goalkeeper can touch it, and wind can push it; the model
-    includes none of these, and judges a shot on target by the ball's center.
-  \item \textbf{Simplifications in the uncertainty.} The drag and lift
-    factors are drawn independently, although a real ball with more drag
-    also has less lift; this makes the predicted spread slightly too wide.
-\end{itemize}
+The main weakness is that the model was not rigorously validated against
+real kicks. The simulated kicks follow our own equations of motion and input
+distributions, so their success shows that the method is consistent with its
+assumptions rather than that those assumptions describe real football. The
+test on real data used only 17 kicks from open play, evaluated on a plane
+\SIrange{6}{9}{\metre} from the kick rather than at the goal line, with the
+true crossing recorded by the same tracking system that supplied the
+observations. In that test the method predicted the horizontal position
+reasonably well but was overconfident in height, where only 59\% of kicks
+fell within two predicted standard deviations. A second weakness is the
+dependence of the answer on inputs that are poorly known. The lift curve
+comes from a single ball with no published error bars, and changing the lift
+factor or the range of spin rates moves the most likely point by
+\SIrange{7}{14}{\centi\metre}, about one standard deviation of the
+prediction. The spin range is also in tension with the data: with the
+Teamgeist coefficients, the exact fits require at least
+\SI{9.4}{\rev\per\second} of sidespin, at the top of the measured range, so
+the predicted crossing depends partly on where that range is cut off. We
+also held the ball radius fixed at \SI{0.11}{\metre}, although the value is
+given to only two significant figures and the legal range of
+\SIrange{10.8}{11.1}{\centi\metre} changes the cross-sectional area, and with
+it the drag and lift, by about 6\%. Lastly, the model treats measurement
+errors as independent and Gaussian, whereas the given data are rounded and
+real tracking errors drift over time; it fixes the air density at its
+sea-level value; and it ignores wind, contact with the posts, crossbar or
+goalkeeper, and the correlation between the drag and lift of real balls.
 
-\subsection{Extensions}
+\subsection{Conclusions}
 
-The most useful next steps are an error model fitted to a real tracking
-system, drag and lift measurements for the match ball, and more than two
-observations: each extra position narrows the spin, and with it the
-prediction. A test on real penalties with known outcomes would show how well
-the method works in the situation it was built for.
+This paper developed a method for predicting where a penalty kick crosses the
+goal plane from two early observations of the ball's position. A
+deterministic model of gravity, drag and Magnus lift, with coefficients
+measured for the Teamgeist ball, showed that a ball without spin cannot
+reproduce the given observations, which it misses by \SI{11.5}{\milli\metre},
+and that every consistent trajectory requires
+\SIrange{9.4}{28.4}{\rev\per\second} of sidespin curling the ball to the
+kicker's right. A Monte Carlo method that samples the uncertain inputs from
+published ranges and weights each sample by its fit to the observations
+predicts that the ball most likely crosses at
+$(y, z) = (2.59, 1.95)$\,\si{\metre}, \SI{1.07}{\metre} inside the post and
+\SI{0.49}{\metre} below the crossbar, with standard deviations of
+\SI{8}{\centi\metre} across and \SI{13}{\centi\metre} in height and a
+probability above 0.999 that the shot is on target. This result lies within
+\SI{9}{\centi\metre} of the best exact fit. The precision of the prediction
+comes from the precision of the observations. The curl that reveals the spin
+amounts to about \SI{1}{\centi\metre} over the first \SI{0.1}{\second}, and
+with measurement errors of \SIrange{1}{2}{\centi\metre} the standard
+deviation across grows to \SIrange{31}{38}{\centi\metre} and the probability
+of an on-target shot falls to between 0.78 and 0.89. The first tenth of a
+second of flight therefore contains enough information to locate the shot,
+provided that the ball's position is measured far more precisely than a
+goalkeeper's eye or a typical tracking system can manage. Better measurements
+of the lift of modern match balls, an error model matched to a real tracking
+system, and more than two observations would each narrow the prediction
+further.
 
 % =====================================================================
 \appendix
