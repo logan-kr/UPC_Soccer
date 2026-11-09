@@ -66,31 +66,24 @@
 \begin{quote}
   \small
   A goalkeeper facing a penalty kick must judge where the ball is going from just the first few moments of its flight. We present a general method for predicting where the ball crosses the
-  goal plane,  given its start post and how uncertain that prediction is, from the ball's positions
+  goal plane, and how uncertain that prediction is, from the ball's positions
   \SI{0.05}{} and \SI{0.10}{\second} after the kick. A physical model follows
   the ball under gravity, drag and the Magnus lift caused by its spin, with
-  drag and lift coefficients measured for modern match balls. Two positions
+  drag and lift characteristics consistent with modern match balls. Two positions
   cannot reveal the ball's spin, its exact aerodynamics or its mass, so a
   Monte Carlo method samples these unknowns from distributions based on
   measurements of kicks and balls. Each sample is fitted to the observations
   and weighted by how well it matches them, and the spread of the weighted
-  crossing points is the uncertainty of the prediction.
-
-  For the given kick, the ball most likely crosses at
-  $(y, z) = (2.59, 1.95)$\,\si{\metre}, in the upper corner about a meter
+  crossing points is the uncertainty of the prediction. For the given kick, the ball most likely crosses at $(y, z) = (2.59, 1.95)$\,\si{\metre}, in the upper corner about a meter
   inside the post, with standard deviations of \SI{8}{\centi\metre} across
-  and \SI{13}{\centi\metre} in height, so a goal is almost certain. The
-  positions, given to the nearest centimeter, are precise enough to reveal
-  the ball's curl; less precise positions would leave the prediction far less
-  certain. A separate search for trajectories that match the observations
-  exactly agrees to within \SI{9}{\centi\metre}, and adding buoyancy, the
+  and \SI{13}{\centi\metre} in height, so a goal is almost certain. Adding buoyancy, the
   added mass of the surrounding air, spin decay and knuckling to the model
   changes the answer by less than \SI{2}{\centi\metre}. The prediction depends most on the lift coefficient
   and the range of spin rates. On 200 simulated kicks, the true crossing fell
   inside the 68\% and 95\% regions 68\% and 98.5\% of the time. On 17 real
   kicks from match tracking data, the method predicted the sideways position
   well but underestimated height errors, likely because the tracker's height
-  readings drift.
+  readings drift in the tracking data.
 \end{quote}
 
 \clearpage
@@ -1424,7 +1417,7 @@ only two significant figures. Across the legal range of
 errors as independent and Gaussian, whereas the given data are rounded and
 real tracking errors drift over time; it fixes the air density at its
 sea-level value; and it ignores wind, contact with the posts, crossbar or
-goalkeeper, and the correlation between the drag and lift of real balls.
+goalkeeper, and the correlation between the drag and lift of real balls. We also neglected to consider bouncing or ground interactions which may occur in a general penalty kicking case.
 
 \subsection{Conclusions}
 
@@ -1447,7 +1440,7 @@ spin exactly with the Teamgeist coefficients and no limit on the spin rate,
 gives a best fit that crosses \SI{9}{\centi\metre} from this point. The
 difference arises mainly because that fit uses \SI{22.7}{\rev\per\second} of
 spin, well above the \SI{9.3}{\rev\per\second} limit of the Monte Carlo
-draws. The precision of the prediction
+draws which are limited by realistic kick parameters. The precision of the prediction
 comes from the precision of the observations. The curl that reveals the spin
 amounts to about \SI{1}{\centi\metre} over the first \SI{0.1}{\second}, and
 with measurement errors of \SIrange{1}{2}{\centi\metre} the standard
@@ -1619,7 +1612,7 @@ sensors report about 2{,}000 times a second. Every other sensor reports
 about 200 times a second. For each kick we keep every fourth ball reading,
 one every \SI{2}{\milli\second}.
 
-A kick is a moment when the ball's reported speed
+A kick is defined as a moment when the ball's reported speed
 rises past \SI{12}{\metre\per\second} and gains at least
 \SI{6}{\metre\per\second} within \SI{0.05}{\second} on either side. We time
 the strike by the largest reported acceleration in the \SI{0.05}{\second}
