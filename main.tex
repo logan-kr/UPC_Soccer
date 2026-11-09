@@ -65,33 +65,33 @@
 
 \begin{quote}
   \small
-  This paper presents a method for predicting where a penalty kick crosses
-  the goal plane from two observations of the ball's position shortly after
-  the kick. The ball was modeled as a rigid sphere subject to gravity, drag
-  and Magnus lift, with coefficients measured for the Adidas Teamgeist ball
-  and a spin rate that decays with distance traveled. With the air density,
-  ball mass and spin decay fixed, a search over launch velocity and spin
-  identified every trajectory that reproduces the given positions to within
-  their \SI{5}{\milli\metre} rounding. A ball without spin could not match
-  the observations, and all consistent trajectories required
-  \SIrange{9.4}{28.4}{\rev\per\second} of sidespin, mostly above the spin
-  rates measured for real kicks. To account for inputs that the
-  observations cannot determine, a Monte Carlo method was developed that
-  samples the spin, spin decay, ball mass and aerodynamic coefficients from
-  distributions based on published measurements and weights each sample
-  by how well it fits the observations. For the given scenario, the most likely crossing point is
-  $(y, z) = (2.59, 1.95)$\,\si{\metre}, with standard deviations of \SI{8}{\centi\metre} horizontally and
-  \SI{13}{\centi\metre} vertically and a probability above 0.999 that the
-  shot is on target. With a position error of \SI{1}{\centi\metre}, the
-  standard deviations grow to \SI{31}{} and \SI{22}{\centi\metre} and this
-  probability falls to 0.89. The prediction depends most on the lift
-  coefficient and the assumed range of spin rates. On 200 simulated kicks,
-  the true crossing point fell inside the 68\% and 95\% regions for 68\%
-  and 98.5\% of kicks, with a median miss of \SI{18}{\centi\metre} against
-  \SI{27}{\centi\metre} for a constant-acceleration fit. On 17 kicks from
-  match tracking data, the method predicted the horizontal position well
-  but underestimated the vertical uncertainty, which we attribute to
-  correlated errors in the tracking system's height measurements.
+  A goalkeeper facing a penalty kick must judge where the ball is going from
+  the first instants of its flight. We predict where the ball crosses the
+  goal plane, and how uncertain that prediction is, from the ball's positions
+  \SI{0.05}{} and \SI{0.10}{\second} after the kick. A physical model follows
+  the ball under gravity, drag and the Magnus lift caused by its spin, with
+  drag and lift coefficients measured for modern match balls. Two positions
+  cannot reveal the ball's spin, its exact aerodynamics or its mass, so a
+  Monte Carlo method samples these unknowns from distributions based on
+  measurements of kicks and balls. Each sample is fitted to the observations
+  and weighted by how well it matches them, and the spread of the weighted
+  crossing points is the uncertainty of the prediction.
+
+  For the given kick, the ball most likely crosses at
+  $(y, z) = (2.59, 1.95)$\,\si{\metre}, in the upper corner about a meter
+  inside the post, with standard deviations of \SI{8}{\centi\metre} across
+  and \SI{13}{\centi\metre} in height, so a goal is almost certain. The
+  positions, given to the nearest centimeter, are precise enough to reveal
+  the ball's curl. With position errors of 1 to \SI{2}{\centi\metre}, as from
+  a tracking system, the likely region grows to about a meter across and the
+  chance of a goal falls to between 0.8 and 0.9. A separate search for
+  trajectories that match the observations exactly agrees to within
+  \SI{9}{\centi\metre}. The prediction depends most on the lift coefficient
+  and the range of spin rates. On 200 simulated kicks, the true crossing fell
+  inside the 68\% and 95\% regions 68\% and 98.5\% of the time. On 17 real
+  kicks from match tracking data, the method predicted the sideways position
+  well but underestimated height errors, likely because the tracker's height
+  readings drift.
 \end{quote}
 
 \clearpage
