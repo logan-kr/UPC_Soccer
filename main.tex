@@ -1277,11 +1277,11 @@ that locates a sensor inside the ball about 2{,}000 times a second
 play, and only two kicks in it reach a goal line untouched. Thus, for every kick that flew freely through the air
 for \SI{0.38}{\second}, about the flight time of the penalty, we placed an
 imaginary plane across its path where the ball was at that time, between
-\SI{6}{} and \SI{9}{\metre} from the kick. This yielded seventeen qualifying kicks , at
-\SIrange{20}{31}{\metre\per\second}. As for the penalty, the method saw only
+\SI{6}{} and \SI{9}{\metre} from the kick. This yielded seventeen qualifying kicks, at
+\SIrange{20}{31}{\metre\per\second} which we used to test our model against. As was defined in the penalty problem, the method for testing saw only
 the ball's position at the start (\SI{0.02}{\second} after the foot struck
 it) and \SI{0.05}{} and \SI{0.10}{\second} later, and predicted where it
-would cross the plane. From the scatter of the tracks, the tracking error is
+would cross the defined plane. From the scatter of the tracks, the tracking error is
 about \SI{0.8}{\centi\metre} horizontally and \SI{2.5}{\centi\metre}
 vertically, and we used these values for $\sigma$. Figure~\ref{fig:realkicks}(a)
 shows these steps on one kick, and Appendix~\ref{app:realdata} gives the full
@@ -1334,9 +1334,8 @@ independent errors.
 
 The test is small, its kicks are passes and shots in open play rather than
 penalties, and the true crossing is measured by the same noisy system. We
-read it as evidence that the method transfers to real kicks for the curl,
-and that a real application would need an error model that matches the
-tracking system, especially in height.
+read this analysis as evidence that our model applies reasonably well to real kicks; however, a rigorous application would need an error model that matches the
+tracking system, especially in height measurements.
 
 % =====================================================================
 \section{Discussion}
@@ -1385,12 +1384,12 @@ Section~\ref{sec:coefficients} is based.
 \label{app:mccode}
 % =====================================================================
 
-Listings~\ref{lst:physics} and~\ref{lst:mc} show the core of our code,
-condensed. Listing~\ref{lst:physics} gives the drag and lift coefficients,
+Listings~\ref{lst:physics} and~\ref{lst:mc} show the core of our code.
+Listing~\ref{lst:physics} gives the drag and lift coefficients,
 the acceleration of the ball for the standard model, and the sampling of
 the inputs of Table~\ref{tab:priors}. Listing~\ref{lst:mc} gives one Monte
-Carlo draw and the summary of all draws. Two helper functions are not
-shown: \texttt{simulate} integrates the equations of motion with DOP853
+Carlo draw and the summary of all draws. The code also uses two helper
+functions: \texttt{simulate} integrates the equations of motion with DOP853
 (Section~\ref{sec:integration}) and returns the positions at the
 observation times together with their derivatives with respect to
 $\bm{v}_0$, computed by central differences; \texttt{fly\_to\_goal}
