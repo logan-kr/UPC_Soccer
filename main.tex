@@ -74,11 +74,11 @@
   Monte Carlo method samples these unknowns from distributions based on
   measurements of kicks and balls. Each sample is fitted to the observations
   and weighted by how well it matches them, and the spread of the weighted
-  crossing points is the uncertainty of the prediction. For the given kick, the ball most likely crosses at $(y, z) = (2.59, 1.95)$\,\si{\metre}, in the upper corner about a meter
+  crossing points is the uncertainty of the prediction. For the given kick, the ball most likely crosses the goal plane at $(y, z) = (2.59, 1.95)$\,\si{\metre}, in the upper corner about a meter
   inside the post, with standard deviations of \SI{8}{\centi\metre} across
   and \SI{13}{\centi\metre} in height, so a shot on goal after the specified observations is almost certain. Adding buoyancy, the
   added mass of the surrounding air, spin decay and knuckling to the model
-  changes the answer by less than \SI{2}{\centi\metre}. The prediction depends most on the lift coefficient
+  changes this answer by less than \SI{2}{\centi\metre}. The prediction depends most on the lift coefficient
   and the range of spin rates. On 200 simulated kicks, the true crossing fell
   inside the 68\% and 95\% regions 68\% and 98.5\% of the time. On 17 real
   kicks from match tracking data, the method predicted the sideways position
@@ -118,7 +118,7 @@ positions we are given. By the time the ball reaches the goal, the same spin
 has moved it by tens of centimeters. Drag, which slows the ball, depends on
 its speed and spin in ways that cannot be measured from two positions.
 Predicting the point at which the balls crosses the plane of the goal is therefore
-a complex extrapolation problem with significant uncertainty which must be quantified.
+a complex extrapolation problem with significant uncertainty that must be quantified.
 
 Our approach combines a physical model of the ball's flight with a
 statistical analysis of what the observations cannot determine.
@@ -130,8 +130,8 @@ trajectories that pass through the given positions to within their rounding.
 Section~\ref{sec:montecarlo} extends this to a Monte Carlo method that samples uncertain quantities from distributions and weights each sample according to how well it explains the observations.
 Section~\ref{sec:results} gives the predicted crossing point and its
 uncertainty for the given scenario, together with tests of the method on
-simulated kicks, and Section~\ref{sec:discussion} discusses the strengths
-and weaknesses of the approach.
+simulated kicks and real kick data, and Section~\ref{sec:discussion} discusses the strengths
+and weaknesses of the overall approach.
 
 % =====================================================================
 \section{Problem Restatement}
@@ -191,7 +191,7 @@ within this distance of every observation is consistent with the data.
 \label{sec:simple-model}
 % =====================================================================
 
-In order to understand the flight characteristics of the ball, we first build a simplistic deterministic model. Given the ball's launch velocity, its
+In order to understand the flight characteristics of the ball, we first build a simple deterministic model. Given the ball's launch velocity, its
 spin, and a few physical constants, we apply this method to predict the the entire path of a ball. The method in
 Sections~\ref{sec:exact-fits} and~\ref{sec:montecarlo} then uses this model to work
 backward from the two observed positions.
@@ -258,7 +258,7 @@ non-spinning ball by about \SI{8}{\metre\per\second\squared}, using the drag
 coefficient $C_D \approx 0.15$ that \citet{kiratidis2018} fit to wind-tunnel
 measurements of the Teamgeist ball \citep{asai2007}
 (Section~\ref{sec:coefficients}). A spin of \SI{9.3}{\rev\per\second}, at the
-top of the range measured when players' kicks are filmed with high-speed
+top of the range measured when players' kicks were filmed with high-speed
 cameras (\citealp{tsukada2011}; Section~\ref{sec:kick-spin}), gives a lift of about
 \SI{16}{\metre\per\second\squared}.
 
@@ -269,8 +269,7 @@ The aerodynamic coefficients $C_D$ and $C_L$ are not constants. They depend
 dynamically on the ball's instantaneous speed and on the ratio of surface
 rotational speed to translational velocity, characterized by the non-dimensional
 spin parameter. Because only the component of angular velocity orthogonal to the
-flight path deflects the oncoming airflow, we define the \emph{perpendicular}
-spin parameter. \citet{kiratidis2018} define the spin parameter as
+flight path deflects the oncoming airflow, we define the perpendicular spin parameter. \citet{kiratidis2018} define the spin parameter as
 $S_p = r\omega/v$ (their Eq.~4) for a ball spinning about an axis perpendicular
 to its flight (their Fig.~1), and give the lift force the direction
 $\bm{\omega}\times\bm{v}$, whose magnitude $|\bm{\omega}||\bm{v}|\sin\theta$
@@ -1688,14 +1687,12 @@ truth = [np.interp(0.38, s, frame[:, i]) for i in (1, 2)]
 \textit{Opus 5.5}
 
 \subsection*{Scope and Nature of Use}
-\textit{We used Opus 5.5 exclusively for code code for the Monte Carlo simulation, }
+\textit{We used Opus 5.5 for code generation and debugging, as well as scanning the report for typos and Latex formatting issues. We did not use it to derive the physics model, design the Monte Carlo experiment or simplified model sol, or write any section of the report.}
 
 \subsection*{Content Authorship}
-\textit{[To be written: which parts of the work were done by the team, and
-which with AI assistance.]}
+\textit{All Physics content, including the mathematical derivations, experiment design, and scientific conclusions were developed independently through the analysis of our team. We used Opus 5.5 for code generation and debugging for the Monte Carlo code, generation of the simulated kicks, and data analysis and code generation for analyzing the physical kicks.}
 
 \subsection*{Quality Assurance}
-\textit{[To be written: how the team checked the content, results and
-references.]}
+\textit{We thoroughly reviewed all content for accuracy and absence of hallucinated information. Opus 5.5 did not derive any analytical physics results or implement design decisions, but was used as a computational tool for software development and final grammar/syntax check.}
 
 \end{document}
