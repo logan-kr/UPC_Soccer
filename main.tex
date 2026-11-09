@@ -1385,14 +1385,72 @@ Section~\ref{sec:coefficients} is based.
 \label{app:mccode}
 % =====================================================================
 
-Listing~\ref{lst:mc} shows the core of the Monte Carlo method of
-Section~\ref{sec:montecarlo}, condensed from our code. The helper functions
-are not shown: \texttt{simulate} integrates the equations of motion
-(Section~\ref{sec:integration}) and returns the positions at the observation
-times together with their derivatives with respect to $\bm{v}_0$, and
-\texttt{fly\_to\_goal} integrates to the goal plane and returns the crossing
-point and outcome. \texttt{sample\_inputs} draws the inputs of
-Table~\ref{tab:priors}.
+Listings~\ref{lst:physics} and~\ref{lst:mc} show the core of our code,
+condensed. Listing~\ref{lst:physics} gives the drag and lift coefficients,
+the acceleration of the ball for the standard model, and the sampling of
+the inputs of Table~\ref{tab:priors}. Listing~\ref{lst:mc} gives one Monte
+Carlo draw and the summary of all draws. Two helper functions are not
+shown: \texttt{simulate} integrates the equations of motion with DOP853
+(Section~\ref{sec:integration}) and returns the positions at the
+observation times together with their derivatives with respect to
+$\bm{v}_0$, computed by central differences; \texttt{fly\_to\_goal}
+integrates to the goal plane and returns the crossing point and outcome.
+
+\begin{lstlisting}[caption={Coefficients, acceleration and input sampling (standard model). Units are SI; spin is in rad/s.}, label=lst:physics, captionpos=b]
+# Drag and lift coefficients: Kiratidis & Leinweber (2018), Teamgeist
+a, v_c, v_s = 0.4927, 12.58, 1.071
+b_min, b_max, v_min, v_max = 0.1440, 0.1540, 23.17, 35.00
+b_spin, alpha, beta = 0.514, 1.15, 0.83
+S_ref, v_ref = 0.19, 333793 * 1.54e-5 / 0.218   # reference point, about 23.6 m/s
+
+def C_D0(v):                                     # no spin (their Eq. 5)
+    return ((a - b_min) / (1 + np.exp((v - v_c) / v_s)) + b_min
+            + (v - v_min) / (1 + np.exp(-(v - v_min) / v_s))
+              * (b_max - b_min) / (v_max - v_min))
+
+def C_D(v, S):                                   # with spin (their Eq. 7)
+    return C_D0(v) + b_spin * S
+
+def C_L(v, S):                                   # lift (their Eqs. 8-9)
+    cd0, cd_ref = C_D0(0.0), C_D(v_ref, S_ref)
+    return alpha * S**beta * (cd0 - np.minimum(C_D(v, S), cd0)) / (cd0 - cd_ref)
+
+# Acceleration of the ball. theta.omega is the spin at launch in world axes
+# (from the launch-frame components of Section 4.1); s is the distance travelled.
+def acceleration(v, s, theta):
+    k = rho * np.pi * r**2 / (2 * theta.m)
+    speed = np.linalg.norm(v)
+    omega = theta.omega * np.exp(-s / theta.L)   # spin decay, axis fixed
+    cross = np.cross(omega, v)                   # omega x v
+    S = r * np.linalg.norm(cross) / speed**2     # perpendicular spin parameter
+    acc = -theta.f_D * k * C_D(speed, S) * speed * v              # drag
+    if np.linalg.norm(cross) > 0:                                  # Magnus lift
+        acc += (theta.f_L * k * C_L(speed, S) * speed**2
+                * cross / np.linalg.norm(cross))
+    m_air = rho * 4 / 3 * np.pi * r**3           # displaced air
+    m_eff = theta.m + m_air / 2                  # added mass
+    acc *= theta.m / m_eff
+    acc[2] -= g * (theta.m - m_air) / m_eff      # gravity less buoyancy
+    return acc                                   # (the extended model adds knuckling)
+
+def rhs(t, state, theta):                        # state: position, velocity, s
+    v, s = state[3:6], state[6]
+    return np.concatenate([v, acceleration(v, s, theta), [np.linalg.norm(v)]])
+
+# Inputs of one draw (Table 3)
+def sample_inputs(rng):
+    rate = 2 * np.pi * rng.uniform(0, 9.3)       # total spin rate
+    psi = np.radians(rng.uniform(-110, 110))     # axis angle from pure backspin
+    m = rng.uniform(0.41, 0.45)                  # ball mass
+    L = rng.uniform(110, 350)                    # spin-decay length
+    f_L = rng.uniform(0.75, 1.00)                # lift factor
+    f_D = rng.uniform(1.00, 1.35)                # drag factor
+    q = rng.uniform(-0.52, 0.52)                 # screw share of the axis
+    spin = rate * np.array([np.sqrt(1 - q**2) * np.cos(psi),   # backspin
+                            np.sqrt(1 - q**2) * np.sin(psi),   # sidespin
+                            q])                                # screw spin
+    return Inputs(spin_launch_frame=spin, m=m, L=L, f_D=f_D, f_L=f_L)
+\end{lstlisting}
 
 \begin{lstlisting}[caption={Core of the Monte Carlo method: one draw, then the summary of all draws.}, label=lst:mc, captionpos=b]
 # One draw, number n (Section 5.3)
