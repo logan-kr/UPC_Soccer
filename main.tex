@@ -76,7 +76,7 @@
   and weighted by how well it matches them, and the spread of the weighted
   crossing points is the uncertainty of the prediction. For the given kick, the ball most likely crosses at $(y, z) = (2.59, 1.95)$\,\si{\metre}, in the upper corner about a meter
   inside the post, with standard deviations of \SI{8}{\centi\metre} across
-  and \SI{13}{\centi\metre} in height, so a shot on goal y is almost certain. Adding buoyancy, the
+  and \SI{13}{\centi\metre} in height, so a shot on goal after the specified observations is almost certain. Adding buoyancy, the
   added mass of the surrounding air, spin decay and knuckling to the model
   changes the answer by less than \SI{2}{\centi\metre}. The prediction depends most on the lift coefficient
   and the range of spin rates. On 200 simulated kicks, the true crossing fell
@@ -1685,10 +1685,10 @@ truth = [np.interp(0.38, s, frame[:, i]) for i in (1, 2)]
 % =====================================================================
 
 \subsection*{System Used}
-\textit{[To be written: which AI system or systems were used.]}
+\textit{Opus 5.5}
 
 \subsection*{Scope and Nature of Use}
-\textit{[To be written: what the AI system was used for.]}
+\textit{We used Opus 5.5 exclusively for code code for the Monte Carlo simulation, }
 
 \subsection*{Content Authorship}
 \textit{[To be written: which parts of the work were done by the team, and
