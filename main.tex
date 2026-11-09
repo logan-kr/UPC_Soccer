@@ -1373,12 +1373,12 @@ The main strength of the approach is that each of its parts can be tested
 independently. The numerical integration agrees with exact solutions for
 flight under gravity alone, drag alone and lift alone to better than
 \SI{1}{\micro\metre}, and with a far more accurate reference integration to
-better than \SI{1}{\nano\metre} at the goal. The physical model rests on
+better than \SI{1}{\nano\metre} at the goal. The physical model is based on
 published measurements: the drag and lift coefficients come from wind-tunnel
 and trajectory data for the Teamgeist ball, and the ranges of spin, spin
 decay and ball mass come from filmed kicks and the Laws of the Game, so every
-assumption has a stated source and range. Because each uncertain input enters
-through an explicit distribution, the effect of each assumption can be
+assumption has a stated source and range. Each uncertain input enters
+through an explicit distribution, so the effect of each assumption can be
 measured directly. Adding buoyancy, added mass, spin decay and knuckling
 moved the most likely point by at most \SI{2}{\centi\metre}; changing one
 input distribution at a time identified the inputs that control the answer;
@@ -1499,7 +1499,7 @@ Carlo draw and the summary of all draws. The code also uses two helper
 functions: \texttt{simulate} integrates the equations of motion with DOP853
 (Section~\ref{sec:integration}) and returns the positions at the
 observation times together with their derivatives with respect to
-$\bm{v}_0$, computed by central differences; \texttt{fly\_to\_goal}
+$\bm{v}_0$, computed by central differences. \texttt{fly\_to\_goal}
 integrates to the goal plane and returns the crossing point and outcome.
 
 \begin{lstlisting}[caption={Coefficients, acceleration and input sampling (standard model). Units are SI; spin is in rad/s.}, label=lst:physics, captionpos=b]
@@ -1640,11 +1640,11 @@ plane is where the ball is after \SI{0.38}{\second}, at a distance $D$ along
 $x$; shifting the frame so that the plane is at $x = 11$, as in the problem,
 puts the start at $(11 - D, 0, z_0)$.
 
-The two observations are the positions \SI{0.05}{} and \SI{0.10}{\second} after the start, interpolated between readings, and the true crossing is the position at \SI{0.38}{\second}. For $\sigma$ we fit a smooth (cubic) curve to each track over the test and take the scatter of the readings about it, in each direction; the medians over the 17 kicks are \SI{0.8}{}, \SI{0.8}{} and \SI{2.5}{\centi\metre}.
+The two observations are the positions \SI{0.05}{} and \SI{0.10}{\second} after the start, interpolated between readings, and the true crossing is the position at \SI{0.38}{\second}. For $\sigma$ we fit a smooth (cubic) curve to each track over the test and take the scatter of the readings about it, in each direction. The medians over the 17 kicks are \SI{0.8}{}, \SI{0.8}{} and \SI{2.5}{\centi\metre}.
 
 Each kick is predicted with the standard model and 4{,}000 draws, exactly as for the penalty, using these three values of $\sigma$.
 
-\begin{lstlisting}[caption={Core of the real-kick test. The arrays t, pos, speed and acc hold one ball's readings in seconds, meters, meters per second and meters per second squared.}, label=lst:realdata, captionpos=b]
+\begin{lstlisting}[caption={Code for the real-kick test. The arrays t, pos, speed and acc hold one ball's readings in seconds, meters, meters per second and meters per second squared.}, label=lst:realdata, captionpos=b]
 # Finding kicks
 up = np.flatnonzero((speed[1:] >= 12) & (speed[:-1] < 12)) + 1
 for i in up:
