@@ -1601,26 +1601,25 @@ p_on_target = w[outcome == "on_target"].sum()
 \label{app:realdata}
 % =====================================================================
 
-This appendix describes the test of Section~\ref{sec:realdata} step by step.
-Listing~\ref{lst:realdata} shows the core of the code.
+Here, we show the test on real data as seen in Section~\ref{sec:realdata} step by step.
 
-\paragraph{Data.} The DEBS 2013 data \citep{debs2013} list one sensor reading
+The DEBS 2013 data \citep{debs2013} list one sensor reading
 per line: sensor number, time in picoseconds, position $(x, y, z)$ in
 millimeters, and the speed and acceleration magnitudes estimated by the
 tracker. Our copy of the file is cut off after 8.6 minutes of play, giving
 8.5 million readings, 4.2 million of them from ball sensors. Three ball
-sensors report about 2{,}000 times a second; every other sensor reports
+sensors report about 2{,}000 times a second. Every other sensor reports
 about 200 times a second. For each kick we keep every fourth ball reading,
 one every \SI{2}{\milli\second}.
 
-\paragraph{Finding kicks.} A kick is a moment when the ball's reported speed
+A kick is a moment when the ball's reported speed
 rises past \SI{12}{\metre\per\second} and gains at least
 \SI{6}{\metre\per\second} within \SI{0.05}{\second} on either side. We time
 the strike by the largest reported acceleration in the \SI{0.05}{\second}
 before the speed crosses \SI{12}{\metre\per\second}, and treat candidates
 less than \SI{0.5}{\second} apart as one kick. This finds 121 kicks.
 
-\paragraph{Choosing kicks.} The test starts \SI{0.02}{\second} after the
+The test starts \SI{0.02}{\second} after the
 strike, once the ball has left the foot, and runs for \SI{0.38}{\second}. A
 kick is kept if, over that time, the ball stays above the ground, rises
 above \SI{0.5}{\metre} at some point, travels at least \SI{5}{\metre}
@@ -1632,7 +1631,7 @@ for a few hundredths of a second after the strike, by about
 positions does not. We therefore use the reported speed only to find and
 screen kicks; everything the method sees comes from the tracked positions.
 
-\paragraph{Coordinates.} The starting point $\bm{r}_0$ is a quadratic fit to
+The starting point $\bm{r}_0$ is a quadratic fit to
 the positions within $\pm\SI{0.01}{\second}$ of the start, evaluated at the
 start, to reduce noise in a point the method treats as exact. The $x$ axis
 points along the horizontal direction from $\bm{r}_0$ to the position
@@ -1641,17 +1640,9 @@ plane is where the ball is after \SI{0.38}{\second}, at a distance $D$ along
 $x$; shifting the frame so that the plane is at $x = 11$, as in the problem,
 puts the start at $(11 - D, 0, z_0)$.
 
-\paragraph{Observations, truth and noise.} The two observations are the
-positions \SI{0.05}{} and \SI{0.10}{\second} after the start, interpolated
-between readings, and the true crossing is the position at
-\SI{0.38}{\second}. For $\sigma$ we fit a smooth (cubic) curve to each
-track over the test and take the scatter of the readings about it, in each
-direction; the medians over the 17 kicks are \SI{0.8}{}, \SI{0.8}{} and
-\SI{2.5}{\centi\metre}.
+The two observations are the positions \SI{0.05}{} and \SI{0.10}{\second} after the start, interpolated between readings, and the true crossing is the position at \SI{0.38}{\second}. For $\sigma$ we fit a smooth (cubic) curve to each track over the test and take the scatter of the readings about it, in each direction; the medians over the 17 kicks are \SI{0.8}{}, \SI{0.8}{} and \SI{2.5}{\centi\metre}.
 
-\paragraph{Prediction.} Each kick is predicted with the standard model and
-4{,}000 draws, exactly as for the penalty, using these three values of
-$\sigma$.
+Each kick is predicted with the standard model and 4{,}000 draws, exactly as for the penalty, using these three values of $\sigma$.
 
 \begin{lstlisting}[caption={Core of the real-kick test. The arrays t, pos, speed and acc hold one ball's readings in seconds, meters, meters per second and meters per second squared.}, label=lst:realdata, captionpos=b]
 # Finding kicks
