@@ -1274,10 +1274,10 @@ To see how the method does on real kicks, we used ball-tracking data from a
 match recorded at the Nuremberg football stadium with a radio-based system
 that locates a sensor inside the ball about 2{,}000 times a second
 \citep{debs2013}. Our copy of the data covers only the first 8.6 minutes of
-play, and only two kicks in it reach a goal line untouched. or every kick that flew freely through the air
+play, and only two kicks in it reach a goal line untouched. Thus, for every kick that flew freely through the air
 for \SI{0.38}{\second}, about the flight time of the penalty, we placed an
 imaginary plane across its path where the ball was at that time, between
-\SI{6}{} and \SI{9}{\metre} from the kick. Seventeen kicks qualified, at
+\SI{6}{} and \SI{9}{\metre} from the kick. This yielded seventeen qualifying kicks , at
 \SIrange{20}{31}{\metre\per\second}. As for the penalty, the method saw only
 the ball's position at the start (\SI{0.02}{\second} after the foot struck
 it) and \SI{0.05}{} and \SI{0.10}{\second} later, and predicted where it
@@ -1381,12 +1381,12 @@ Section~\ref{sec:coefficients} is based.
 
 % =====================================================================
 % =====================================================================
-\section{Core of the Monte Carlo Code}
+\section{Monte Carlo Code}
 \label{app:mccode}
 % =====================================================================
 
 Listing~\ref{lst:mc} shows the core of the Monte Carlo method of
-Section~\ref{sec:montecarlo}, condensed from our code. Two helper functions
+Section~\ref{sec:montecarlo}, condensed from our code. The helper functions
 are not shown: \texttt{simulate} integrates the equations of motion
 (Section~\ref{sec:integration}) and returns the positions at the observation
 times together with their derivatives with respect to $\bm{v}_0$, and
