@@ -1157,7 +1157,7 @@ it is lost in the noise: the weights barely change the inputs
 ($N_{\mathrm{eff}}$ is 95\% of $N$), the most likely point moves to
 $(3.20, 2.00)$\,\si{\metre}, close to where a ball without spin would cross,
 and the spread is set almost entirely by the spin distribution. A real
-tracking system or a goalkeeper's eye is closer to the larger values
+tracking system or a goalkeeper's eye would likely be closer to the larger values
 than to the rounding of the given data, so in practice the uncertainty is
 likely to be several times larger than in Equation~\eqref{eq:answer}.
 
@@ -1189,7 +1189,7 @@ $\sigma = \SI{2.9}{\milli\metre}$ the most likely point is
 $(2.60, 1.93)$\,\si{\metre} for the basic model, $(2.59, 1.95)$ for the
 standard model and $(2.59, 1.96)$ for the extended model, with spreads that
 agree to within a few millimeters. Buoyancy, added mass, spin decay and
-knuckling are all real, but for this kick none of them moves the prediction
+knuckling are all real, but for this specific kick none of them moves the prediction
 by more than \SI{2}{\centi\metre}.
 
 To see how much the answer depends on the input distributions, we changed
@@ -1246,7 +1246,7 @@ place the ball in the same corner, about a meter inside the post.
 \subsection{Testing on Simulated Kicks}
 \label{sec:validation}
 
-We check that the stated uncertainty is honest: the true crossing point
+We check that the stated uncertainty is consistent: the true crossing point
 should land inside the 68\% region about 68\% of the time, and inside the
 95\% region about 95\% of the time. The true crossing of the given kick is
 unknown, so we simulated 200 kicks whose crossings we know. Each had its
@@ -1274,8 +1274,7 @@ To see how the method does on real kicks, we used ball-tracking data from a
 match recorded at the Nuremberg football stadium with a radio-based system
 that locates a sensor inside the ball about 2{,}000 times a second
 \citep{debs2013}. Our copy of the data covers only the first 8.6 minutes of
-play, and only two kicks in it reach a goal line untouched. We therefore
-used a different target. For every kick that flew freely through the air
+play, and only two kicks in it reach a goal line untouched. or every kick that flew freely through the air
 for \SI{0.38}{\second}, about the flight time of the penalty, we placed an
 imaginary plane across its path where the ball was at that time, between
 \SI{6}{} and \SI{9}{\metre} from the kick. Seventeen kicks qualified, at
