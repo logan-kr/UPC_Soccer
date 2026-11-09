@@ -65,8 +65,33 @@
 
 \begin{quote}
   \small
-  % Written last, once the results sections are final.
-  \textit{[Abstract to be written.]}
+  This paper presents a method for predicting where a penalty kick crosses
+  the goal plane from two observations of the ball's position shortly after
+  the kick. The ball was modeled as a rigid sphere subject to gravity, drag
+  and Magnus lift, with coefficients measured for the Adidas Teamgeist ball
+  and a spin rate that decays with distance traveled. With the air density,
+  ball mass and spin decay fixed, a search over launch velocity and spin
+  identified every trajectory that reproduces the given positions to within
+  their \SI{5}{\milli\metre} rounding. A ball without spin could not match
+  the observations, and all consistent trajectories required
+  \SIrange{9.4}{28.4}{\rev\per\second} of sidespin, mostly above the spin
+  rates measured for real kicks. To account for inputs that the
+  observations cannot determine, a Monte Carlo method was developed that
+  samples the spin, spin decay, ball mass and aerodynamic coefficients from
+  distributions based on published measurements and weights each sample
+  by how well it fits the observations. For the given scenario, the most likely crossing point is
+  $(y, z) = (2.59, 1.95)$\,\si{\metre}, with standard deviations of \SI{8}{\centi\metre} horizontally and
+  \SI{13}{\centi\metre} vertically and a probability above 0.999 that the
+  shot is on target. With a position error of \SI{1}{\centi\metre}, the
+  standard deviations grow to \SI{31}{} and \SI{22}{\centi\metre} and this
+  probability falls to 0.89. The prediction depends most on the lift
+  coefficient and the assumed range of spin rates. On 200 simulated kicks,
+  the true crossing point fell inside the 68\% and 95\% regions for 68\%
+  and 98.5\% of kicks, with a median miss of \SI{18}{\centi\metre} against
+  \SI{27}{\centi\metre} for a constant-acceleration fit. On 17 kicks from
+  match tracking data, the method predicted the horizontal position well
+  but underestimated the vertical uncertainty, which we attribute to
+  correlated errors in the tracking system's height measurements.
 \end{quote}
 
 \clearpage
